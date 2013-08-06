@@ -35,26 +35,14 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteKingT.loadFromFile("Graphics/Pieces/WhiteK.png");
     whitePawnT.loadFromFile("Graphics/Pieces/WhiteP.png");
 
-    pieces.emplace_back(blackRookT,cellToPosition(7,0),-1);
-    pieces.emplace_back(blackRookT,cellToPosition(7,7),-1);
-    pieces.emplace_back(blackKnightT,cellToPosition(7,1),-1);
-    pieces.emplace_back(blackKnightT,cellToPosition(7,6),-1);
-    pieces.emplace_back(blackBishopT,cellToPosition(7,2),-1);
-    pieces.emplace_back(blackBishopT,cellToPosition(7,5),-1);
-    pieces.emplace_back(blackQueenT,cellToPosition(7,3),-1);
-    pieces.emplace_back(blackKingT,cellToPosition(7,4),-1);
-    for (int i=0; i<8; ++i)
-        pieces.emplace_back(blackPawnT,cellToPosition(6,i),-1);
-    pieces.emplace_back(whiteRookT,cellToPosition(0,0),1);
-    pieces.emplace_back(whiteRookT,cellToPosition(0,7),1);
-    pieces.emplace_back(whiteKnightT,cellToPosition(0,1),1);
-    pieces.emplace_back(whiteKnightT,cellToPosition(0,6),1);
-    pieces.emplace_back(whiteBishopT,cellToPosition(0,2),1);
-    pieces.emplace_back(whiteBishopT,cellToPosition(0,5),1);
-    pieces.emplace_back(whiteQueenT,cellToPosition(0,3),1);
-    pieces.emplace_back(whiteKingT,cellToPosition(0,4),1);
-    for (int i=0; i<8; ++i)
-        pieces.emplace_back(whitePawnT,cellToPosition(1,i),1);
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            const int pieceId = currentPosition[i][j];
+            if (pieceId==0) continue;
+            //const sf::Texture &pieceTexture = idToTexture(pieceId);
+            pieces.emplace_back(idToTexture(pieceId),cellToPosition(i,j),pieceId);
+        }
+    }
 
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){
@@ -109,9 +97,39 @@ void boardMaster::display()
 
 }
 
-sf::Vector2f boardMaster::cellToPosition(const int row, const int col)
+sf::Vector2f boardMaster::cellToPosition(const int row, const int col) const
 {
     return sf::Vector2f(flipOffset.x * (9 - 2 * col) + 20 + 50 * col, (flipOffset.y * (9 - 2 * row)) + 420 - 50 * (row+1));
+}
+
+const sf::Texture &boardMaster::idToTexture(const int pieceId) const
+{
+    switch (pieceId) {
+    case 1:
+        return whiteRookT;
+    case 2:
+        return whiteBishopT;
+    case 3:
+        return whiteKnightT;
+    case 4:
+        return whiteQueenT;
+    case 5:
+        return whitePawnT;
+    case 6:
+        return whiteKingT;
+    case -1:
+        return blackRookT;
+    case -2:
+        return blackBishopT;
+    case -3:
+        return blackKnightT;
+    case -4:
+        return blackQueenT;
+    case -5:
+        return blackPawnT;
+    case -6:
+        return blackKingT;
+    }
 }
 
 sf::Vector2f boardMaster::getMousePosition()

@@ -6,6 +6,7 @@
 #include <Thor/Time/Timer.hpp>
 #include "piecesprite.h"
 #include "position.h"
+#include "completemove.h"
 
 class boardMaster
 {
@@ -59,7 +60,8 @@ public:
 
     void display();
 
-    sf::Vector2f cellToPosition(const int row, const int col);
+    sf::Vector2f cellToPosition(const int row, const int col) const;
+    const sf::Texture &idToTexture(const int pieceId) const;
 
     sf::Vector2f getMousePosition(); //mouse position in the canvas' coords
 

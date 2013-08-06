@@ -3,7 +3,7 @@
 #include <boost/assert.hpp>
 #include <cmath>
 
-boardMove::boardMove(position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):
+boardMove::boardMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):
     board(thePosition),
     row1(theRow1),
     col1(theCol1),
@@ -17,7 +17,7 @@ boardMove::boardMove(position &thePosition, const int theRow1, const int theCol1
     BOOST_ASSERT_MSG(pieceCode != 0, "No piece in starting square");
 }
 
-bool boardMove::isLegal()
+bool boardMove::isLegal() const
 {
     if (isOccupied()) return false;
 

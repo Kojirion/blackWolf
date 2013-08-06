@@ -5,7 +5,10 @@
 class boardMove
 {
 private:
-    position &board;
+    friend class completeMove;
+
+    const position &board;
+    position newBoard;
 
     int row1;
     int col1;
@@ -25,9 +28,10 @@ private:
 
 
 public:
-    boardMove(position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
+    boardMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
 
-    position newBoard;
+
+    bool isLegal() const;
 };
 
 #endif // BOARDMOVE_H

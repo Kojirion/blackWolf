@@ -30,6 +30,8 @@ public:
         return positionRow(*this, rowId);
     }
 
+    int turnColor;
+
 private:
     int cells[8][8];
 
@@ -37,6 +39,8 @@ private:
     const int&   pget(int row,int col) const{
         return cells[row][col];
     }
+
+    void init();
 
 };
 

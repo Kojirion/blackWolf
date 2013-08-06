@@ -7,15 +7,15 @@ pieceSprite::pieceSprite(const sf::Texture &texture, int theType):
 
 }
 
-pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide):
-    sf::Sprite(texture), side(theSide)
+pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theType):
+    sf::Sprite(texture), pieceType(theType)
 {
     sf::Sprite::setPosition(position);
 }
 
 int pieceSprite::getSide() const
 {
-    return boost::math::sign(pieceType)
+    return boost::math::sign(pieceType);
 }
 
 bool pieceSprite::contains(const sf::Vector2f &point) const

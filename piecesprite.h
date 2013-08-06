@@ -6,9 +6,9 @@
 class pieceSprite : public sf::Sprite
 {
 private:
-    int side;
+    int pieceType;
 public:
-    pieceSprite(const sf::Texture &texture, int theSide);
+    pieceSprite(const sf::Texture &texture, int theType);
     pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide);
     //sf::FloatRect boundingRect;
 

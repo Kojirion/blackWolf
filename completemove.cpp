@@ -1,6 +1,6 @@
 #include "completemove.h"
 
-bool completeMove::isCheckSafe()
+bool completeMove::isCheckSafe() const
 {
     const int checkedSide = sideInCheck();
     if (checkedSide == 2) return false;
@@ -13,7 +13,7 @@ completeMove::completeMove(position &thePosition, const int theRow1, const int t
 {
 }
 
-int completeMove::sideInCheck()
+int completeMove::sideInCheck() const
 {
     //returns which side is in check, 2 for both
     int whichSide = 0;
@@ -54,4 +54,11 @@ int completeMove::sideInCheck()
     }
 
     return whichSide;
+}
+
+bool completeMove::isLegal() const
+{
+    if (!boardMove::isLegal()) return false;
+
+    return isCheckSafe();
 }
