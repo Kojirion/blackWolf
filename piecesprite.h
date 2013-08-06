@@ -12,7 +12,7 @@ public:
 
     //void setPosition(float x, float y);
 
-    bool contains(const sf::Vector2f &point);
+    bool contains(const sf::Vector2f &point) const;
 };
 
 #endif // PIECESPRITE_H

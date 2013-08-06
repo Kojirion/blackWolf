@@ -1,11 +1,17 @@
 #include "boardmaster.h"
 
-boardMaster::boardMaster():
+boardMaster::boardMaster(sf::Window &theWindow):
     offset(0,0),
     flipOffset(0,0),
-    window_(sfg::Canvas::Create())
+    window_(sfg::Canvas::Create()),
+    currentPiece(nullptr),
+    bigWindow(theWindow)
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
+    window_->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::processLeftClick, this);
+    window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
+
+
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
     boardSprite_.setTexture(boardTexture_);
     boardSprite_.setPosition(offset);
@@ -44,6 +50,8 @@ boardMaster::boardMaster():
     for (int i=0; i<8; ++i)
         pieces.emplace_back(whitePawnT,cellToPosition(1,i));
 
+    //currentPiece = &pieces[0];
+
 
 
 
@@ -64,4 +72,35 @@ void boardMaster::display()
 sf::Vector2f boardMaster::cellToPosition(const int row, const int col)
 {
     return sf::Vector2f(flipOffset.x * (9 - 2 * col) + 20 + 50 * col, (flipOffset.y * (9 - 2 * row)) + 420 - 50 * (row+1));
+}
+
+sf::Vector2f boardMaster::getMousePosition()
+{
+    sf::Vector2f windowPos = window_->GetAbsolutePosition() + static_cast<sf::Vector2f>(bigWindow.getPosition());
+    return (static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - windowPos);
+}
+
+void boardMaster::processLeftClick()
+{
+    clickedPoint = getMousePosition();
+
+    //std::cout << clickedPoint.x << " " << clickedPoint.y << std::endl;
+
+    for (auto &piece : pieces){
+        if (piece.contains(clickedPoint)){
+            currentPiece = &piece;
+            break;
+        }
+    }
+}
+
+void boardMaster::processMouseMove()
+{
+    if (currentPiece){
+        /*sf::Vector2f mouseCurrentPoint = getMousePosition();
+        sf::Vector2f mouseDifference = (mouseCurrentPoint - clickedPoint);
+        clickedPoint = mouseCurrentPoint;*/
+
+        currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
+    }
 }

@@ -31,15 +31,25 @@ private:
     std::vector<pieceSprite> pieces;
     std::vector<std::vector<int> > cells;
 
+    pieceSprite *currentPiece;
+    sf::Vector2f clickedPoint;
+
 
 public:
-    boardMaster();
+    boardMaster(sf::Window &theWindow);
 
     sfg::Canvas::Ptr window_;
+    sf::Window &bigWindow; //only to know its position
 
     void display();
 
     sf::Vector2f cellToPosition(const int row, const int col);
+
+    sf::Vector2f getMousePosition(); //mouse position in the canvas' coords
+
+    //slots
+    void processLeftClick();
+    void processMouseMove();
 };
 
 #endif // BOARDMASTER_H

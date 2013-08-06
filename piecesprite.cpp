@@ -12,7 +12,7 @@ pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &positio
     sf::Sprite::setPosition(position);
 }
 
-bool pieceSprite::contains(const sf::Vector2f &point)
+bool pieceSprite::contains(const sf::Vector2f &point) const
 {
     return getGlobalBounds().contains(point);
 }

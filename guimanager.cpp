@@ -7,7 +7,7 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
-    boardMaster boss;
+    boardMaster boss(window);
 
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
     //boardWindow->SetTitle( "Board" );
@@ -18,7 +18,6 @@ void guiManager::run()
 
     window.resetGLStates();
     sf::Clock clock;
-    boss.display();
 
     while (window.isOpen())
     {
@@ -37,7 +36,7 @@ void guiManager::run()
         desktop.Update(clock.restart().asSeconds());
 
         window.clear();
-
+        boss.display();
         sfgui_.Display(window);
         window.display();
     }
