@@ -50,6 +50,7 @@ public:
     //slots
     void processLeftClick();
     void processMouseMove();
+    void processMouseRelease();
 };
 
 #endif // BOARDMASTER_H

@@ -8,8 +8,9 @@ boardMaster::boardMaster(sf::Window &theWindow):
     bigWindow(theWindow)
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
-    window_->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::processLeftClick, this);
+    window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
+    window_->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&boardMaster::processMouseRelease, this);
 
 
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
@@ -103,4 +104,9 @@ void boardMaster::processMouseMove()
 
         currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
     }
+}
+
+void boardMaster::processMouseRelease()
+{
+    currentPiece = nullptr;
 }
