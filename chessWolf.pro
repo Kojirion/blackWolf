@@ -11,6 +11,7 @@ SOURCES += main.cpp \
 QMAKE_CXXFLAGS += -std=c++11
 
 LIBS += /usr/local/lib/libsfgui.so
+LIBS += /usr/local/lib/libthor.so
 LIBS += /usr/local/lib/libsfml-graphics.so.2
 LIBS += /usr/local/lib/libsfml-window.so.2
 LIBS += /usr/local/lib/libsfml-system.so.2

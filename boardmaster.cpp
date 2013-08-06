@@ -1,11 +1,13 @@
 #include "boardmaster.h"
+#include <sstream>
 
 boardMaster::boardMaster(sf::Window &theWindow):
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
     currentPiece(nullptr),
     bigWindow(theWindow),
-    turnColor(1)
+    turnColor(1),
+    turnLabel_(sfg::Label::Create("White to play"))
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
@@ -62,6 +64,15 @@ boardMaster::boardMaster(sf::Window &theWindow):
         }
     }
 
+    whiteClock.restart(sf::seconds(300));
+    blackClock.restart(sf::seconds(300));
+    blackClock.stop();
+
+    whiteClockLabel_ = sfg::Label::Create();
+    blackClockLabel_ = sfg::Label::Create();
+    updateClocks();
+
+
 
 
 
@@ -74,6 +85,8 @@ void boardMaster::display()
     window_->Draw(boardSprite_);
 
     for (auto piece : pieces) window_->Draw(piece);
+
+    updateClocks();
 
     //window_->Display();
 
@@ -93,6 +106,20 @@ sf::Vector2f boardMaster::getMousePosition()
 int boardMaster::getTurnColor() const
 {
     return turnColor;
+}
+
+void boardMaster::switchTurn()
+{
+    turnColor *= -1;
+    if (turnColor == 1){
+        blackClock.stop();
+        whiteClock.start();
+        turnLabel_->SetText("White to play");
+    }else{
+        whiteClock.stop();
+        blackClock.start();
+        turnLabel_->SetText("Black to play");
+    }
 }
 
 void boardMaster::processLeftClick()
@@ -130,11 +157,26 @@ void boardMaster::processMouseRelease()
                 if (rectGrid[i][j].contains(centrePos)){
                     currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
                     currentPiece = nullptr;
-                    turnColor *= -1;
+                    switchTurn();
                     return;
                 }
             }
         }
         currentPiece = nullptr;
     }
+}
+
+std::string boardMaster::toString(sf::Time value) const
+{
+    std::ostringstream stream;
+    stream.setf(std::ios_base::fixed);
+    stream.precision(2);
+    stream << value.asSeconds();
+    return stream.str();
+}
+
+void boardMaster::updateClocks()
+{
+    whiteClockLabel_->SetText(toString(whiteClock.getRemainingTime()));
+    blackClockLabel_->SetText(toString(blackClock.getRemainingTime()));
 }

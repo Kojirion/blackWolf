@@ -2,12 +2,16 @@
 #define BOARDMASTER_H
 #include <SFML/Graphics.hpp>
 #include <SFGUI/Canvas.hpp>
+#include <SFGUI/Label.hpp>
+#include <Thor/Time/Timer.hpp>
 #include "piecesprite.h"
 #include "position.h"
 
 class boardMaster
 {
 private:
+    sf::Window &bigWindow; //only to know its position
+
     int turnColor;
 
     sf::Vector2f flipOffset;
@@ -37,12 +41,17 @@ private:
     pieceSprite *currentPiece;
     sf::Vector2f clickedPoint;
 
+    thor::Timer whiteClock;
+    thor::Timer blackClock;
+
 
 public:
     boardMaster(sf::Window &theWindow);
 
     sfg::Canvas::Ptr window_;
-    sf::Window &bigWindow; //only to know its position
+    sfg::Label::Ptr turnLabel_;
+    sfg::Label::Ptr whiteClockLabel_;
+    sfg::Label::Ptr blackClockLabel_;
 
     void display();
 
@@ -52,10 +61,16 @@ public:
 
     int getTurnColor() const;
 
+    void switchTurn();
+
+    std::string toString(sf::Time value) const;
+    void updateClocks();
+
     //slots
     void processLeftClick();
     void processMouseMove();
     void processMouseRelease();
+
 };
 
 #endif // BOARDMASTER_H
