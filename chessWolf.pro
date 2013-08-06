@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     boardmaster.cpp \
     piecesprite.cpp \
     position.cpp \
-    guimanager.cpp
+    guimanager.cpp \
+    boardmove.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -22,5 +23,6 @@ HEADERS += \
     boardmaster.h \
     piecesprite.h \
     position.h \
-    guimanager.h
+    guimanager.h \
+    boardmove.h
 

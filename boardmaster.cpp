@@ -16,7 +16,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
     window_->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&boardMaster::processMouseRelease, this);
 
-    bool didIt = font.loadFromFile("DejaVuSans.ttf"); //assert it
+    font.loadFromFile("DejaVuSans.ttf"); //assert it
 
 
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
@@ -68,13 +68,11 @@ boardMaster::boardMaster(sf::Window &theWindow):
         }
     }
 
-    sf::Text whiteClockText;
     whiteClockText.setFont(font);
     whiteClockText.setCharacterSize(20);
     //whiteClockText.setPosition(0.f, 0.f);
     whiteClockText.setColor(sf::Color(0, 140, 190));
 
-    sf::Text blackClockText;
     blackClockText.setFont(font);
     blackClockText.setCharacterSize(20);
     //blackClockText.setPosition(70.f, 150.f);
@@ -205,6 +203,5 @@ void boardMaster::updateClocks()
 
     blackClockText.setString(toString(blackClock.getRemainingTime()));
     blackClockCanvas_->Clear();
-    blackClockCanvas_->Draw(blackClockText);
-    blackClockCanvas_->Display();
+    blackClockCanvas_->Draw(blackClockText);    
 }
