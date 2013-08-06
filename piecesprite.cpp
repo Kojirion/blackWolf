@@ -1,15 +1,20 @@
 #include "piecesprite.h"
 
-pieceSprite::pieceSprite(const sf::Texture &texture):
-    sf::Sprite(texture)
+pieceSprite::pieceSprite(const sf::Texture &texture, int theSide):
+    sf::Sprite(texture), side(theSide)
 {
 
 }
 
-pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position):
-    sf::Sprite(texture)
+pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide):
+    sf::Sprite(texture), side(theSide)
 {
     sf::Sprite::setPosition(position);
+}
+
+int pieceSprite::getSide() const
+{
+    return side;
 }
 
 bool pieceSprite::contains(const sf::Vector2f &point) const

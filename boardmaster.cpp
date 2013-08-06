@@ -1,11 +1,11 @@
 #include "boardmaster.h"
 
 boardMaster::boardMaster(sf::Window &theWindow):
-    offset(0,0),
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
     currentPiece(nullptr),
-    bigWindow(theWindow)
+    bigWindow(theWindow),
+    turnColor(1)
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
@@ -14,8 +14,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
 
 
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
-    boardSprite_.setTexture(boardTexture_);
-    boardSprite_.setPosition(offset);
+    boardSprite_.setTexture(boardTexture_);    
 
     blackRookT.loadFromFile("Graphics/Pieces/BlackR.png");
     blackBishopT.loadFromFile("Graphics/Pieces/BlackB.png");
@@ -30,28 +29,38 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteKingT.loadFromFile("Graphics/Pieces/WhiteK.png");
     whitePawnT.loadFromFile("Graphics/Pieces/WhiteP.png");
 
-    pieces.emplace_back(blackRookT,cellToPosition(7,0));
-    pieces.emplace_back(blackRookT,cellToPosition(7,7));
-    pieces.emplace_back(blackKnightT,cellToPosition(7,1));
-    pieces.emplace_back(blackKnightT,cellToPosition(7,6));
-    pieces.emplace_back(blackBishopT,cellToPosition(7,2));
-    pieces.emplace_back(blackBishopT,cellToPosition(7,5));
-    pieces.emplace_back(blackQueenT,cellToPosition(7,3));
-    pieces.emplace_back(blackKingT,cellToPosition(7,4));
+    pieces.emplace_back(blackRookT,cellToPosition(7,0),-1);
+    pieces.emplace_back(blackRookT,cellToPosition(7,7),-1);
+    pieces.emplace_back(blackKnightT,cellToPosition(7,1),-1);
+    pieces.emplace_back(blackKnightT,cellToPosition(7,6),-1);
+    pieces.emplace_back(blackBishopT,cellToPosition(7,2),-1);
+    pieces.emplace_back(blackBishopT,cellToPosition(7,5),-1);
+    pieces.emplace_back(blackQueenT,cellToPosition(7,3),-1);
+    pieces.emplace_back(blackKingT,cellToPosition(7,4),-1);
     for (int i=0; i<8; ++i)
-        pieces.emplace_back(blackPawnT,cellToPosition(6,i));
-    pieces.emplace_back(whiteRookT,cellToPosition(0,0));
-    pieces.emplace_back(whiteRookT,cellToPosition(0,7));
-    pieces.emplace_back(whiteKnightT,cellToPosition(0,1));
-    pieces.emplace_back(whiteKnightT,cellToPosition(0,6));
-    pieces.emplace_back(whiteBishopT,cellToPosition(0,2));
-    pieces.emplace_back(whiteBishopT,cellToPosition(0,5));
-    pieces.emplace_back(whiteQueenT,cellToPosition(0,3));
-    pieces.emplace_back(whiteKingT,cellToPosition(0,4));
+        pieces.emplace_back(blackPawnT,cellToPosition(6,i),-1);
+    pieces.emplace_back(whiteRookT,cellToPosition(0,0),1);
+    pieces.emplace_back(whiteRookT,cellToPosition(0,7),1);
+    pieces.emplace_back(whiteKnightT,cellToPosition(0,1),1);
+    pieces.emplace_back(whiteKnightT,cellToPosition(0,6),1);
+    pieces.emplace_back(whiteBishopT,cellToPosition(0,2),1);
+    pieces.emplace_back(whiteBishopT,cellToPosition(0,5),1);
+    pieces.emplace_back(whiteQueenT,cellToPosition(0,3),1);
+    pieces.emplace_back(whiteKingT,cellToPosition(0,4),1);
     for (int i=0; i<8; ++i)
-        pieces.emplace_back(whitePawnT,cellToPosition(1,i));
+        pieces.emplace_back(whitePawnT,cellToPosition(1,i),1);
 
-    //currentPiece = &pieces[0];
+    rectGrid.resize(8);
+    for (int i=0; i<8; ++i){
+        rectGrid[i].resize(8);
+        for (int j=0; j<8; ++j){
+            sf::Vector2f toSet = cellToPosition(i,j);
+            rectGrid[i][j].left = toSet.x;
+            rectGrid[i][j].top = toSet.y;
+            rectGrid[i][j].width = 50.f;
+            rectGrid[i][j].height = 50.f;
+        }
+    }
 
 
 
@@ -81,6 +90,11 @@ sf::Vector2f boardMaster::getMousePosition()
     return (static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - windowPos);
 }
 
+int boardMaster::getTurnColor() const
+{
+    return turnColor;
+}
+
 void boardMaster::processLeftClick()
 {
     clickedPoint = getMousePosition();
@@ -89,6 +103,7 @@ void boardMaster::processLeftClick()
 
     for (auto &piece : pieces){
         if (piece.contains(clickedPoint)){
+            if (piece.getSide()!=turnColor) return;
             currentPiece = &piece;
             break;
         }
@@ -108,5 +123,18 @@ void boardMaster::processMouseMove()
 
 void boardMaster::processMouseRelease()
 {
-    currentPiece = nullptr;
+    if (currentPiece){
+        sf::Vector2f centrePos = currentPiece->getPosition() + sf::Vector2f(25.f,25.f);
+        for (int i=0; i<8; ++i){
+            for (int j=0; j<8; ++j){
+                if (rectGrid[i][j].contains(centrePos)){
+                    currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
+                    currentPiece = nullptr;
+                    turnColor *= -1;
+                    return;
+                }
+            }
+        }
+        currentPiece = nullptr;
+    }
 }

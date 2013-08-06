@@ -8,7 +8,8 @@
 class boardMaster
 {
 private:
-    sf::Vector2f offset;
+    int turnColor;
+
     sf::Vector2f flipOffset;
 
     sf::Texture boardTexture_;
@@ -31,6 +32,8 @@ private:
     std::vector<pieceSprite> pieces;
     std::vector<std::vector<int> > cells;
 
+    std::vector<std::vector<sf::FloatRect> > rectGrid;
+
     pieceSprite *currentPiece;
     sf::Vector2f clickedPoint;
 
@@ -46,6 +49,8 @@ public:
     sf::Vector2f cellToPosition(const int row, const int col);
 
     sf::Vector2f getMousePosition(); //mouse position in the canvas' coords
+
+    int getTurnColor() const;
 
     //slots
     void processLeftClick();
