@@ -1,7 +1,8 @@
 #include "piecesprite.h"
+#include <boost/math/special_functions/sign.hpp>
 
-pieceSprite::pieceSprite(const sf::Texture &texture, int theSide):
-    sf::Sprite(texture), side(theSide)
+pieceSprite::pieceSprite(const sf::Texture &texture, int theType):
+    sf::Sprite(texture), pieceType(theType)
 {
 
 }
@@ -14,7 +15,7 @@ pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &positio
 
 int pieceSprite::getSide() const
 {
-    return side;
+    return boost::math::sign(pieceType)
 }
 
 bool pieceSprite::contains(const sf::Vector2f &point) const

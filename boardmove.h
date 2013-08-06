@@ -7,8 +7,6 @@ class boardMove
 private:
     position &board;
 
-    position newBoard;
-
     int row1;
     int col1;
     int row2;
@@ -28,6 +26,8 @@ private:
 
 public:
     boardMove(position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
+
+    position newBoard;
 };
 
 #endif // BOARDMOVE_H

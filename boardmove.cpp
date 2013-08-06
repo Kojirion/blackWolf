@@ -17,6 +17,26 @@ boardMove::boardMove(position &thePosition, const int theRow1, const int theCol1
     BOOST_ASSERT_MSG(pieceCode != 0, "No piece in starting square");
 }
 
+bool boardMove::isLegal()
+{
+    if (isOccupied()) return false;
+
+    switch (std::abs(pieceCode)) {
+    case 1:
+        return isRookLegal();
+    case 2:
+        return isBishopLegal();
+    case 3:
+        return isKnightLegal();
+    case 4:
+        return isQueenLegal();
+    case 5:
+        return isPawnLegal();
+    case 6:
+        return isKingLegal();
+    }
+}
+
 
 bool boardMove::isOccupied() const
 {

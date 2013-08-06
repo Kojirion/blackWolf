@@ -4,7 +4,8 @@ position::position()
 {
 }
 
-position::position(const position &givenPos, const int row1, const int col1, const int row2, const int col2)
+position::position(const position &givenPos, const int row1, const int col1, const int row2, const int col2):
+    turnColor(-givenPos.turnColor)
 {
     //makes a new position out of the given one, moving the piece on first to square to second
     //must add functionality for castling and en passant
