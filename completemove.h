@@ -13,6 +13,8 @@ public:
 
     bool isLegal() const;
 
+    position getNewBoard() const;
+
 
 };
 

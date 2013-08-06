@@ -1,12 +1,12 @@
 #include "boardmaster.h"
 #include <sstream>
+#include <boost/assert.hpp>
 
 boardMaster::boardMaster(sf::Window &theWindow):
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
     currentPiece(nullptr),
     bigWindow(theWindow),
-    turnColor(1),
     turnLabel_(sfg::Label::Create("White to play")),
     whiteClockCanvas_(sfg::Canvas::Create()),
     blackClockCanvas_(sfg::Canvas::Create())
@@ -15,6 +15,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
     window_->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&boardMaster::processMouseRelease, this);
+    window_->GetSignal(sfg::Widget::OnMouseEnter).Connect(&boardMaster::processEnterCanvas, this);
 
     font.loadFromFile("DejaVuSans.ttf"); //assert it
 
@@ -40,7 +41,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
             const int pieceId = currentPosition[i][j];
             if (pieceId==0) continue;
             //const sf::Texture &pieceTexture = idToTexture(pieceId);
-            pieces.emplace_back(idToTexture(pieceId),cellToPosition(i,j),pieceId);
+            pieces.emplace_back(idToTexture(pieceId),cellToPosition(i,j),pieceId,i,j);
         }
     }
 
@@ -140,13 +141,12 @@ sf::Vector2f boardMaster::getMousePosition()
 
 int boardMaster::getTurnColor() const
 {
-    return turnColor;
+    return currentPosition.turnColor;
 }
 
 void boardMaster::switchTurn()
 {
-    turnColor *= -1;
-    if (turnColor == 1){
+    if (getTurnColor() == 1){
         blackClock.stop();
         whiteClock.start();
         turnLabel_->SetText("White to play");
@@ -157,15 +157,23 @@ void boardMaster::switchTurn()
     }
 }
 
+void boardMaster::sendBack()
+{
+    BOOST_ASSERT_MSG(currentPiece, "No current piece to send back");
+
+    currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
+    currentPiece = nullptr;
+}
+
 void boardMaster::processLeftClick()
 {
     clickedPoint = getMousePosition();
 
-    //std::cout << clickedPoint.x << " " << clickedPoint.y << std::endl;
+    const int whoseTurn = getTurnColor();
 
     for (auto &piece : pieces){
         if (piece.contains(clickedPoint)){
-            if (piece.getSide()!=turnColor) return;
+            if (piece.getSide()!=whoseTurn) return;
             currentPiece = &piece;
             break;
         }
@@ -174,11 +182,7 @@ void boardMaster::processLeftClick()
 
 void boardMaster::processMouseMove()
 {
-    if (currentPiece){
-        /*sf::Vector2f mouseCurrentPoint = getMousePosition();
-        sf::Vector2f mouseDifference = (mouseCurrentPoint - clickedPoint);
-        clickedPoint = mouseCurrentPoint;*/
-
+    if (currentPiece){        
         currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
     }
 }
@@ -190,14 +194,27 @@ void boardMaster::processMouseRelease()
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
-                    currentPiece = nullptr;
-                    switchTurn();
+                    completeMove toCheck(currentPosition,currentPiece->row,currentPiece->col,i,j);
+                    if (toCheck.isLegal()){
+                        currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
+                        currentPiece = nullptr;
+                        currentPosition = toCheck.getNewBoard();
+                        switchTurn();
+                    }else{
+                        sendBack();
+                    }
                     return;
                 }
             }
         }
-        currentPiece = nullptr;
+        sendBack();
+    }
+}
+
+void boardMaster::processEnterCanvas()
+{
+    if (currentPiece){
+        if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) sendBack();
     }
 }
 

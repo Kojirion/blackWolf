@@ -13,8 +13,6 @@ class boardMaster
 private:
     sf::Window &bigWindow; //only to know its position
 
-    int turnColor;
-
     sf::Font font;
 
     sf::Vector2f flipOffset;
@@ -69,6 +67,8 @@ public:
 
     void switchTurn();
 
+    void sendBack(); //sends the current piece back
+
     std::string toString(sf::Time value) const;
     void updateClocks();
 
@@ -76,6 +76,7 @@ public:
     void processLeftClick();
     void processMouseMove();
     void processMouseRelease();
+    void processEnterCanvas();
 
 };
 

@@ -11,7 +11,7 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
     col2(theCol2),
     newBoard(thePosition,theRow1,theCol1,theRow2,theCol2)
 {
-    BOOST_ASSERT_MSG((row1!=row2)||(col1!=col2), "Start and end square are the same");
+    //BOOST_ASSERT_MSG((row1!=row2)||(col1!=col2), "Start and end square are the same");
 
     pieceCode = board[row1][col1];
     BOOST_ASSERT_MSG(pieceCode != 0, "No piece in starting square");

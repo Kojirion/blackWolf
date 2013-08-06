@@ -24,6 +24,8 @@ position::position(const position &givenPos, const int row1, const int col1, con
 
 void position::init()
 {
+    turnColor = 1;
+
     cells[0][0] = 1;
     cells[0][1] = 3;
     cells[0][2] = 2;

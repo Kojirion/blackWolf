@@ -8,8 +8,11 @@ class pieceSprite : public sf::Sprite
 private:
     int pieceType;
 public:
-    pieceSprite(const sf::Texture &texture, int theType);
-    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide);
+    //pieceSprite(const sf::Texture &texture, int theType);
+    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide, int theRow, int theCol);
+
+    int row;
+    int col;
     //sf::FloatRect boundingRect;
 
     //void setPosition(float x, float y);

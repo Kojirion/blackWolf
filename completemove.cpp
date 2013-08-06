@@ -58,7 +58,14 @@ int completeMove::sideInCheck() const
 
 bool completeMove::isLegal() const
 {
+    if ((row1==row2)&&(col1==col2)) return false; //start and end are the same
+
     if (!boardMove::isLegal()) return false;
 
     return isCheckSafe();
+}
+
+position completeMove::getNewBoard() const
+{
+    return newBoard;
 }
