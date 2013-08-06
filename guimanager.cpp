@@ -11,9 +11,9 @@ void guiManager::run()
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->Attach(boss.window_,sf::Rect<sf::Uint32>( 0, 0, 1, 8 ));
-    mainLayout->Attach(boss.whiteClockLabel_,sf::Rect<sf::Uint32>( 1, 0, 1, 1 ));
-    mainLayout->Attach(boss.blackClockLabel_,sf::Rect<sf::Uint32>( 1, 1, 1, 1 ));
-    mainLayout->Attach(boss.turnLabel_,sf::Rect<sf::Uint32>( 1, 2, 1, 1 ));
+    mainLayout->Attach(boss.whiteClockCanvas_,sf::Rect<sf::Uint32>( 1, 0, 1, 1 ));
+    mainLayout->Attach(boss.blackClockCanvas_,sf::Rect<sf::Uint32>( 1, 2, 1, 1 ));
+    mainLayout->Attach(boss.turnLabel_,sf::Rect<sf::Uint32>( 1, 3, 1, 1 ));
 
 
     sfg::Window::Ptr boardWindow(sfg::Window::Create());

@@ -14,6 +14,8 @@ private:
 
     int turnColor;
 
+    sf::Font font;
+
     sf::Vector2f flipOffset;
 
     sf::Texture boardTexture_;
@@ -50,8 +52,10 @@ public:
 
     sfg::Canvas::Ptr window_;
     sfg::Label::Ptr turnLabel_;
-    sfg::Label::Ptr whiteClockLabel_;
-    sfg::Label::Ptr blackClockLabel_;
+    sfg::Canvas::Ptr whiteClockCanvas_;
+    sfg::Canvas::Ptr blackClockCanvas_;
+    sf::Text whiteClockText;
+    sf::Text blackClockText;
 
     void display();
 

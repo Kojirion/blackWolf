@@ -7,12 +7,16 @@ boardMaster::boardMaster(sf::Window &theWindow):
     currentPiece(nullptr),
     bigWindow(theWindow),
     turnColor(1),
-    turnLabel_(sfg::Label::Create("White to play"))
+    turnLabel_(sfg::Label::Create("White to play")),
+    whiteClockCanvas_(sfg::Canvas::Create()),
+    blackClockCanvas_(sfg::Canvas::Create())
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
     window_->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&boardMaster::processMouseRelease, this);
+
+    bool didIt = font.loadFromFile("DejaVuSans.ttf"); //assert it
 
 
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
@@ -64,12 +68,27 @@ boardMaster::boardMaster(sf::Window &theWindow):
         }
     }
 
+    sf::Text whiteClockText;
+    whiteClockText.setFont(font);
+    whiteClockText.setCharacterSize(20);
+    //whiteClockText.setPosition(0.f, 0.f);
+    whiteClockText.setColor(sf::Color(0, 140, 190));
+
+    sf::Text blackClockText;
+    blackClockText.setFont(font);
+    blackClockText.setCharacterSize(20);
+    //blackClockText.setPosition(70.f, 150.f);
+    blackClockText.setColor(sf::Color(0, 140, 190));
+
+    whiteClockCanvas_->SetRequisition(sf::Vector2f(100,50));
+    blackClockCanvas_ = sfg::Canvas::Create();
+    blackClockCanvas_->SetRequisition(sf::Vector2f(100,50));
+
     whiteClock.restart(sf::seconds(300));
     blackClock.restart(sf::seconds(300));
     blackClock.stop();
 
-    whiteClockLabel_ = sfg::Label::Create();
-    blackClockLabel_ = sfg::Label::Create();
+
     updateClocks();
 
 
@@ -168,15 +187,24 @@ void boardMaster::processMouseRelease()
 
 std::string boardMaster::toString(sf::Time value) const
 {
+    int minutes = value.asSeconds()/60;
+    int seconds = static_cast<int>(value.asSeconds())%60;
+
     std::ostringstream stream;
     stream.setf(std::ios_base::fixed);
     stream.precision(2);
-    stream << value.asSeconds();
+    stream << minutes << ":" << seconds;
     return stream.str();
 }
 
 void boardMaster::updateClocks()
 {
-    whiteClockLabel_->SetText(toString(whiteClock.getRemainingTime()));
-    blackClockLabel_->SetText(toString(blackClock.getRemainingTime()));
+    whiteClockText.setString(toString(whiteClock.getRemainingTime()));
+    whiteClockCanvas_->Clear();
+    whiteClockCanvas_->Draw(whiteClockText);
+
+    blackClockText.setString(toString(blackClock.getRemainingTime()));
+    blackClockCanvas_->Clear();
+    blackClockCanvas_->Draw(blackClockText);
+    blackClockCanvas_->Display();
 }
