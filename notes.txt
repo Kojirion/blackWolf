@@ -34,6 +34,8 @@ see whether moving opponent piece should be allowed
 improved checkSafe - we don't really need to know if both sides are in check
  --is there a way to turn parts of code off?
 
+make an isObstructed function that will not cause problems with shadow pawns
+
 
 
 

@@ -33,6 +33,8 @@ boardMaster::boardMaster(sf::Window &theWindow):
 {
     releasePiece();
 
+    moveList->SetColumnSpacings(10.f);
+
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
@@ -238,10 +240,10 @@ void boardMaster::processMouseRelease()
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();
-                        //sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
+                        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;
                         const int plyRemainder = (plyCounter)%2;
-                        //moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+                        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
                         plyCounter++;
                     }else{
                         sendBack();

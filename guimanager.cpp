@@ -9,12 +9,16 @@ void guiManager::run()
 {
     boardMaster boss(window);
 
+    sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
+    moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
+    moveListWindow->AddWithViewport(boss.moveList);
+
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
-    mainLayout->Attach(boss.window_,sf::Rect<sf::Uint32>( 0, 0, 1, 8 ),sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
-    mainLayout->Attach(boss.whiteClockCanvas_,sf::Rect<sf::Uint32>( 1, 0, 1, 1 ));
-    mainLayout->Attach(boss.blackClockCanvas_,sf::Rect<sf::Uint32>( 1, 2, 1, 1 ));
-    mainLayout->Attach(boss.turnLabel_,sf::Rect<sf::Uint32>( 1, 3, 1, 1 ));
-    mainLayout->Attach(boss.moveList,sf::Rect<sf::Uint32>( 1, 4, 1, 1 ));
+    mainLayout->Attach(boss.window_,{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(boss.whiteClockCanvas_,{1, 0, 1, 1});
+    mainLayout->Attach(boss.blackClockCanvas_,{1, 2, 1, 1});
+    mainLayout->Attach(boss.turnLabel_,{1, 3, 1, 1});
+    mainLayout->Attach(moveListWindow,{1, 4, 1, 4});
 
 
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
