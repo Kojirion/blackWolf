@@ -6,7 +6,6 @@
 #include <SFGUI/Table.hpp>
 #include <Thor/Time/Timer.hpp>
 #include <boost/bimap.hpp>
-#include <boost/bimap/list_of.hpp>
 #include "piecesprite.h"
 #include "position.h"
 #include "completemove.h"
@@ -28,7 +27,7 @@ public:
     }
 };
 
-typedef boost::bimap<squareId, boost::bimaps::list_of<pieceSprite> > cellsNpieces;
+typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
 
 class boardMaster
 {
@@ -59,11 +58,12 @@ private:
     cellsNpieces pieces;
 
     //std::map<squareId, pieceSprite> pieces;
-    std::vector<std::vector<int> > cells;
-
     std::vector<std::vector<sf::FloatRect> > rectGrid;
 
-    pieceSprite *currentPiece;
+    cellsNpieces::right_iterator currentPiece;
+    bool pieceHeld();
+    void releasePiece();
+    //pieceSprite *currentPiece;
     sf::Vector2f clickedPoint;
 
     thor::Timer whiteClock;
@@ -110,6 +110,9 @@ public:
     void processMouseMove();
     void processMouseRelease();
     void processEnterCanvas();
+
+    //modify functions
+    pieceSprite changePosition(pieceSprite piece, const sf::Vector2f position) const; //returns a new sprite with changed position
 
 };
 

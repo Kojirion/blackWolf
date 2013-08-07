@@ -1,6 +1,17 @@
 #include "boardmaster.h"
 #include <sstream>
 #include <boost/assert.hpp>
+#include <boost/bimap/support/lambda.hpp>
+
+bool boardMaster::pieceHeld()
+{
+    return (currentPiece!=pieces.right.end());
+}
+
+void boardMaster::releasePiece()
+{
+    currentPiece = pieces.right.end();
+}
 
 void boardMaster::destroy(const int row, const int col)
 {
@@ -13,7 +24,6 @@ void boardMaster::destroy(const int row, const int col)
 boardMaster::boardMaster(sf::Window &theWindow):
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
-    currentPiece(nullptr),
     bigWindow(theWindow),
     turnLabel_(sfg::Label::Create("White to play")),
     whiteClockCanvas_(sfg::Canvas::Create()),
@@ -21,6 +31,8 @@ boardMaster::boardMaster(sf::Window &theWindow):
     moveList(sfg::Table::Create()),
     plyCounter(0)
 {
+    releasePiece();
+
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
     window_->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardMaster::processMouseMove, this);
@@ -175,10 +187,10 @@ void boardMaster::switchTurn()
 
 void boardMaster::sendBack()
 {
-    BOOST_ASSERT_MSG(currentPiece, "No current piece to send back");
+    BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
-    currentPiece = nullptr;
+    //currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
+    releasePiece();
 }
 
 void boardMaster::processLeftClick()
@@ -190,7 +202,7 @@ void boardMaster::processLeftClick()
     for (auto &piece : pieces){
         if (piece.right.contains(clickedPoint)){
             if (piece.right.getSide()!=whoseTurn) return;
-            currentPiece = &(piece.right);
+            currentPiece = pieces.right.find(piece.right);
             break;
         }
     }
@@ -198,26 +210,33 @@ void boardMaster::processLeftClick()
 
 void boardMaster::processMouseMove()
 {
-    if (currentPiece){        
-        currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
+    if (pieceHeld()){
+        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
+                changePosition(currentPiece->first,getMousePosition()-sf::Vector2f(25.f,25.f)));
+        //currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
     }
 }
 
 void boardMaster::processMouseRelease()
 {
-    if (currentPiece){
-        sf::Vector2f centrePos = currentPiece->getPosition() + sf::Vector2f(25.f,25.f);
+    if (pieceHeld()){
+        sf::Vector2f centrePos = currentPiece->first.getPosition() + sf::Vector2f(25.f,25.f);
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    const int originRow = currentPiece->row;
-                    const int originCol = currentPiece->col;
+                    const int originRow = currentPiece->first.row;
+                    const int originCol = currentPiece->first.col;
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
                         destroy(i,j);
-                        currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
-                        currentPiece->setCell(i,j);
-                        currentPiece = nullptr;
+                        pieces.right.modify_data(currentPiece, boost::bimaps::_data = squareId(i,j));
+                        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
+                                changePosition(currentPiece->first,sf::Vector2f(rectGrid[i][j].left,rectGrid[i][j].top)));
+
+                        //pieces.right[*currentPiece] = squareId(i,j);
+                        //currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
+                        //currentPiece->setCell(i,j);
+                        releasePiece();
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();
                         sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
@@ -238,9 +257,15 @@ void boardMaster::processMouseRelease()
 
 void boardMaster::processEnterCanvas()
 {
-    if (currentPiece){
+    if (pieceHeld()){
         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) sendBack();
     }
+}
+
+pieceSprite boardMaster::changePosition(pieceSprite piece, const sf::Vector2f position) const
+{
+    piece.setPosition(position);
+    return piece;
 }
 
 std::string boardMaster::toString(sf::Time value) const

@@ -2,3 +2,13 @@ Boost::bimap :
     By using list_of, there's no need for pieceSprite ids.
     The danger is that list implementation may invalidate pointer to sprite
     Alternative is to have a const pointer to currentSprite and use bimap modify functions to set position
+
+    Now pieceSprite row and col are useless.
+
+    Should add tags to make bimap more descriptive.
+
+    currentPiece could hold an iterator instead of a pointer.
+
+
+
+
