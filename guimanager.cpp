@@ -14,6 +14,7 @@ void guiManager::run()
     mainLayout->Attach(boss.whiteClockCanvas_,sf::Rect<sf::Uint32>( 1, 0, 1, 1 ));
     mainLayout->Attach(boss.blackClockCanvas_,sf::Rect<sf::Uint32>( 1, 2, 1, 1 ));
     mainLayout->Attach(boss.turnLabel_,sf::Rect<sf::Uint32>( 1, 3, 1, 1 ));
+    mainLayout->Attach(boss.moveList,sf::Rect<sf::Uint32>( 1, 4, 1, 1 ));
 
 
     sfg::Window::Ptr boardWindow(sfg::Window::Create());

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFGUI/Canvas.hpp>
 #include <SFGUI/Label.hpp>
+#include <SFGUI/Table.hpp>
 #include <Thor/Time/Timer.hpp>
 #include "piecesprite.h"
 #include "position.h"
@@ -45,6 +46,8 @@ private:
     thor::Timer whiteClock;
     thor::Timer blackClock;
 
+    int plyCounter;
+
 
 public:
     boardMaster(sf::Window &theWindow);
@@ -55,6 +58,7 @@ public:
     sfg::Canvas::Ptr blackClockCanvas_;
     sf::Text whiteClockText;
     sf::Text blackClockText;
+    sfg::Table::Ptr moveList;
 
     void display();
 
@@ -70,6 +74,10 @@ public:
     void sendBack(); //sends the current piece back
 
     std::string toString(sf::Time value) const;
+    std::string colToString(const int col) const;
+    std::string moveToString(const int row1, const int col1, const int row2, const int col2) const;
+    std::string cellToString(const int row, const int col) const;
+
     void updateClocks();
 
     //slots

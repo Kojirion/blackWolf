@@ -9,7 +9,9 @@ boardMaster::boardMaster(sf::Window &theWindow):
     bigWindow(theWindow),
     turnLabel_(sfg::Label::Create("White to play")),
     whiteClockCanvas_(sfg::Canvas::Create()),
-    blackClockCanvas_(sfg::Canvas::Create())
+    blackClockCanvas_(sfg::Canvas::Create()),
+    moveList(sfg::Table::Create()),
+    plyCounter(0)
 {
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
@@ -194,12 +196,19 @@ void boardMaster::processMouseRelease()
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    completeMove toCheck(currentPosition,currentPiece->row,currentPiece->col,i,j);
+                    const int originRow = currentPiece->row;
+                    const int originCol = currentPiece->col;
+                    completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
                         currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
                         currentPiece = nullptr;
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();
+                        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
+                        const int plyPairsCount = plyCounter/2;
+                        const int plyRemainder = (plyCounter)%2;
+                        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+                        plyCounter++;
                     }else{
                         sendBack();
                     }
@@ -228,6 +237,38 @@ std::string boardMaster::toString(sf::Time value) const
     stream.precision(2);
     stream << minutes << ":" << seconds;
     return stream.str();
+}
+
+std::string boardMaster::colToString(const int col) const
+{
+    switch (col) {
+    case 0:
+        return "a";
+    case 1:
+        return "b";
+    case 2:
+        return "c";
+    case 3:
+        return "d";
+    case 4:
+        return "e";
+    case 5:
+        return "f";
+    case 6:
+        return "g";
+    case 7:
+        return "h";
+    }
+}
+
+std::string boardMaster::moveToString(const int row1, const int col1, const int row2, const int col2) const
+{
+    return (cellToString(row1,col1) + "-" + cellToString(row2,col2));
+}
+
+std::string boardMaster::cellToString(const int row, const int col) const
+{
+    return (colToString(col) + std::to_string(row+1));
 }
 
 void boardMaster::updateClocks()
