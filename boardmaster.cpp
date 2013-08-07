@@ -4,15 +4,9 @@
 
 void boardMaster::destroy(const int row, const int col)
 {
-    std::vector<pieceSprite>::iterator it;
-    std::vector<pieceSprite>::const_iterator itEnd = pieces.end();
+    squareId toDelete(row,col);
 
-    for (it = pieces.begin(); it!=itEnd; ++it){
-        if ((it->row==row)&&(it->col==col)){
-            pieces.erase(it);
-            return;
-        }
-    }
+    pieces.left.erase(toDelete);
 
 }
 
@@ -52,12 +46,17 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteKingT.loadFromFile("Graphics/Pieces/WhiteK.png");
     whitePawnT.loadFromFile("Graphics/Pieces/WhiteP.png");
 
+    int idCount = 1;
+
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const int pieceId = currentPosition[i][j];
             if (pieceId==0) continue;
             //const sf::Texture &pieceTexture = idToTexture(pieceId);
-            pieces.emplace_back(idToTexture(pieceId),cellToPosition(i,j),pieceId,i,j);
+            squareId cellId(i,j);
+            pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId,i,j,idCount);
+            pieces.insert(cellsNpieces::value_type(cellId,toAdd));
+            idCount++;
         }
     }
 
@@ -106,8 +105,9 @@ void boardMaster::display()
 
     window_->Draw(boardSprite_);
 
-    for (auto piece : pieces) window_->Draw(piece);
-
+    for (auto &piece : pieces){
+        window_->Draw(piece.right);
+    }
     updateClocks();
 
     //window_->Display();
@@ -188,9 +188,9 @@ void boardMaster::processLeftClick()
     const int whoseTurn = getTurnColor();
 
     for (auto &piece : pieces){
-        if (piece.contains(clickedPoint)){
-            if (piece.getSide()!=whoseTurn) return;
-            currentPiece = &piece;
+        if (piece.right.contains(clickedPoint)){
+            if (piece.right.getSide()!=whoseTurn) return;
+            currentPiece = &(piece.right);
             break;
         }
     }

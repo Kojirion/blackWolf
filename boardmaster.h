@@ -5,9 +5,30 @@
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Table.hpp>
 #include <Thor/Time/Timer.hpp>
+#include <boost/bimap.hpp>
+#include <boost/bimap/list_of.hpp>
 #include "piecesprite.h"
 #include "position.h"
 #include "completemove.h"
+
+class squareId{
+public:
+    int row;
+    int col;
+
+    squareId(int theRow, int theCol):
+        row(theRow),col(theCol)
+    {
+
+    }
+
+    bool operator< (const squareId &that) const{
+        if(row==that.row) return (col<that.col);
+        return (row<that.row);
+    }
+};
+
+typedef boost::bimap<squareId, boost::bimaps::list_of<pieceSprite> > cellsNpieces;
 
 class boardMaster
 {
@@ -33,9 +54,11 @@ private:
     sf::Texture whiteKnightT;
     sf::Texture whiteQueenT;
     sf::Texture whiteKingT;
-    sf::Texture whitePawnT;    
+    sf::Texture whitePawnT;
 
-    std::vector<pieceSprite> pieces;
+    cellsNpieces pieces;
+
+    //std::map<squareId, pieceSprite> pieces;
     std::vector<std::vector<int> > cells;
 
     std::vector<std::vector<sf::FloatRect> > rectGrid;
