@@ -15,6 +15,8 @@ completeMove::completeMove(position &thePosition, const int theRow1, const int t
 
 int completeMove::sideInCheck() const
 {
+    return 0; //forego the check for now
+
     //returns which side is in check, 2 for both
     int whichSide = 0;
 
@@ -58,8 +60,6 @@ int completeMove::sideInCheck() const
 
 bool completeMove::isLegal() const
 {
-    if ((row1==row2)&&(col1==col2)) return false; //start and end are the same
-
     if (!boardMove::isLegal()) return false;
 
     return isCheckSafe();

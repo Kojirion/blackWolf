@@ -238,10 +238,10 @@ void boardMaster::processMouseRelease()
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();
-                        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
+                        //sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;
                         const int plyRemainder = (plyCounter)%2;
-                        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+                        //moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
                         plyCounter++;
                     }else{
                         sendBack();

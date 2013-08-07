@@ -13,12 +13,16 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
 {
     //BOOST_ASSERT_MSG((row1!=row2)||(col1!=col2), "Start and end square are the same");
 
+
     pieceCode = board[row1][col1];
     BOOST_ASSERT_MSG(pieceCode != 0, "No piece in starting square");
+    BOOST_ASSERT_MSG(pieceCode*board.turnColor>0, "Trying to move opponent's piece");
 }
 
 bool boardMove::isLegal() const
 {
+    if (startEndSame()) return false;
+
     if (isOccupied()) return false;
 
     switch (std::abs(pieceCode)) {
@@ -37,6 +41,11 @@ bool boardMove::isLegal() const
     }
 }
 
+
+bool boardMove::startEndSame() const
+{
+    return ((row1==row2)&&(col1==col2));
+}
 
 bool boardMove::isOccupied() const
 {
@@ -60,21 +69,19 @@ bool boardMove::isKnightLegal() const
 
 bool boardMove::isBishopLegal() const
 {
+
+    const int deltaRow = row2 - row1;
+    const int deltaCol = col2 - col1;
+
     //if not in same diagonal, do not proceed
-    if (std::abs(row2 - row1) != std::abs(col2 - col1)) return false;
+    if (std::abs(deltaRow) != std::abs(deltaCol)) return false;
 
-    //check if path is obstructed
-    const int signRowDiff = boost::math::sign(row2 - row1);
-    const int signColDiff = boost::math::sign(col2 - col1);
-    const int maxRowIt = row2 - row1 - signRowDiff;
-    const int maxColIt = col2 - col1 - signColDiff;
+    const int signRowDiff = boost::math::sign(deltaRow);
+    const int signColDiff = boost::math::sign(deltaCol);
 
-    for (int i=signRowDiff; i<=maxRowIt; i+=signRowDiff){
-        for (int j=signColDiff; j<=maxColIt; j+=signColDiff){
-            if (std::abs(i)==std::abs(j)){
-                if (board[row1+i][col1+j] != 0) return false;
-            }
-        }
+    for (int i=row1+signRowDiff; i!=row2; i+=signRowDiff){
+        int j = col1 + (i-row1)*signColDiff*signRowDiff;
+        if (board[i][j] != 0) return false;
     }
     return true;
 }

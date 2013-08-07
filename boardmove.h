@@ -17,6 +17,8 @@ private:
 
     int pieceCode;
 
+
+    bool startEndSame() const;
     bool isOccupied() const;
     bool isKnightLegal() const;
     bool isBishopLegal() const;

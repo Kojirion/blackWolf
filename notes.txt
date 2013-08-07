@@ -1,15 +1,39 @@
 Boost::bimap :
-    By using list_of, there's no need for pieceSprite ids.
-    The danger is that list implementation may invalidate pointer to sprite
-    Alternative is to have a const pointer to currentSprite and use bimap modify functions to set position
+    -By using list_of, there's no need for pieceSprite ids.
+    -The danger is that list implementation may invalidate pointer to sprite
+    -Alternative is to have a const pointer to currentSprite and use bimap modify functions to set position
 
-    Now pieceSprite row and col are useless.
+    -Now pieceSprite row and col are useless.
 
     Should add tags to make bimap more descriptive.
 
     currentPiece could hold an iterator instead of a pointer.
 
     bishop moves significant slowdown-moves stop registering after a few
+
+    Wrap boost map in a class to improve code clarity
+
+    make mini classes around the clocks
+
+    put the move list in scrolled window, after fixing the slowdown
+
+    sfgui resource manager
+
+does isCheckSafe take into account color?
+
+since we ensure boost::sign won't return 0, could we have better results with a faster one?
+
+Must reinstate the boost assert that squares are distinct
+Should we also assert that the piece to be move is the same color as the turns?
+
+see how original bishop behaves with checkSafe off}
+see how original bishop behaves with amended moves}
+} still slow
+
+see whether moving opponent piece should be allowed
+improved checkSafe - we don't really need to know if both sides are in check
+ --is there a way to turn parts of code off?
+
 
 
 
