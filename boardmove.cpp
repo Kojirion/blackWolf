@@ -118,7 +118,7 @@ bool boardMove::isPawnLegal() const
     //can be rewritten much smaller
 
     if (board[row1][col1]>0){ //white pawn
-        if ((row1==1)&&(col1==3)&&(col1==col2)){ //double advance
+        if ((row1==1)&&(row2==3)&&(col1==col2)){ //double advance
             if ((board[row2][col2]==0)&&(board[2][col2]==0))
                 return true;
         }else{
@@ -130,7 +130,7 @@ bool boardMove::isPawnLegal() const
             }
         }
     }else{
-        if ((row1==6)&&(col1==4)&&(col1==col2)){ //double advance
+        if ((row1==6)&&(row2==4)&&(col1==col2)){ //double advance
             if ((board[row2][col2]==0)&&(board[5][col2]==0))
                 return true;
         }else{

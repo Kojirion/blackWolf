@@ -17,6 +17,8 @@ public:
 
     //void setPosition(float x, float y);
 
+    void setCell(const int theRow, const int theCol);
+
     int getSide() const;
     bool contains(const sf::Vector2f &point) const;
 };

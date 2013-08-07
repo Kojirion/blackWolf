@@ -2,6 +2,20 @@
 #include <sstream>
 #include <boost/assert.hpp>
 
+void boardMaster::destroy(const int row, const int col)
+{
+    std::vector<pieceSprite>::iterator it;
+    std::vector<pieceSprite>::const_iterator itEnd = pieces.end();
+
+    for (it = pieces.begin(); it!=itEnd; ++it){
+        if ((it->row==row)&&(it->col==col)){
+            pieces.erase(it);
+            return;
+        }
+    }
+
+}
+
 boardMaster::boardMaster(sf::Window &theWindow):
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
@@ -200,7 +214,9 @@ void boardMaster::processMouseRelease()
                     const int originCol = currentPiece->col;
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
+                        destroy(i,j);
                         currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
+                        currentPiece->setCell(i,j);
                         currentPiece = nullptr;
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();

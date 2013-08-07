@@ -13,6 +13,12 @@ pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &positio
     sf::Sprite::setPosition(position);
 }
 
+void pieceSprite::setCell(const int theRow, const int theCol)
+{
+    row = theRow;
+    col = theCol;
+}
+
 int pieceSprite::getSide() const
 {
     return boost::math::sign(pieceType);

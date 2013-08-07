@@ -48,6 +48,8 @@ private:
 
     int plyCounter;
 
+    void destroy(const int row, const int col); //will destroy the sprite in given location
+
 
 public:
     boardMaster(sf::Window &theWindow);
