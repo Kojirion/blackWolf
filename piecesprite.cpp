@@ -7,16 +7,10 @@
 
 }*/
 
-pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theType, int theRow, int theCol, int theId):
-    sf::Sprite(texture), pieceType(theType), row(theRow), col(theCol), id(theId)
+pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theType, int theId):
+    sf::Sprite(texture), pieceType(theType), id(theId)
 {
     sf::Sprite::setPosition(position);
-}
-
-void pieceSprite::setCell(const int theRow, const int theCol)
-{
-    row = theRow;
-    col = theCol;
 }
 
 bool pieceSprite::operator <(const pieceSprite &that) const

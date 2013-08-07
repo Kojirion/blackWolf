@@ -10,15 +10,7 @@ private:
     int id;
 public:
     //pieceSprite(const sf::Texture &texture, int theType);
-    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide, int theRow, int theCol, int theId);
-
-    int row;
-    int col;
-    //sf::FloatRect boundingRect;
-
-    //void setPosition(float x, float y);
-
-    void setCell(const int theRow, const int theCol);
+    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theSide, int theId);
 
     bool operator<(const pieceSprite &that) const;
 

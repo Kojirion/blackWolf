@@ -66,7 +66,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
             if (pieceId==0) continue;
             //const sf::Texture &pieceTexture = idToTexture(pieceId);
             squareId cellId(i,j);
-            pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId,i,j,idCount);
+            pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces.insert(cellsNpieces::value_type(cellId,toAdd));
             idCount++;
         }
@@ -189,6 +189,9 @@ void boardMaster::sendBack()
 {
     BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
+    pieces.right.modify_key(currentPiece, boost::bimaps::_key =
+            changePosition(currentPiece->first,cellToPosition(currentPiece->second.row, currentPiece->second.col)));
+
     //currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
     releasePiece();
 }
@@ -213,7 +216,6 @@ void boardMaster::processMouseMove()
     if (pieceHeld()){
         pieces.right.modify_key(currentPiece, boost::bimaps::_key =
                 changePosition(currentPiece->first,getMousePosition()-sf::Vector2f(25.f,25.f)));
-        //currentPiece->setPosition(getMousePosition()-sf::Vector2f(25.f,25.f));
     }
 }
 
@@ -224,8 +226,8 @@ void boardMaster::processMouseRelease()
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    const int originRow = currentPiece->first.row;
-                    const int originCol = currentPiece->first.col;
+                    const int originRow = currentPiece->second.row;
+                    const int originCol = currentPiece->second.col;
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
                         destroy(i,j);
@@ -233,9 +235,6 @@ void boardMaster::processMouseRelease()
                         pieces.right.modify_key(currentPiece, boost::bimaps::_key =
                                 changePosition(currentPiece->first,sf::Vector2f(rectGrid[i][j].left,rectGrid[i][j].top)));
 
-                        //pieces.right[*currentPiece] = squareId(i,j);
-                        //currentPiece->setPosition(rectGrid[i][j].left,rectGrid[i][j].top);
-                        //currentPiece->setCell(i,j);
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
                         switchTurn();

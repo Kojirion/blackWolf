@@ -9,6 +9,8 @@ Boost::bimap :
 
     currentPiece could hold an iterator instead of a pointer.
 
+    bishop moves significant slowdown-moves stop registering after a few
+
 
 
 
