@@ -28,3 +28,6 @@ HEADERS += \
     boardmove.h \
     completemove.h
 
+OTHER_FILES += \
+    notes.txt
+
