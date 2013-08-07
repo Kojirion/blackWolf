@@ -17,14 +17,50 @@ position::position(const position &givenPos, const int row1, const int col1, con
         }
     }
 
+    const int pieceCode = cells[row1][row2];
+
     cells[row2][col2] = cells[row1][col1];
     cells[row1][col1] = 0;
 
+    //this will perform the castle regardless of whether the side has castling rights
+    //will produce gibberish if castling rights have been lost or way is obstructed
+    if (pieceCode==6){
+        if ((row1==0)&&(row2==0)){
+            if (col1==4){
+                if (col2==6){
+                    cells[0][5] = cells[0][7];
+                    cells[0][7] = 0;
+                }else if (col2==2){
+                    cells[0][3] = cells[0][0];
+                    cells[0][0] = 0;
+                }
+            }
+        }
+    }else if (pieceCode==-6){
+        if ((row1==7)&&(row2==7)){
+            if (col1==4){
+                if (col2==6){
+                    cells[7][5] = cells[7][7];
+                    cells[7][7] = 0;
+                }else if (col2==2){
+                    cells[7][3] = cells[7][0];
+                    cells[7][0] = 0;
+                }
+            }
+        }
+    }
+
 }
+
 
 void position::init()
 {
     turnColor = 1;
+
+    whiteCastleQueen = true;
+    whiteCastleKing = true;
+    blackCastleQueen = true;
+    blackCastleKing = true;
 
     cells[0][0] = 1;
     cells[0][1] = 3;

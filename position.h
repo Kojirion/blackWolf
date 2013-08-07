@@ -31,6 +31,10 @@ public:
     }
 
     int turnColor;
+    bool whiteCastleQueen;
+    bool whiteCastleKing;
+    bool blackCastleQueen;
+    bool blackCastleKing;
 
 private:
     int cells[8][8];
