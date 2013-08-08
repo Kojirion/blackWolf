@@ -11,18 +11,28 @@ position::position(const position &givenPos, const int row1, const int col1, con
     whiteCastleKing(givenPos.whiteCastleKing),
     blackCastleQueen(givenPos.blackCastleQueen),
     blackCastleKing(givenPos.blackCastleKing),
-    wasCastle(false)
+    wasCastle(false),
+    wasEnPassant(false)
 {
     //makes a new position out of the given one, moving the piece on first to square to second
     //must add functionality for castling and en passant
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            cells[i][j] = givenPos[i][j];
+            const int givenPiece = givenPos[i][j];
+            if ((givenPiece == 7)||(givenPiece==-7)) cells[i][j] = 0; //clear shadow pawn
+            else cells[i][j] = givenPiece;
         }
     }
 
     const int pieceCode = cells[row1][col1];
+    const int destPiece = givenPos[row2][col2];
+
+    //check if en passant capture
+    if ((destPiece==7)||(destPiece==-7)){ //about to nick a shadow pawn
+        wasEnPassant = true;
+        cells[row2+turnColor][col2] = 0; //remove the true pawn
+    }
 
     cells[row2][col2] = pieceCode;
     cells[row1][col1] = 0;
@@ -78,6 +88,14 @@ position::position(const position &givenPos, const int row1, const int col1, con
         else if ((row1==7)&&(col1==7)) blackCastleKing = false;
         break;
     }
+
+    //create shadow pawn for en passant
+    if (pieceCode==5){
+        if ((row1==1)&&(row2==3)) cells[2][col2] = 7;
+    }else if (pieceCode==-5){
+        if ((row1==6)&&(row2==4)) cells[5][col2] = -7;
+    }
+
 }
 
 
@@ -91,6 +109,7 @@ void position::init()
     blackCastleKing = true;
 
     wasCastle = false;
+    wasEnPassant = false;
 
     cells[0][0] = 1;
     cells[0][1] = 3;

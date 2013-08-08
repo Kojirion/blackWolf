@@ -45,6 +45,16 @@ void boardMaster::handleCastle(const int row, const int col)
     }
 }
 
+void boardMaster::handleEnPassant(const int row, const int col)
+{
+    if (row==5){
+        destroy(4,col);
+    }else{
+        BOOST_ASSERT_MSG(row==2, "Invalid en passant");
+        destroy(3,col);
+    }
+}
+
 void boardMaster::destroy(const int row, const int col)
 {
     squareId toDelete(row,col);
@@ -272,6 +282,7 @@ void boardMaster::processMouseRelease()
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
                         if (currentPosition.wasCastle) handleCastle(i,j);
+                        if (currentPosition.wasEnPassant) handleEnPassant(i,j);
                         switchTurn();
                         sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;

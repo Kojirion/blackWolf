@@ -37,6 +37,7 @@ public:
     bool blackCastleKing;
 
     bool wasCastle;
+    bool wasEnPassant;
 
 private:
     int cells[8][8];
