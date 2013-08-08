@@ -38,6 +38,8 @@ bool boardMove::isLegal() const
         return isPawnLegal();
     case 6:
         return isKingLegal();
+    case 7:
+        return false; //shadow pawn
     }
 }
 
@@ -81,7 +83,7 @@ bool boardMove::isBishopLegal() const
 
     for (int i=row1+signRowDiff; i!=row2; i+=signRowDiff){
         int j = col1 + (i-row1)*signColDiff*signRowDiff;
-        if (board[i][j] != 0) return false;
+        if (isObstructed(board[i][j])) return false;
     }
     return true;
 }
@@ -90,18 +92,18 @@ bool boardMove::isRookLegal() const
 {
     if (row1==row2){
         const int signDiff = boost::math::sign(col2 - col1);
-        const int maxIt = col2 - col1 - signDiff;
+        const int maxIt = col2 - col1;
 
-        for (int i=signDiff; i<=maxIt; i+=signDiff){
-            if (board[row1][col1+i] != 0) return false;
+        for (int i=signDiff; i!=maxIt; i+=signDiff){
+            if (isObstructed(board[row1][col1+i])) return false;
         }
         return true; //no obstruction
     }else if (col1==col2){
         const int signDiff = boost::math::sign(row2 - row1);
-        const int maxIt = row2 - row1 - signDiff;
+        const int maxIt = row2 - row1;
 
-        for (int i=signDiff; i<=maxIt; i+=signDiff){
-            if (board[row1+i][col1] != 0) return false;
+        for (int i=signDiff; i!=maxIt; i+=signDiff){
+            if (isObstructed(board[row1+i][col1])) return false;
         }
         return true; //no obstruction
     }
@@ -157,5 +159,5 @@ bool boardMove::isPawnLegal() const
 
 bool boardMove::isObstructed(const int pieceCode) const
 {
-    return ((pieceCode!=0)&&(pieceCode!=7));
+    return ((pieceCode!=0)&&(pieceCode!=7)&&(pieceCode!=-7));
 }

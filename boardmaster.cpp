@@ -3,6 +3,24 @@
 #include <boost/assert.hpp>
 #include <boost/bimap/support/lambda.hpp>
 
+void boardMaster::setGameEnded(const int result)
+{
+    gameEnded = true;
+
+    switch (result) {
+    case 1:
+        turnLabel_->SetText("White wins!");
+        break;
+    case -1:
+        turnLabel_->SetText("Black wins!");
+        break;
+    case 0:
+        turnLabel_->SetText("Draw!");
+        break;
+    }
+
+}
+
 bool boardMaster::pieceHeld()
 {
     return (currentPiece!=pieces.right.end());
@@ -11,6 +29,11 @@ bool boardMaster::pieceHeld()
 void boardMaster::releasePiece()
 {
     currentPiece = pieces.right.end();
+}
+
+void boardMaster::flagDown(const int side)
+{
+    setGameEnded(-side);
 }
 
 void boardMaster::handleCastle(const int row, const int col)
@@ -73,13 +96,20 @@ boardMaster::boardMaster(sf::Window &theWindow):
     moveList(sfg::Table::Create()),
     plyCounter(0),
     humanColor(1),
-    humanBoth(false)
+    humanBoth(false),
+    gameEnded(false)
 {
     releasePiece();
 
     if (!chessAi.load()) humanBoth = true;
 
+    whiteClock.connect(std::bind(&boardMaster::flagDown, this, 1));
+    blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));
+
+    sfg::Label::Ptr dummyLabel(sfg::Label::Create());
     moveList->SetColumnSpacings(10.f);
+    //moveList->Attach(dummyLabel,{0,0,1,1});
+    //moveList->SetColumnSpacing(0,10.f);
 
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);
@@ -173,7 +203,7 @@ void boardMaster::display()
     for (auto &piece : pieces){
         window_->Draw(piece.right);
     }
-    updateClocks();
+    if (!gameEnded) updateClocks();
 
     //window_->Display();
 
@@ -250,6 +280,8 @@ void boardMaster::switchTurn()
         const int destCol = std::get<3>(moveToMake);
 
         completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
+        BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
+
         cellsNpieces::right_iterator pieceToMove = pieces.project_right(pieces.left.find(squareId(originRow,originCol)));
 
         chessAi.makeMove(originRow,originCol,destRow,destCol);
@@ -267,7 +299,9 @@ void boardMaster::switchTurn()
         const int plyRemainder = (plyCounter)%2;
         moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
         plyCounter++;
-        switchTurn();
+        if (toCheck.isCheckmate()) setGameEnded(-getTurnColor());
+        if (toCheck.isStalemate()) setGameEnded(0);
+        if (!gameEnded) switchTurn();
 
     }
 }
@@ -286,6 +320,7 @@ void boardMaster::switchTurn()
 
     void boardMaster::processLeftClick()
     {
+        if (gameEnded) return;
         if (humanColor != getTurnColor()) return; //must alter this for pre-move in future
 
         clickedPoint = getMousePosition();
@@ -335,7 +370,9 @@ void boardMaster::processMouseRelease()
                         const int plyRemainder = (plyCounter)%2;
                         moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
                         plyCounter++;
-                        switchTurn();
+                        if (toCheck.isCheckmate()) setGameEnded(getTurnColor());
+                        if (toCheck.isStalemate()) setGameEnded(0);
+                        if (!gameEnded) switchTurn();
                     }else{
                         sendBack();
                     }

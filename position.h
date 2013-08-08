@@ -38,6 +38,7 @@ public:
 
     bool wasCastle;
     bool wasEnPassant;
+    bool wasPromotion;
 
 private:
     int cells[8][8];

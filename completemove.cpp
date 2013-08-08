@@ -33,7 +33,7 @@ bool completeMove::isCheckSafe() const
 
 bool completeMove::handleCastle() const
 {
-    if (inCheck()) return false;
+    if (inCheck(board,board.turnColor)) return false;
 
     if (pieceCode==6){
         if (col2==6){ //kingside
@@ -80,15 +80,15 @@ bool completeMove::handleCastle() const
 
 }
 
-bool completeMove::inCheck() const
+bool completeMove::inCheck(const position &givenPos, const int side) const
 {
     int kingRow, kingCol;
 
     for (int i=0; i<8; ++i){
         bool found = false;
         for (int j=0; j<8; ++j){
-            const int pieceId = board[i][j];
-            if (pieceId==6*board.turnColor){ //found our king
+            const int pieceId = givenPos[i][j];
+            if (pieceId==6*side){ //found our king
                 kingRow = i;
                 kingCol = j;
                 break;
@@ -99,14 +99,31 @@ bool completeMove::inCheck() const
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const int pieceId = board[i][j];
-            if (pieceId*board.turnColor<0){ //enemy piece
-                boardMove toCheck(board,i,j,kingRow,kingCol);
+            const int pieceId = givenPos[i][j];
+            if (pieceId*side<0){ //enemy piece
+                boardMove toCheck(givenPos,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return true;
             }
         }
     }
 
+    return false;
+}
+
+bool completeMove::hasLegalMoves() const
+{
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            for (int k=0; k<8; ++k){
+                for (int l=0; l<8; ++l){
+                    if (newBoard[i][j]*newBoard.turnColor>0){
+                        completeMove toCheck(newBoard,i,j,k,l);
+                        if (toCheck.isLegal()) return true;
+                    }
+                }
+            }
+        }
+    }
     return false;
 }
 
@@ -122,6 +139,16 @@ bool completeMove::isLegal() const
     if (!boardMove::isLegal()) return false;
 
     return isCheckSafe();
+}
+
+bool completeMove::isCheckmate() const
+{
+    return ((!hasLegalMoves())&&(inCheck(newBoard,newBoard.turnColor)));
+}
+
+bool completeMove::isStalemate() const
+{
+    return ((!hasLegalMoves())&&(!inCheck(newBoard,newBoard.turnColor)));
 }
 
 position completeMove::getNewBoard() const

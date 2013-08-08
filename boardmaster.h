@@ -4,7 +4,7 @@
 #include <SFGUI/Canvas.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Table.hpp>
-#include <Thor/Time/Timer.hpp>
+#include <Thor/Time/CallbackTimer.hpp>
 #include <boost/bimap.hpp>
 #include "piecesprite.h"
 #include "position.h"
@@ -60,6 +60,8 @@ private:
 
     int humanColor;
     bool humanBoth; //if both players are human
+    bool gameEnded;
+    void setGameEnded(const int result);
     chessEngine chessAi;
 
     //std::map<squareId, pieceSprite> pieces;
@@ -71,8 +73,10 @@ private:
     //pieceSprite *currentPiece;
     sf::Vector2f clickedPoint;
 
-    thor::Timer whiteClock;
-    thor::Timer blackClock;
+    thor::CallbackTimer whiteClock;
+    thor::CallbackTimer blackClock;
+
+    void flagDown(const int side);
 
     int plyCounter;
 

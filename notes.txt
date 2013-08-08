@@ -42,6 +42,26 @@ which both boardMove and boardManager can check.
 
 introduce an optional modifier on construction of move/position to avoid same color error on castling
 
+make a move make function
+checkmate checking
+rook couldn't move bug
+
+dummy cell
+
+add enums instead of pieceCodes
+
+use action maps for shortcuts: draw claims, switch to queen etc
+still need to implement queening
+and handling gameEnd
+
+add get PGN functionality
+add a resultCheck function so that the checks for checkmate/stalemate are not done twice
+
+inCheck code can now be reused
+write movefunction and bimap wrapper
+
+bug: checkmate was not detected
+
 
 
 

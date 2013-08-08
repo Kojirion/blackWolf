@@ -8,13 +8,18 @@ private:
     bool isCheckSafe() const;
     bool handleCastle() const;
 
-    bool inCheck() const;
+    bool inCheck(const position &givenPos, const int side) const; //is given side in check?
+
+    bool hasLegalMoves() const; //checks if the new side will have legal moves in new position
 
 
 public:
     completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
 
     bool isLegal() const;
+
+    bool isCheckmate() const;
+    bool isStalemate() const;
 
     position getNewBoard() const;
 
