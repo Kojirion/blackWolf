@@ -9,6 +9,7 @@
 #include "piecesprite.h"
 #include "position.h"
 #include "completemove.h"
+#include "chessengine.h"
 
 class squareId{
 public:
@@ -57,6 +58,10 @@ private:
 
     cellsNpieces pieces;
 
+    int humanColor;
+    bool humanBoth; //if both players are human
+    chessEngine chessAi;
+
     //std::map<squareId, pieceSprite> pieces;
     std::vector<std::vector<sf::FloatRect> > rectGrid;
 
@@ -79,6 +84,7 @@ private:
 
 public:
     boardMaster(sf::Window &theWindow);
+    ~boardMaster();
 
     sfg::Canvas::Ptr window_;
     sfg::Label::Ptr turnLabel_;

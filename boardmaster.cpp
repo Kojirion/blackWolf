@@ -71,9 +71,13 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteClockCanvas_(sfg::Canvas::Create()),
     blackClockCanvas_(sfg::Canvas::Create()),
     moveList(sfg::Table::Create()),
-    plyCounter(0)
+    plyCounter(0),
+    humanColor(1),
+    humanBoth(false)
 {
     releasePiece();
+
+    if (!chessAi.load()) humanBoth = true;
 
     moveList->SetColumnSpacings(10.f);
 
@@ -155,6 +159,11 @@ boardMaster::boardMaster(sf::Window &theWindow):
 
 }
 
+boardMaster::~boardMaster()
+{
+    if (!humanBoth) chessAi.unLoad();
+}
+
 void boardMaster::display()
 {
     window_->Clear();
@@ -227,30 +236,66 @@ void boardMaster::switchTurn()
         blackClock.start();
         turnLabel_->SetText("Black to play");
     }
+
+
+    if (humanBoth) {
+        humanColor = getTurnColor();
+    }
+    else if (humanColor != getTurnColor()){
+
+        chessEngine::move moveToMake = chessAi.getMove();
+        const int originRow = std::get<0>(moveToMake);
+        const int originCol = std::get<1>(moveToMake);
+        const int destRow = std::get<2>(moveToMake);
+        const int destCol = std::get<3>(moveToMake);
+
+        completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
+
+        chessAi.makeMove(originRow,originCol,destRow,destCol);
+        destroy(destRow,destCol);
+        pieces.right.modify_data(currentPiece, boost::bimaps::_data = squareId(destRow,destCol));
+        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
+                changePosition(currentPiece->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
+
+        releasePiece();
+        currentPosition = toCheck.getNewBoard();
+        if (currentPosition.wasCastle) handleCastle(destRow,destCol);
+        if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
+        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,destRow,destCol)));
+        const int plyPairsCount = plyCounter/2;
+        const int plyRemainder = (plyCounter)%2;
+        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+        plyCounter++;
+        switchTurn();
+
+    }
 }
 
-void boardMaster::sendBack()
-{
-    BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    pieces.right.modify_key(currentPiece, boost::bimaps::_key =
-            changePosition(currentPiece->first,cellToPosition(currentPiece->second.row, currentPiece->second.col)));
+    void boardMaster::sendBack()
+    {
+        BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    //currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
-    releasePiece();
-}
+        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
+                changePosition(currentPiece->first,cellToPosition(currentPiece->second.row, currentPiece->second.col)));
 
-void boardMaster::processLeftClick()
-{
-    clickedPoint = getMousePosition();
+        //currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
+        releasePiece();
+    }
 
-    const int whoseTurn = getTurnColor();
+    void boardMaster::processLeftClick()
+    {
+        if (humanColor != getTurnColor()) return; //must alter this for pre-move in future
 
-    for (auto &piece : pieces){
-        if (piece.right.contains(clickedPoint)){
-            if (piece.right.getSide()!=whoseTurn) return;
-            currentPiece = pieces.right.find(piece.right);
-            break;
+        clickedPoint = getMousePosition();
+
+        const int whoseTurn = getTurnColor();
+
+        for (auto &piece : pieces){
+            if (piece.right.contains(clickedPoint)){
+                if (piece.right.getSide()!=whoseTurn) return;
+                currentPiece = pieces.right.find(piece.right);
+                break;
         }
     }
 }
@@ -274,6 +319,7 @@ void boardMaster::processMouseRelease()
                     const int originCol = currentPiece->second.col;
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
+                        if (!humanBoth) chessAi.makeMove(originRow,originCol,i,j);
                         destroy(i,j);
                         pieces.right.modify_data(currentPiece, boost::bimaps::_data = squareId(i,j));
                         pieces.right.modify_key(currentPiece, boost::bimaps::_key =
@@ -283,12 +329,12 @@ void boardMaster::processMouseRelease()
                         currentPosition = toCheck.getNewBoard();
                         if (currentPosition.wasCastle) handleCastle(i,j);
                         if (currentPosition.wasEnPassant) handleEnPassant(i,j);
-                        switchTurn();
                         sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;
                         const int plyRemainder = (plyCounter)%2;
                         moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
                         plyCounter++;
+                        switchTurn();
                     }else{
                         sendBack();
                     }
