@@ -33,6 +33,8 @@ void boardMaster::releasePiece()
 
 void boardMaster::flagDown(const int side)
 {
+    if (side==1) whiteClockText.setColor(sf::Color::Yellow);
+    else blackClockText.setColor(sf::Color::Yellow);
     setGameEnded(-side);
 }
 
@@ -405,7 +407,9 @@ std::string boardMaster::toString(sf::Time value) const
     std::ostringstream stream;
     stream.setf(std::ios_base::fixed);
     stream.precision(2);
-    stream << minutes << ":" << seconds;
+    stream << minutes << ":";
+    if (seconds<10) stream << "0";
+    stream << seconds;
     return stream.str();
 }
 
@@ -443,10 +447,12 @@ std::string boardMaster::cellToString(const int row, const int col) const
 
 void boardMaster::updateClocks()
 {
+    whiteClock.update();
     whiteClockText.setString(toString(whiteClock.getRemainingTime()));
     whiteClockCanvas_->Clear();
     whiteClockCanvas_->Draw(whiteClockText);
 
+    blackClock.update();
     blackClockText.setString(toString(blackClock.getRemainingTime()));
     blackClockCanvas_->Clear();
     blackClockCanvas_->Draw(blackClockText);    

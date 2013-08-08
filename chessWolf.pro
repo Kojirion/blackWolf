@@ -31,5 +31,7 @@ HEADERS += \
     chessengine.h
 
 OTHER_FILES += \
-    notes.txt
+    notes.txt \
+    README.txt \
+    license.txt
 
