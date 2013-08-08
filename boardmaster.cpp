@@ -250,12 +250,13 @@ void boardMaster::switchTurn()
         const int destCol = std::get<3>(moveToMake);
 
         completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
+        cellsNpieces::right_iterator pieceToMove = pieces.project_right(pieces.left.find(squareId(originRow,originCol)));
 
         chessAi.makeMove(originRow,originCol,destRow,destCol);
         destroy(destRow,destCol);
-        pieces.right.modify_data(currentPiece, boost::bimaps::_data = squareId(destRow,destCol));
-        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
-                changePosition(currentPiece->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
+        pieces.right.modify_data(pieceToMove, boost::bimaps::_data = squareId(destRow,destCol));
+        pieces.right.modify_key(pieceToMove, boost::bimaps::_key =
+                changePosition(pieceToMove->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
 
         releasePiece();
         currentPosition = toCheck.getNewBoard();

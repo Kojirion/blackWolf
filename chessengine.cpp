@@ -51,9 +51,9 @@ int chessEngine::stringToCol(const std::string stringedCol) const
 
 chessEngine::move chessEngine::stringToTuple(const std::string theString) const
 {
-    const int row1 = std::stoi(theString.substr(1,1));
+    const int row1 = std::stoi(theString.substr(1,1)) - 1;
     const int col1 = stringToCol(theString.substr(0,1));
-    const int row2 = std::stoi(theString.substr(3,1));
+    const int row2 = std::stoi(theString.substr(3,1)) - 1;
     const int col2 = stringToCol(theString.substr(2,1));
 
     return std::make_tuple(row1,col1,row2,col2);
@@ -89,7 +89,7 @@ chessEngine::move chessEngine::getMove()
     while (process >> str){
         if (str=="bestmove"){
             process >> str;
-            std::cout << "The best move is" << str << std::endl;
+            return stringToTuple(str);
         }
     }
 }
