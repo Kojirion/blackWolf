@@ -22,9 +22,9 @@ position::position(const position &givenPos, const int row1, const int col1, con
         }
     }
 
-    const int pieceCode = cells[row1][row2];
+    const int pieceCode = cells[row1][col1];
 
-    cells[row2][col2] = cells[row1][col1];
+    cells[row2][col2] = pieceCode;
     cells[row1][col1] = 0;
 
     //this will perform the castle regardless of whether the side has castling rights

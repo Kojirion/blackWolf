@@ -40,6 +40,8 @@ For castle to work, it's not enough to update the cells - the boardManager must 
 Therefore, position will have a wasCastle bool member the value of which is set in it ctor,
 which both boardMove and boardManager can check.
 
+introduce an optional modifier on construction of move/position to avoid same color error on castling
+
 
 
 

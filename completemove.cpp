@@ -102,12 +102,12 @@ bool completeMove::inCheck() const
             const int pieceId = board[i][j];
             if (pieceId*board.turnColor<0){ //enemy piece
                 boardMove toCheck(board,i,j,kingRow,kingCol);
-                if (toCheck.isLegal()) return false;
+                if (toCheck.isLegal()) return true;
             }
         }
     }
 
-    return true;
+    return false;
 }
 
 completeMove::completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):

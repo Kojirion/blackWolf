@@ -16,7 +16,7 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
 
     pieceCode = board[row1][col1];
     BOOST_ASSERT_MSG(pieceCode != 0, "No piece in starting square");
-    BOOST_ASSERT_MSG(pieceCode*board.turnColor>0, "Trying to move opponent's piece");
+    //BOOST_ASSERT_MSG(pieceCode*board.turnColor>0, "Trying to move opponent's piece");
 }
 
 bool boardMove::isLegal() const

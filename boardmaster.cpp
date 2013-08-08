@@ -13,6 +13,38 @@ void boardMaster::releasePiece()
     currentPiece = pieces.right.end();
 }
 
+void boardMaster::handleCastle(const int row, const int col)
+{
+    if (row==0){
+        if (col==2){
+            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(0,0)));
+            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(0,3));
+            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
+                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[0][3].left,rectGrid[0][3].top)));
+        }else{
+            BOOST_ASSERT_MSG(col==6, "Invalid Castle");
+            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(0,7)));
+            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(0,5));
+            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
+                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[0][5].left,rectGrid[0][5].top)));
+        }
+    }else{
+        if (col==2){
+            BOOST_ASSERT_MSG(row==7, "Invalid Castle");
+            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(7,0)));
+            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(7,3));
+            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
+                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[7][3].left,rectGrid[7][3].top)));
+        }else{
+            BOOST_ASSERT_MSG(col==6, "Invalid Castle");
+            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(7,7)));
+            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(7,5));
+            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
+                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[7][5].left,rectGrid[7][5].top)));
+        }
+    }
+}
+
 void boardMaster::destroy(const int row, const int col)
 {
     squareId toDelete(row,col);
@@ -239,7 +271,7 @@ void boardMaster::processMouseRelease()
 
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
-                        //if (currentPosition.wasCastle)
+                        if (currentPosition.wasCastle) handleCastle(i,j);
                         switchTurn();
                         sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;

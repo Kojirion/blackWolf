@@ -71,6 +71,8 @@ private:
 
     int plyCounter;
 
+    void handleCastle(const int row, const int col); //move was castle with destination the given square
+
     void destroy(const int row, const int col); //will destroy the sprite in given location
 
 
