@@ -7,7 +7,7 @@ class boardMove
 private:
     friend class completeMove;
 
-    const position &board;
+    position board;
     position newBoard;
 
     int row1;
@@ -26,6 +26,8 @@ private:
     bool isQueenLegal() const;
     bool isKingLegal() const;
     bool isPawnLegal() const;
+
+    bool isObstructed(const int pieceCode) const; //returns true if square occupied
 
 
 

@@ -239,6 +239,7 @@ void boardMaster::processMouseRelease()
 
                         releasePiece();
                         currentPosition = toCheck.getNewBoard();
+                        //if (currentPosition.wasCastle)
                         switchTurn();
                         sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
                         const int plyPairsCount = plyCounter/2;

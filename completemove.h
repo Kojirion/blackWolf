@@ -6,8 +6,13 @@ class completeMove : private boardMove
 {
 private:
     bool isCheckSafe() const;
+    bool handleCastle() const;
+
+    bool inCheck() const;
+
+
 public:
-    completeMove(position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
+    completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
 
     bool isLegal() const;
 

@@ -6,7 +6,12 @@ position::position()
 }
 
 position::position(const position &givenPos, const int row1, const int col1, const int row2, const int col2):
-    turnColor(-givenPos.turnColor)
+    turnColor(-givenPos.turnColor),
+    whiteCastleQueen(givenPos.whiteCastleQueen),
+    whiteCastleKing(givenPos.whiteCastleKing),
+    blackCastleQueen(givenPos.blackCastleQueen),
+    blackCastleKing(givenPos.blackCastleKing),
+    wasCastle(false)
 {
     //makes a new position out of the given one, moving the piece on first to square to second
     //must add functionality for castling and en passant
@@ -30,9 +35,11 @@ position::position(const position &givenPos, const int row1, const int col1, con
                 if (col2==6){
                     cells[0][5] = cells[0][7];
                     cells[0][7] = 0;
+                    wasCastle = true;
                 }else if (col2==2){
                     cells[0][3] = cells[0][0];
                     cells[0][0] = 0;
+                    wasCastle = true;
                 }
             }
         }
@@ -42,14 +49,35 @@ position::position(const position &givenPos, const int row1, const int col1, con
                 if (col2==6){
                     cells[7][5] = cells[7][7];
                     cells[7][7] = 0;
+                    wasCastle = true;
                 }else if (col2==2){
                     cells[7][3] = cells[7][0];
                     cells[7][0] = 0;
+                    wasCastle = true;
                 }
             }
         }
     }
 
+    //checking if castling rights should be lost
+    switch (pieceCode) {
+    case 6:
+        whiteCastleQueen = false;
+        whiteCastleKing = false;
+        break;
+    case -6:
+        blackCastleQueen = false;
+        blackCastleKing = false;
+        break;
+    case 1:
+        if ((row1==0)&&(col1==0)) whiteCastleQueen = false;
+        else if ((row1==0)&&(col1==7)) whiteCastleKing = false;
+        break;
+    case -1:
+        if ((row1==7)&&(col1==0)) blackCastleQueen = false;
+        else if ((row1==7)&&(col1==7)) blackCastleKing = false;
+        break;
+    }
 }
 
 
@@ -61,6 +89,8 @@ void position::init()
     whiteCastleKing = true;
     blackCastleQueen = true;
     blackCastleKing = true;
+
+    wasCastle = false;
 
     cells[0][0] = 1;
     cells[0][1] = 3;

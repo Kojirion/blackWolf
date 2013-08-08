@@ -115,6 +115,9 @@ bool boardMove::isQueenLegal() const
 
 bool boardMove::isKingLegal() const
 {
+    if (newBoard.wasCastle) return true; //tentative true
+    //completeMove will ultimately decide if the castle is legal
+
     if ((std::abs(row2-row1)>1) || (std::abs(col2-col1)>1)) return false;
 
     return isQueenLegal();
@@ -150,4 +153,9 @@ bool boardMove::isPawnLegal() const
         }
     }
     return false;
+}
+
+bool boardMove::isObstructed(const int pieceCode) const
+{
+    return ((pieceCode!=0)&&(pieceCode!=7));
 }
