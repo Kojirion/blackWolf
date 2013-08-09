@@ -1,6 +1,6 @@
 #ifndef CHESSENGINE_H
 #define CHESSENGINE_H
-#include <pstream.h>
+#include <libExecStream/exec-stream.h>
 #include <iostream>
 #include <tuple>
 
@@ -23,7 +23,7 @@ public:
     void unLoad();
 
 private:
-    redi::pstream process;
+    exec_stream_t process;
 
     void waitForOk();
 

@@ -54,12 +54,15 @@ position should have std arrays
 have pieces work with range based for
 
 insert code in display loop that checks if it's ai's turn and if it has played its move, to avoid threads for now
+engine while use timers will processing input
 
 enforce const-ness on position functions
 
 profile
 
 is initialization done in order?
+
+try catch for loading the engine
 
 
 

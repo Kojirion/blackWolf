@@ -2,11 +2,11 @@
 
 void chessEngine::waitForOk()
 {
-    process << "isready" << std::endl;
+    process.in() << "isready" << std::endl;
 
     std::string str;
     while (str!="readyok"){
-        process >> str;
+        process.out() >> str;
     }
 }
 
@@ -60,10 +60,11 @@ chessEngine::move chessEngine::stringToTuple(const std::string theString) const
 }
 
 
-chessEngine::chessEngine():
-    process("./stockfish")
+chessEngine::chessEngine()
 {
+    process.set_wait_timeout(exec_stream_t::s_all,60000);
 
+    process.start("./stockfish","");
 }
 
 void chessEngine::makeMove(const int row1, const int col1, const int row2, const int col2)
@@ -74,21 +75,21 @@ void chessEngine::makeMove(const int row1, const int col1, const int row2, const
 
 void chessEngine::newGame()
 {
-    process << "ucinewgame" << std::endl;
+    process.in() << "ucinewgame" << std::endl;
     //process << redi::pstreambuf::kill() << std::endl;
     waitForOk();
 }
 
 chessEngine::move chessEngine::getMove()
 {
-    process << ("position startpos moves " + moveList) << std::endl;
-    process << "go depth 8" << std::endl;
+    process.in() << ("position startpos moves " + moveList) << std::endl;
+    process.in() << "go depth 8" << std::endl;
 
     std::string str;
 
-    while (process >> str){
+    while (process.out() >> str){
         if (str=="bestmove"){
-            process >> str;
+            process.out() >> str;
             return stringToTuple(str);
         }
     }
@@ -96,11 +97,11 @@ chessEngine::move chessEngine::getMove()
 
 bool chessEngine::load()
 {
-    process << "uci" << std::endl;
+    process.in() << "uci" << std::endl;
 
     std::string str;
     while (str!="uciok"){
-        process >> str;
+        process.out() >> str;
     }
 
     waitForOk();
@@ -110,8 +111,8 @@ bool chessEngine::load()
 
 void chessEngine::unLoad()
 {
-    process << "quit" << std::endl;
+    process.in() << "quit" << std::endl;
     //process.rdbuf->kill();
-    while (!process.rdbuf()->exited()){}
-    process.rdbuf()->status(); //throw away the exit status
+    //while (!process.rdbuf()->exited()){}
+    //process.rdbuf()->status(); //throw away the exit status
 }
