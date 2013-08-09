@@ -1,6 +1,7 @@
 #ifndef PIECESBIMAP_H
 #define PIECESBIMAP_H
 #include <boost/bimap.hpp>
+#include <boost/bimap/support/lambda.hpp>
 #include "piecesprite.h"
 
 class squareId{
@@ -23,9 +24,11 @@ public:
 class piecesBimap
 {
 public:
-    typedef cellsNpieces::right_iterator piecePointer;
+    //friend class spriteHelper;
 
-    class piecePointer{
+    typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
+
+    /*class piecePointer{
     private:
         cellsNpieces::right_iterator pointer;
     public:
@@ -43,7 +46,7 @@ public:
             poitner = pieces.end();
         }
 
-    };
+    };*/
 
     class iterator{
     private:
@@ -70,7 +73,7 @@ public:
 
     class spriteHelper{ //helps use the sprite
     private:
-        const piecesBimap &parent;
+        piecesBimap &parent;
         const int rowId;
         const int colId;
 
@@ -81,14 +84,14 @@ public:
         }
 
     public:
-        spriteHelper(const pieceBimap &p, const int theRowId, const int theColId):
+        spriteHelper(piecesBimap &p, const int theRowId, const int theColId):
             parent(p), rowId(theRowId), colId(theColId)
         {
 
         }
 
         void moveTo(const int destRow, const int destCol, const sf::Vector2f position){
-            cellsNpieces::right_iterator pieceToMove = parent.pieces.project_right(pieces.left.find(squareId(rowId,colId)));
+            cellsNpieces::right_iterator pieceToMove = parent.pieces.project_right(parent.pieces.left.find(squareId(rowId,colId)));
             parent.pieces.right.modify_data(pieceToMove, boost::bimaps::_data = squareId(destRow,destCol));
             parent.pieces.right.modify_key(pieceToMove, boost::bimaps::_key = changePosition(pieceToMove->first,position));
         }
@@ -109,11 +112,11 @@ public:
 
     class indexHelper{ //helps get to the pieceSprite at given square
     private:
-        const piecesBimap &parent;
+        piecesBimap &parent;
         int rowId;
 
     public:
-        indexHelper(const piecesBimap &p, int theRowId):
+        indexHelper(piecesBimap &p, int theRowId):
             parent(p), rowId(theRowId)
         {
 
@@ -125,7 +128,7 @@ public:
     };
 
     indexHelper operator[](const int rowId){
-        return indexHelper(this, rowId);
+        return indexHelper(*this, rowId);
     }
 
     iterator begin(){
@@ -138,10 +141,9 @@ public:
 
     piecesBimap();
 
-    private:
-        typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
+private:
 
-        cellsNpieces pieces;
+    cellsNpieces pieces;
 };
 
 #endif // PIECESBIMAP_H

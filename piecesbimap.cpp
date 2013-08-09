@@ -7,5 +7,5 @@ piecesBimap::piecesBimap()
 
 pieceSprite &piecesBimap::iterator::operator *() const
 {
-    return pos;
+    return pos.first;
 }

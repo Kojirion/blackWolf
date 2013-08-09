@@ -5,30 +5,15 @@
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Table.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
-#include <boost/bimap.hpp>
+#include "piecesbimap.h"
 #include "piecesprite.h"
 #include "position.h"
 #include "completemove.h"
 #include "chessengine.h"
 
-class squareId{
-public:
-    int row;
-    int col;
 
-    squareId(int theRow, int theCol):
-        row(theRow),col(theCol)
-    {
 
-    }
 
-    bool operator< (const squareId &that) const{
-        if(row==that.row) return (col<that.col);
-        return (row<that.row);
-    }
-};
-
-typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
 
 class boardMaster
 {
