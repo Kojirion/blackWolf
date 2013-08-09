@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     guimanager.cpp \
     boardmove.cpp \
     completemove.cpp \
-    chessengine.cpp
+    chessengine.cpp \
+    piecesbimap.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -28,7 +29,8 @@ HEADERS += \
     guimanager.h \
     boardmove.h \
     completemove.h \
-    chessengine.h
+    chessengine.h \
+    piecesbimap.h
 
 OTHER_FILES += \
     notes.txt \

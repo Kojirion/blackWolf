@@ -47,6 +47,17 @@ engine should check for promotion info with at.i
 
 use a separate thread for engine
 
+hasLegalMoves has to consider promotion
+
+position should have std arrays
+
+have pieces work with range based for
+
+insert code in display loop that checks if it's ai's turn and if it has played its move, to avoid threads for now
+
+enforce const-ness on position functions
+
+profile
 
 
 
