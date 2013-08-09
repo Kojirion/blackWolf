@@ -1,21 +1,9 @@
 Boost::bimap :
-    -By using list_of, there's no need for pieceSprite ids.
-    -The danger is that list implementation may invalidate pointer to sprite
-    -Alternative is to have a const pointer to currentSprite and use bimap modify functions to set position
-
-    -Now pieceSprite row and col are useless.
-
     Should add tags to make bimap more descriptive.
-
-    currentPiece could hold an iterator instead of a pointer.
-
-    bishop moves significant slowdown-moves stop registering after a few
 
     Wrap boost map in a class to improve code clarity
 
     make mini classes around the clocks
-
-    put the move list in scrolled window, after fixing the slowdown
 
     sfgui resource manager
 
@@ -23,18 +11,8 @@ does isCheckSafe take into account color?
 
 since we ensure boost::sign won't return 0, could we have better results with a faster one?
 
-Must reinstate the boost assert that squares are distinct
-Should we also assert that the piece to be move is the same color as the turns?
 
-see how original bishop behaves with checkSafe off}
-see how original bishop behaves with amended moves}
-} still slow
-
-see whether moving opponent piece should be allowed
-improved checkSafe - we don't really need to know if both sides are in check
  --is there a way to turn parts of code off?
-
-make an isObstructed function that will not cause problems with shadow pawns
 
 For castle to work, it's not enough to update the cells - the boardManager must somehow receive a signal to adjust the rook's position.
 Therefore, position will have a wasCastle bool member the value of which is set in it ctor,
@@ -50,7 +28,7 @@ dummy cell
 
 add enums instead of pieceCodes
 
-use action maps for shortcuts: draw claims, switch to queen etc
+use action maps for shortcuts: draw claims, switch to queen, autoresign for quick blitz games etc
 still need to implement queening
 and handling gameEnd
 
@@ -62,6 +40,12 @@ write movefunction and bimap wrapper
 sfgui resource manager
 
 bug: checkmate was not detected
+
+legalMoves, isCheckmate, isStalemate - check should only be done once
+
+engine should check for promotion info with at.i
+
+use a separate thread for engine
 
 
 

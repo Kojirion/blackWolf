@@ -82,6 +82,9 @@ private:
 
     void handleCastle(const int row, const int col); //move was castle with destination the given square
     void handleEnPassant(const int row, const int col);
+    void handlePromotion(const int row, const int col);
+
+    void moveMake (const completeMove &move);
 
     void destroy(const int row, const int col); //will destroy the sprite in given location
 

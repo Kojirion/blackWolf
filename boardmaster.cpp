@@ -80,6 +80,45 @@ void boardMaster::handleEnPassant(const int row, const int col)
     }
 }
 
+void boardMaster::handlePromotion(const int row, const int col)
+{
+    destroy(row,col);
+
+}
+
+void boardMaster::moveMake(const completeMove &move)
+{
+    const int originRow = move.getRow1();
+    const int originCol = move.getCol1();
+    const int destRow = move.getRow2();
+    const int destCol = move.getCol2();
+
+    cellsNpieces::right_iterator pieceToMove = pieces.project_right(pieces.left.find(squareId(originRow,originCol)));
+
+    if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol); //update engine's internal board
+    destroy(destRow,destCol); //destroy any sprites at destination
+    pieces.right.modify_data(pieceToMove, boost::bimaps::_data = squareId(destRow,destCol));
+    pieces.right.modify_key(pieceToMove, boost::bimaps::_key =
+            changePosition(pieceToMove->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
+
+    releasePiece(); //resets the currentPiece iterator
+    currentPosition = move.getNewBoard(); //set currentPosition to the new board of the move
+    if (currentPosition.wasCastle) handleCastle(destRow,destCol);
+    if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
+
+    //update move counter and move list widget
+    sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,destRow,destCol)));
+    const int plyPairsCount = plyCounter/2;
+    const int plyRemainder = (plyCounter)%2;
+    moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+    plyCounter++;
+
+    //check for game end or switch turn
+    if (move.isCheckmate()) setGameEnded(-getTurnColor());
+    if (move.isStalemate()) setGameEnded(0);
+    if (!gameEnded) switchTurn();
+}
+
 void boardMaster::destroy(const int row, const int col)
 {
     squareId toDelete(row,col);
@@ -275,7 +314,6 @@ void boardMaster::switchTurn()
         humanColor = getTurnColor();
     }
     else if (humanColor != getTurnColor()){
-
         chessEngine::move moveToMake = chessAi.getMove();
         const int originRow = std::get<0>(moveToMake);
         const int originCol = std::get<1>(moveToMake);
@@ -285,27 +323,7 @@ void boardMaster::switchTurn()
         completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
         BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
-        cellsNpieces::right_iterator pieceToMove = pieces.project_right(pieces.left.find(squareId(originRow,originCol)));
-
-        chessAi.makeMove(originRow,originCol,destRow,destCol);
-        destroy(destRow,destCol);
-        pieces.right.modify_data(pieceToMove, boost::bimaps::_data = squareId(destRow,destCol));
-        pieces.right.modify_key(pieceToMove, boost::bimaps::_key =
-                changePosition(pieceToMove->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
-
-        releasePiece();
-        currentPosition = toCheck.getNewBoard();
-        if (currentPosition.wasCastle) handleCastle(destRow,destCol);
-        if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
-        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,destRow,destCol)));
-        const int plyPairsCount = plyCounter/2;
-        const int plyRemainder = (plyCounter)%2;
-        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
-        plyCounter++;
-        if (toCheck.isCheckmate()) setGameEnded(-getTurnColor());
-        if (toCheck.isStalemate()) setGameEnded(0);
-        if (!gameEnded) switchTurn();
-
+        moveMake(toCheck);
     }
 }
 
@@ -358,24 +376,7 @@ void boardMaster::processMouseRelease()
                     const int originCol = currentPiece->second.col;
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
-                        if (!humanBoth) chessAi.makeMove(originRow,originCol,i,j);
-                        destroy(i,j);
-                        pieces.right.modify_data(currentPiece, boost::bimaps::_data = squareId(i,j));
-                        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
-                                changePosition(currentPiece->first,sf::Vector2f(rectGrid[i][j].left,rectGrid[i][j].top)));
-
-                        releasePiece();
-                        currentPosition = toCheck.getNewBoard();
-                        if (currentPosition.wasCastle) handleCastle(i,j);
-                        if (currentPosition.wasEnPassant) handleEnPassant(i,j);
-                        sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,i,j)));
-                        const int plyPairsCount = plyCounter/2;
-                        const int plyRemainder = (plyCounter)%2;
-                        moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
-                        plyCounter++;
-                        if (toCheck.isCheckmate()) setGameEnded(getTurnColor());
-                        if (toCheck.isStalemate()) setGameEnded(0);
-                        if (!gameEnded) switchTurn();
+                        moveMake(toCheck);
                     }else{
                         sendBack();
                     }

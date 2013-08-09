@@ -12,7 +12,8 @@ position::position(const position &givenPos, const int row1, const int col1, con
     blackCastleQueen(givenPos.blackCastleQueen),
     blackCastleKing(givenPos.blackCastleKing),
     wasCastle(false),
-    wasEnPassant(false)
+    wasEnPassant(false),
+    wasPromotion(false)
 {
     //makes a new position out of the given one, moving the piece on first to square to second
     //must add functionality for castling and en passant
@@ -96,6 +97,13 @@ position::position(const position &givenPos, const int row1, const int col1, con
         if ((row1==6)&&(row2==4)) cells[5][col2] = -7;
     }
 
+    //check if promotion
+    if (pieceCode==5){
+        if (row2==7) wasPromotion = true;
+    }else if (pieceCode==-5){
+        if (row2==0) wasPromotion = true;
+    }
+
 }
 
 
@@ -110,6 +118,7 @@ void position::init()
 
     wasCastle = false;
     wasEnPassant = false;
+    wasPromotion = false;
 
     cells[0][0] = 1;
     cells[0][1] = 3;

@@ -50,6 +50,8 @@ private:
 
     void init();
 
+    void setPromotion(const int row, const int col, const int chosenPiece);
+
 };
 
 #endif // POSITION_H

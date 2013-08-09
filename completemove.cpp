@@ -151,6 +151,26 @@ bool completeMove::isStalemate() const
     return ((!hasLegalMoves())&&(!inCheck(newBoard,newBoard.turnColor)));
 }
 
+int completeMove::getRow1() const
+{
+    return row1;
+}
+
+int completeMove::getCol1() const
+{
+    return col1;
+}
+
+int completeMove::getRow2() const
+{
+    return row2;
+}
+
+int completeMove::getCol2() const
+{
+    return col2;
+}
+
 position completeMove::getNewBoard() const
 {
     return newBoard;
