@@ -59,6 +59,7 @@ add a resultCheck function so that the checks for checkmate/stalemate are not do
 
 inCheck code can now be reused
 write movefunction and bimap wrapper
+sfgui resource manager
 
 bug: checkmate was not detected
 

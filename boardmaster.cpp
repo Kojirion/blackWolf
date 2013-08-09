@@ -109,9 +109,10 @@ boardMaster::boardMaster(sf::Window &theWindow):
     blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));
 
     sfg::Label::Ptr dummyLabel(sfg::Label::Create());
-    moveList->SetColumnSpacings(10.f);
-    //moveList->Attach(dummyLabel,{0,0,1,1});
-    //moveList->SetColumnSpacing(0,10.f);
+    moveList->SetColumnSpacings(0.f);
+    moveList->Attach(dummyLabel,{0,0,1,1});
+    moveList->SetColumnSpacing(0,10.f);
+    moveList->Remove(dummyLabel);
 
     window_->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window_->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardMaster::processLeftClick, this);

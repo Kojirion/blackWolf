@@ -15,8 +15,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 External libraries:
 
-SFML is under the zlib/png license
-SFGUI is under the zlib/png license
-Thor is under the zlib/png license
+SFML is under the zlib/png licence
+SFGUI is under the zlib/png licence
+Thor is under the zlib/png licence
 Pstreams is under the LGPL
 Boost Libraries are under the Boost Software License
+
+Stockfish is under the GPL

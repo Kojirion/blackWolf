@@ -33,5 +33,5 @@ HEADERS += \
 OTHER_FILES += \
     notes.txt \
     README.txt \
-    license.txt
+    licence.txt
 
