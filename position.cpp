@@ -97,11 +97,17 @@ position::position(const position &givenPos, const int row1, const int col1, con
         if ((row1==6)&&(row2==4)) cells[5][col2] = -7;
     }
 
-    //check if promotion
+    //check if promotion - set to Queen for now
     if (pieceCode==5){
-        if (row2==7) wasPromotion = true;
+        if (row2==7){
+            wasPromotion = true;
+            cells[row2][col2] = 4;
+        }
     }else if (pieceCode==-5){
-        if (row2==0) wasPromotion = true;
+        if (row2==0){
+            wasPromotion = true;
+            cells[row2][col2] = -4;
+        }
     }
 
 }

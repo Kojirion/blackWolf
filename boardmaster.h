@@ -63,6 +63,7 @@ private:
     void flagDown(const int side);
 
     int plyCounter;
+    int idCount; //pieces ids
 
     void handleCastle(const int row, const int col); //move was castle with destination the given square
     void handleEnPassant(const int row, const int col);

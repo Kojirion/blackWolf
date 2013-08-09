@@ -69,8 +69,11 @@ void boardMaster::handleEnPassant(const int row, const int col)
 
 void boardMaster::handlePromotion(const int row, const int col)
 {
+    const int whichSide = pieces[row][col].getSide();
     destroy(row,col);
-
+    pieceSprite toAdd(idToTexture(whichSide*4),cellToPosition(row,col),whichSide,idCount);
+    pieces[row][col].insert(toAdd);
+    idCount++;
 }
 
 void boardMaster::moveMake(const completeMove &move)
@@ -88,6 +91,7 @@ void boardMaster::moveMake(const completeMove &move)
     currentPosition = move.getNewBoard(); //set currentPosition to the new board of the move
     if (currentPosition.wasCastle) handleCastle(destRow,destCol);
     if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
+    if (currentPosition.wasPromotion) handlePromotion(destRow, destCol);
 
     //update move counter and move list widget
     sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,destRow,destCol)));
@@ -119,12 +123,13 @@ boardMaster::boardMaster(sf::Window &theWindow):
     humanColor(1),
     humanBoth(false),
     gameEnded(false),
-    currentPiece(&pieces)
+    currentPiece(&pieces),
+    idCount(1)
 {
     releasePiece();
 
-    //if (!chessAi.load()) humanBoth = true;
-    humanBoth = true;
+    if (!chessAi.load()) humanBoth = true;
+    //humanBoth = true;
 
     whiteClock.connect(std::bind(&boardMaster::flagDown, this, 1));
     blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));
@@ -159,8 +164,6 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteQueenT.loadFromFile("Graphics/Pieces/WhiteQ.png");
     whiteKingT.loadFromFile("Graphics/Pieces/WhiteK.png");
     whitePawnT.loadFromFile("Graphics/Pieces/WhiteP.png");
-
-    int idCount = 1;
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){

@@ -164,6 +164,11 @@ public:
             parent.pieces.insert(cellsNpieces::value_type(cellId,toAdd));
         }
 
+        int getSide() const
+        {
+            return pieceToUse->first.getSide();
+        }
+
 
     };
 
