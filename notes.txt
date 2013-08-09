@@ -59,6 +59,8 @@ enforce const-ness on position functions
 
 profile
 
+is initialization done in order?
+
 
 
 

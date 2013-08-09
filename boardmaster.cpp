@@ -1,7 +1,6 @@
 #include "boardmaster.h"
 #include <sstream>
 #include <boost/assert.hpp>
-#include <boost/bimap/support/lambda.hpp>
 
 void boardMaster::setGameEnded(const int result)
 {
@@ -23,12 +22,12 @@ void boardMaster::setGameEnded(const int result)
 
 bool boardMaster::pieceHeld()
 {
-    return (currentPiece!=pieces.right.end());
+    return (currentPiece.isValid());
 }
 
 void boardMaster::releasePiece()
 {
-    currentPiece = pieces.right.end();
+    currentPiece.invalidate();
 }
 
 void boardMaster::flagDown(const int side)
@@ -42,30 +41,18 @@ void boardMaster::handleCastle(const int row, const int col)
 {
     if (row==0){
         if (col==2){
-            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(0,0)));
-            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(0,3));
-            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
-                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[0][3].left,rectGrid[0][3].top)));
+            pieces[0][0].moveTo(0,3,cellToPosition(0,3));
         }else{
             BOOST_ASSERT_MSG(col==6, "Invalid Castle");
-            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(0,7)));
-            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(0,5));
-            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
-                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[0][5].left,rectGrid[0][5].top)));
+            pieces[0][7].moveTo(0,5,cellToPosition(0,5));
         }
     }else{
         if (col==2){
             BOOST_ASSERT_MSG(row==7, "Invalid Castle");
-            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(7,0)));
-            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(7,3));
-            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
-                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[7][3].left,rectGrid[7][3].top)));
+            pieces[7][0].moveTo(7,3,cellToPosition(7,3));
         }else{
-            BOOST_ASSERT_MSG(col==6, "Invalid Castle");
-            cellsNpieces::right_iterator rookSprite = pieces.project_right(pieces.left.find(squareId(7,7)));
-            pieces.right.modify_data(rookSprite, boost::bimaps::_data = squareId(7,5));
-            pieces.right.modify_key(rookSprite, boost::bimaps::_key =
-                    changePosition(rookSprite->first,sf::Vector2f(rectGrid[7][5].left,rectGrid[7][5].top)));
+            BOOST_ASSERT_MSG(col==6, "Invalid Castle");            
+            pieces[7][7].moveTo(7,5,cellToPosition(7,5));
         }
     }
 }
@@ -93,13 +80,9 @@ void boardMaster::moveMake(const completeMove &move)
     const int destRow = move.getRow2();
     const int destCol = move.getCol2();
 
-    cellsNpieces::right_iterator pieceToMove = pieces.project_right(pieces.left.find(squareId(originRow,originCol)));
-
     if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol); //update engine's internal board
     destroy(destRow,destCol); //destroy any sprites at destination
-    pieces.right.modify_data(pieceToMove, boost::bimaps::_data = squareId(destRow,destCol));
-    pieces.right.modify_key(pieceToMove, boost::bimaps::_key =
-            changePosition(pieceToMove->first,sf::Vector2f(rectGrid[destRow][destCol].left,rectGrid[destRow][destCol].top)));
+    pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition(destRow, destCol));
 
     releasePiece(); //resets the currentPiece iterator
     currentPosition = move.getNewBoard(); //set currentPosition to the new board of the move
@@ -121,10 +104,7 @@ void boardMaster::moveMake(const completeMove &move)
 
 void boardMaster::destroy(const int row, const int col)
 {
-    squareId toDelete(row,col);
-
-    pieces.left.erase(toDelete);
-
+    pieces[row][col].erase();
 }
 
 boardMaster::boardMaster(sf::Window &theWindow):
@@ -138,7 +118,8 @@ boardMaster::boardMaster(sf::Window &theWindow):
     plyCounter(0),
     humanColor(1),
     humanBoth(false),
-    gameEnded(false)
+    gameEnded(false),
+    currentPiece(&pieces)
 {
     releasePiece();
 
@@ -184,10 +165,8 @@ boardMaster::boardMaster(sf::Window &theWindow):
         for (int j=0; j<8; ++j){
             const int pieceId = currentPosition[i][j];
             if (pieceId==0) continue;
-            //const sf::Texture &pieceTexture = idToTexture(pieceId);
-            squareId cellId(i,j);
             pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
-            pieces.insert(cellsNpieces::value_type(cellId,toAdd));
+            pieces[i][j].insert(toAdd);
             idCount++;
         }
     }
@@ -243,7 +222,7 @@ void boardMaster::display()
     window_->Draw(boardSprite_);
 
     for (auto &piece : pieces){
-        window_->Draw(piece.right);
+        window_->Draw(piece);
     }
     if (!gameEnded) updateClocks();
 
@@ -332,10 +311,8 @@ void boardMaster::switchTurn()
     {
         BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
-                changePosition(currentPiece->first,cellToPosition(currentPiece->second.row, currentPiece->second.col)));
-
-        //currentPiece->setPosition(cellToPosition(currentPiece->row,currentPiece->col));
+        pieces[currentPiece].sendTo(cellToPosition(currentPiece.getRow(),currentPiece.getCol()));
+        
         releasePiece();
     }
 
@@ -349,31 +326,30 @@ void boardMaster::switchTurn()
         const int whoseTurn = getTurnColor();
 
         for (auto &piece : pieces){
-            if (piece.right.contains(clickedPoint)){
-                if (piece.right.getSide()!=whoseTurn) return;
-                currentPiece = pieces.right.find(piece.right);
+            if (piece.getSide()!=whoseTurn) return;
+            if (piece.contains(clickedPoint)){
+                currentPiece = pieces.spriteToIt(piece);
                 break;
+            }
         }
     }
-}
 
 void boardMaster::processMouseMove()
 {
     if (pieceHeld()){
-        pieces.right.modify_key(currentPiece, boost::bimaps::_key =
-                changePosition(currentPiece->first,getMousePosition()-sf::Vector2f(25.f,25.f)));
+        pieces[currentPiece].sendTo(getMousePosition()-sf::Vector2f(25.f,25.f));
     }
 }
 
 void boardMaster::processMouseRelease()
 {
     if (pieceHeld()){
-        sf::Vector2f centrePos = currentPiece->first.getPosition() + sf::Vector2f(25.f,25.f);
+        sf::Vector2f centrePos = pieces[currentPiece].getPosition() + sf::Vector2f(25.f,25.f);
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    const int originRow = currentPiece->second.row;
-                    const int originCol = currentPiece->second.col;
+                    const int originRow = currentPiece.getRow();
+                    const int originCol = currentPiece.getCol();
                     completeMove toCheck(currentPosition,originRow,originCol,i,j);
                     if (toCheck.isLegal()){
                         moveMake(toCheck);

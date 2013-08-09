@@ -41,7 +41,7 @@ private:
     sf::Texture whiteKingT;
     sf::Texture whitePawnT;
 
-    cellsNpieces pieces;
+    piecesBimap pieces;
 
     int humanColor;
     bool humanBoth; //if both players are human
@@ -52,10 +52,9 @@ private:
     //std::map<squareId, pieceSprite> pieces;
     std::vector<std::vector<sf::FloatRect> > rectGrid;
 
-    cellsNpieces::right_iterator currentPiece;
+    piecesBimap::iterator currentPiece;
     bool pieceHeld();
     void releasePiece();
-    //pieceSprite *currentPiece;
     sf::Vector2f clickedPoint;
 
     thor::CallbackTimer whiteClock;
