@@ -123,7 +123,8 @@ boardMaster::boardMaster(sf::Window &theWindow):
 {
     releasePiece();
 
-    if (!chessAi.load()) humanBoth = true;
+    //if (!chessAi.load()) humanBoth = true;
+    humanBoth = true;
 
     whiteClock.connect(std::bind(&boardMaster::flagDown, this, 1));
     blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));
@@ -326,7 +327,7 @@ void boardMaster::switchTurn()
         const int whoseTurn = getTurnColor();
 
         for (auto &piece : pieces){
-            if (piece.getSide()!=whoseTurn) return;
+            if (piece.getSide()!=whoseTurn) continue;
             if (piece.contains(clickedPoint)){
                 currentPiece = pieces.spriteToIt(piece);
                 break;
