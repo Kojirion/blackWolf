@@ -1,5 +1,12 @@
 #include "piecesbimap.h"
 
+void piecesBimap::clear()
+{
+    for (auto &piece : pieces){
+        pieces.left.erase(piece.left);
+    }
+}
+
 piecesBimap::piecesBimap()
 {
 }

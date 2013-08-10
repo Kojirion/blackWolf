@@ -13,14 +13,17 @@ void guiManager::run()
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(boss.moveList);
 
-    sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
-    flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
-
     sfg::Button::Ptr resignButton(sfg::Button::Create("Resign"));
     resignButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, &boss);
 
     sfg::Button::Ptr drawButton(sfg::Button::Create("Offer draw"));
     drawButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, &boss);
+
+    sfg::Button::Ptr newGameButton(sfg::Button::Create("New game"));
+    newGameButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, &boss);
+
+    sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
+    flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
 
 
     sfg::Table::Ptr buttonLayout(sfg::Table::Create());
@@ -29,7 +32,8 @@ void guiManager::run()
 
     buttonLayout->Attach(resignButton,{0,0,1,1});
     buttonLayout->Attach(drawButton,{0,1,1,1});
-    buttonLayout->Attach(flipButton,{1,0,1,1});
+    buttonLayout->Attach(newGameButton,{1,0,1,1});
+    buttonLayout->Attach(flipButton,{1,1,1,1});
 
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());

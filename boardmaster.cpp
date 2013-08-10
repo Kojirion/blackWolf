@@ -111,6 +111,47 @@ void boardMaster::destroy(const int row, const int col)
     pieces[row][col].erase();
 }
 
+void boardMaster::newGame()
+{
+    currentPosition = position();
+
+    plyCounter = 0;
+    moveList->RemoveAll();
+
+    humanColor = 1;
+    gameEnded = false;
+
+    idCount = 1;
+    pieces.clear();
+
+    initPieces();
+
+    whiteClock.restart(sf::seconds(300));
+    blackClock.restart(sf::seconds(300));
+    blackClock.stop();
+
+    updateClocks();
+
+    //display();
+    //where will to play label be set??
+
+    //there should be a flipped bool
+
+}
+
+void boardMaster::initPieces()
+{
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            const int pieceId = currentPosition[i][j];
+            if (pieceId==0) continue;
+            pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
+            pieces[i][j].insert(toAdd);
+            idCount++;
+        }
+    }
+}
+
 boardMaster::boardMaster(sf::Window &theWindow):
     flipOffset(0,0),
     window_(sfg::Canvas::Create()),
@@ -126,8 +167,6 @@ boardMaster::boardMaster(sf::Window &theWindow):
     currentPiece(&pieces),
     idCount(1)
 {
-    releasePiece();
-
     if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;
 
@@ -401,6 +440,11 @@ void boardMaster::resign()
 void boardMaster::offerDraw()
 {
     return; //ai rejects all offers for now
+}
+
+void boardMaster::requestNewGame()
+{
+    newGame();
 }
 
 std::string boardMaster::toString(sf::Time value) const

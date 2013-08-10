@@ -224,6 +224,8 @@ public:
         return iterator(this, pieces.right.find(givenSprite));
     }
 
+    void clear();
+
 
     piecesBimap();
 

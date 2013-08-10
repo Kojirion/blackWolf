@@ -73,6 +73,10 @@ private:
 
     void destroy(const int row, const int col); //will destroy the sprite in given location
 
+    void newGame();
+
+    void initPieces();
+
 
 public:
     boardMaster(sf::Window &theWindow);
@@ -114,6 +118,7 @@ public:
     void flipBoard();
     void resign();
     void offerDraw();
+    void requestNewGame();
 
 
 };
