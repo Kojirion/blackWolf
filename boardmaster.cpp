@@ -236,7 +236,6 @@ void boardMaster::display()
 
 sf::Vector2f boardMaster::cellToPosition(const int row, const int col) const
 {
-    /*_PUTIMAGE ((flip_offx * (9 - 2 * k%)) + 20 + 50 * (k% - 1), offset - (flip_offy * (9 - 2 * i%)) + 420 - 50 * i%)*/
     return sf::Vector2f(flipOffset.x * (7 - 2*col) + 20 + 50 * col, -flipOffset.y * (7 - 2*row) + 420 - 50 * (row+1));
 }
 
@@ -272,8 +271,7 @@ const sf::Texture &boardMaster::idToTexture(const int pieceId) const
 
 sf::Vector2f boardMaster::getMousePosition()
 {
-    sf::Vector2f windowPos = window_->GetAbsolutePosition() + static_cast<sf::Vector2f>(bigWindow.getPosition());
-    return (static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - windowPos);
+    return (static_cast<sf::Vector2f>(sf::Mouse::getPosition(bigWindow)) - window_->GetAbsolutePosition());
 }
 
 int boardMaster::getTurnColor() const
