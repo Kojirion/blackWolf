@@ -229,7 +229,28 @@ void boardMaster::promoteRook()
     promotionChoiceMade(1);
 }
 
-boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow):
+void boardMaster::whiteNewGame()
+{
+    sideChoiceWindow->Show(false);
+    boardWindow->SetState(sfg::Widget::NORMAL);
+    newGame(1);
+}
+
+void boardMaster::blackNewGame()
+{
+    sideChoiceWindow->Show(false);
+    boardWindow->SetState(sfg::Widget::NORMAL);
+    newGame(-1);
+}
+
+void boardMaster::bothNewGame()
+{
+    sideChoiceWindow->Show(false);
+    boardWindow->SetState(sfg::Widget::NORMAL);
+    newGame(2);
+}
+
+boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow):
     flipOffset(0),
     window_(sfg::Canvas::Create()),
     bigWindow(theWindow),
@@ -240,7 +261,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow)
     plyCounter(0), humanColor(1), humanBoth(false), gameEnded(false),
     currentPiece(&pieces),
     idCount(1),
-    choiceWindow(sfg::Window::Create()),
+    choiceWindow(sfg::Window::Create()), sideChoiceWindow(theSideChoiceWindow),
     boardWindow(theBoardWindow),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0)
 {
@@ -260,8 +281,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow)
     promotionBox->Pack(rookButton);
 
     choiceWindow->Add(promotionBox);
-
     choiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
+    choiceWindow->SetTitle("Choose piece");
 
     queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteQueen,this);
     bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteBishop,this);
@@ -530,7 +551,9 @@ void boardMaster::offerDraw()
 
 void boardMaster::requestNewGame()
 {
-    newGame(1);
+    sideChoiceWindow->Show(true);
+    desktop.BringToFront(sideChoiceWindow);
+    boardWindow->SetState(sfg::Widget::INSENSITIVE);
 }
 
 std::string boardMaster::toString(sf::Time value) const

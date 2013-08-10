@@ -88,7 +88,7 @@ private:
 
 
 public:
-    boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow);
+    boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow);
     ~boardMaster();
 
     sfg::Desktop desktop;
@@ -102,6 +102,7 @@ public:
     sfg::Table::Ptr moveList;
     sfg::Window::Ptr choiceWindow;
     sfg::Window::Ptr boardWindow;
+    sfg::Window::Ptr sideChoiceWindow;
 
     void display();
 
@@ -137,6 +138,10 @@ public:
     void promoteBishop();
     void promoteKnight();
     void promoteRook();
+
+    void whiteNewGame();
+    void blackNewGame();
+    void bothNewGame();
 
 
 };

@@ -9,10 +9,12 @@ class guiManager
 private:
     sfg::SFGUI sfgui_;
     sf::RenderWindow window;
+
 public:
     guiManager();
 
     void run();
+
 };
 
 #endif // GUIMANAGER_H

@@ -8,8 +8,9 @@ guiManager::guiManager():
 void guiManager::run()
 {
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
+    sfg::Window::Ptr sideChoiceWindow(sfg::Window::Create());
 
-    boardMaster boss(window, boardWindow);
+    boardMaster boss(window, boardWindow, sideChoiceWindow);
 
     sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
     moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
@@ -47,6 +48,27 @@ void guiManager::run()
     mainLayout->Attach(boss.turnLabel_,{1, 2, 1, 1});
     mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
     mainLayout->Attach(buttonLayout,{0,8,2,2});
+
+    //when making new game
+    boss.sideChoiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
+    boss.sideChoiceWindow->SetRequisition(sf::Vector2f(200.f,200.f));
+    boss.sideChoiceWindow->SetTitle("Choose color");
+
+    sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::VERTICAL, 5.f));
+    sfg::Button::Ptr whiteSide(sfg::Button::Create("White"));
+    sfg::Button::Ptr blackSide(sfg::Button::Create("Black"));
+    sfg::Button::Ptr bothSide(sfg::Button::Create("Both"));
+
+    whiteSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::whiteNewGame, &boss);
+    blackSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::blackNewGame, &boss);
+    bothSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::bothNewGame, &boss);
+
+    sideChoiceBox->Pack(whiteSide);
+    sideChoiceBox->Pack(blackSide);
+    sideChoiceBox->Pack(bothSide);
+    sideChoiceWindow->Add(sideChoiceBox);
+    sideChoiceWindow->Show(false);
+    boss.desktop.Add(sideChoiceWindow);
 
 
 
@@ -86,3 +108,5 @@ void guiManager::run()
     }
 
 }
+
+
