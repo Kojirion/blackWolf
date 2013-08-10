@@ -82,6 +82,8 @@ private:
     void initPieces();
     void resetRects();
 
+    void aiTurn();
+
     int toPromoteRow;
     int toPromoteCol;
     int promotionChoice; //which piece was chosen by either ai or player

@@ -168,6 +168,8 @@ void boardMaster::newGame(const int whoHuman)
 
     updateClocks();
 
+    if (humanColor!=getTurnColor()) aiTurn();
+
 }
 
 void boardMaster::initPieces()
@@ -193,6 +195,20 @@ void boardMaster::resetRects()
             rectGrid[i][j].top = toSet.y;
         }
     }
+}
+
+void boardMaster::aiTurn()
+{
+    chessEngine::move moveToMake = chessAi.getMove();
+    const int originRow = std::get<0>(moveToMake);
+    const int originCol = std::get<1>(moveToMake);
+    const int destRow = std::get<2>(moveToMake);
+    const int destCol = std::get<3>(moveToMake);
+
+    completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
+    BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
+
+    moveMake(toCheck);
 }
 
 void boardMaster::promotionChoiceMade(const int whichPiece)
@@ -448,16 +464,7 @@ void boardMaster::switchTurn()
         humanColor = getTurnColor();
     }
     else if (humanColor != getTurnColor()){
-        chessEngine::move moveToMake = chessAi.getMove();
-        const int originRow = std::get<0>(moveToMake);
-        const int originCol = std::get<1>(moveToMake);
-        const int destRow = std::get<2>(moveToMake);
-        const int destCol = std::get<3>(moveToMake);
-
-        completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
-        BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
-
-        moveMake(toCheck);
+        aiTurn();
     }
 }
 
