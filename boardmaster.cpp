@@ -236,7 +236,8 @@ void boardMaster::display()
 
 sf::Vector2f boardMaster::cellToPosition(const int row, const int col) const
 {
-    return sf::Vector2f(flipOffset.x * (9 - 2 * col) + 20 + 50 * col, (flipOffset.y * (9 - 2 * row)) + 420 - 50 * (row+1));
+    /*_PUTIMAGE ((flip_offx * (9 - 2 * k%)) + 20 + 50 * (k% - 1), offset - (flip_offy * (9 - 2 * i%)) + 420 - 50 * i%)*/
+    return sf::Vector2f(flipOffset.x * (7 - 2*col) + 20 + 50 * col, -flipOffset.y * (7 - 2*row) + 420 - 50 * (row+1));
 }
 
 const sf::Texture &boardMaster::idToTexture(const int pieceId) const
@@ -375,10 +376,15 @@ void boardMaster::processEnterCanvas()
     }
 }
 
-pieceSprite boardMaster::changePosition(pieceSprite piece, const sf::Vector2f position) const
+void boardMaster::flipBoard()
 {
-    piece.setPosition(position);
-    return piece;
+    if (flipOffset!=sf::Vector2f()) flipOffset = sf::Vector2f();
+    else flipOffset = sf::Vector2f(50.f,50.f);
+
+    for (auto &piece : pieces){
+        auto toFlip = pieces[piece];
+        toFlip.sendTo(cellToPosition(toFlip.getRow(), toFlip.getCol()));
+    }
 }
 
 std::string boardMaster::toString(sf::Time value) const

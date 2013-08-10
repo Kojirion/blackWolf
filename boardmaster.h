@@ -111,9 +111,8 @@ public:
     void processMouseMove();
     void processMouseRelease();
     void processEnterCanvas();
+    void flipBoard();
 
-    //modify functions
-    pieceSprite changePosition(pieceSprite piece, const sf::Vector2f position) const; //returns a new sprite with changed position
 
 };
 

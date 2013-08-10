@@ -121,7 +121,7 @@ public:
             pieceToUse = parent.pieces.project_right(parent.pieces.left.find(squareId(rowId,colId)));
         }
 
-        spriteHelper(piecesBimap &p, pieceSprite& piece):
+        spriteHelper(piecesBimap &p, const pieceSprite& piece):
             parent(p)
         {
             pieceToUse = parent.pieces.right.find(piece);
@@ -169,6 +169,16 @@ public:
             return pieceToUse->first.getSide();
         }
 
+        int getRow() const
+        {
+            return rowId;
+        }
+
+        int getCol() const
+        {
+            return colId;
+        }
+
 
     };
 
@@ -193,7 +203,7 @@ public:
         return indexHelper(*this, rowId);
     }
 
-    spriteHelper operator[](pieceSprite &toUse){
+    spriteHelper operator[](const pieceSprite &toUse){
         return spriteHelper(*this, toUse);
     }
 

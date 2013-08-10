@@ -1,3 +1,6 @@
+//describes a position
+//can be constructed given another position and a move to make on it
+//thus it is aware if move just made was castling, en passant or promotion
 #ifndef POSITION_H
 #define POSITION_H
 #include <vector>

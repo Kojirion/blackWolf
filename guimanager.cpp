@@ -13,12 +13,23 @@ void guiManager::run()
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(boss.moveList);
 
+    sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
+    flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
+
+
+    sfg::Table::Ptr buttonLayout(sfg::Table::Create());
+    buttonLayout->Attach(flipButton,{0,0,1,1});
+
+
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->Attach(boss.window_,{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
     mainLayout->Attach(boss.whiteClockCanvas_,{1, 0, 1, 1});
     mainLayout->Attach(boss.blackClockCanvas_,{1, 2, 1, 1});
     mainLayout->Attach(boss.turnLabel_,{1, 3, 1, 1});
     mainLayout->Attach(moveListWindow,{1, 4, 1, 4});
+    mainLayout->Attach(buttonLayout,{0,8,2,2});
+
+
 
 
     sfg::Window::Ptr boardWindow(sfg::Window::Create());

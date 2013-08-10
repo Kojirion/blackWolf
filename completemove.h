@@ -1,3 +1,8 @@
+//Is a boardMove
+//ensuring that the move won't be placing own side in check
+//that castling is legal
+//and also able to check if the game ended due to checkmate or stalemate
+
 #ifndef COMPLETEMOVE_H
 #define COMPLETEMOVE_H
 #include "boardmove.h"
