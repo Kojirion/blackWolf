@@ -79,6 +79,15 @@ int chessEngine::symbolToInt(std::string symbol) const
     if (symbol=="r") return 1;
 }
 
+std::string chessEngine::intToSymbol(const int which) const
+{
+    if (which == 4) return "q";
+    if (which == 2) return "b";
+    if (which == 3) return "k";
+    if (which == 1) return "r";
+}
+
+
 
 chessEngine::chessEngine()
 {
@@ -87,9 +96,10 @@ chessEngine::chessEngine()
     process.start("./stockfish","");
 }
 
-void chessEngine::makeMove(const int row1, const int col1, const int row2, const int col2)
+void chessEngine::makeMove(const int row1, const int col1, const int row2, const int col2, const int pieceChoice)
 {
     std::string toAdd = moveString(row1,col1,row2,col2);
+    if (pieceChoice!=0) toAdd += intToSymbol(pieceChoice);
     moveList += toAdd + " ";
 }
 
@@ -103,7 +113,7 @@ void chessEngine::newGame()
 chessEngine::move chessEngine::getMove()
 {
     toEngine("position startpos moves " + moveList);
-    toEngine("go depth 8");
+    toEngine("go depth 2");
 
     while(true){
         if (fromEngine()=="bestmove")

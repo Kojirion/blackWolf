@@ -79,7 +79,7 @@ void boardMaster::handlePromotion(const int row, const int col)
     toPromoteRow = row;
     toPromoteCol = col;
 
-    if (humanColor==getTurnColor()){
+    if (humanColor!=getTurnColor()){
         choiceWindow->Show(true);
         desktop.BringToFront(choiceWindow);
         boardWindow->SetState(sfg::Widget::INSENSITIVE);
@@ -95,7 +95,6 @@ void boardMaster::moveMake(const completeMove &move)
     const int destRow = move.getRow2();
     const int destCol = move.getCol2();
 
-    if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol); //update engine's internal board
     destroy(destRow,destCol); //destroy any sprites at destination
     pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition(destRow, destCol));
 
@@ -103,7 +102,13 @@ void boardMaster::moveMake(const completeMove &move)
     currentPosition = move.getNewBoard(); //set currentPosition to the new board of the move
     if (currentPosition.wasCastle) handleCastle(destRow,destCol);
     if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
-    if (currentPosition.wasPromotion) handlePromotion(destRow, destCol);
+    //handle promoition AND update the engine, depending on whether it was or not
+    if (currentPosition.wasPromotion){
+        handlePromotion(destRow, destCol);
+         if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+    }else{
+         if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol);
+    }
 
     //update move counter and move list widget
     sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(originRow,originCol,destRow,destCol)));
@@ -192,6 +197,7 @@ void boardMaster::resetRects()
 
 void boardMaster::promotionChoiceMade(const int whichPiece)
 {
+    promotionChoice = whichPiece;
     const int whichSide = pieces[toPromoteRow][toPromoteCol].getSide();
     destroy(toPromoteRow,toPromoteCol);
     pieceSprite toAdd(idToTexture(whichSide*whichPiece),cellToPosition(toPromoteRow,toPromoteCol),whichSide,idCount);
@@ -236,7 +242,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow)
     idCount(1),
     choiceWindow(sfg::Window::Create()),
     boardWindow(theBoardWindow),
-    toPromoteRow(0), toPromoteCol(0)
+    toPromoteRow(0), toPromoteCol(0), promotionChoice(0)
 {
     if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;

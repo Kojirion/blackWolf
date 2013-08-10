@@ -12,7 +12,7 @@ public:
 
     chessEngine();
 
-    void makeMove(const int row1, const int col1, const int row2, const int col2);
+    void makeMove(const int row1, const int col1, const int row2, const int col2, const int pieceChoice = 0);
 
     void newGame();
 
@@ -23,6 +23,7 @@ public:
     void unLoad();
 
     int getPromotionChoice() const;
+
 
 private:
     exec_stream_t process;
@@ -43,6 +44,7 @@ private:
 
 
     int symbolToInt(std::string symbol) const;
+    std::string intToSymbol(const int which) const;
     int promotedChoice;
 
 };

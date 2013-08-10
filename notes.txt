@@ -77,6 +77,8 @@ IT IS ASSUMED THAT STOCKFISH DENOTES THE KNIGHT BY K
 
 class with static enums that can be used for pieceCodes
 
+is player able to resign after game ended?
+
 
 
 

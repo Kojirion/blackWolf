@@ -84,6 +84,7 @@ private:
 
     int toPromoteRow;
     int toPromoteCol;
+    int promotionChoice; //which piece was chosen by either ai or player
 
 
 public:
