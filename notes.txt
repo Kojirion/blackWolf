@@ -51,8 +51,6 @@ hasLegalMoves has to consider promotion
 
 position should have std arrays
 
-have pieces work with range based for
-
 insert code in display loop that checks if it's ai's turn and if it has played its move, to avoid threads for now
 engine while use timers will processing input
 
@@ -64,11 +62,10 @@ is initialization done in order?
 
 try catch for loading the engine
 
-set the requisition on moveList thing
+
 
 split up newGame into cleanup and init, so the latter can be used in ctor
 
--toEngine and fromEngine functions to hide whether we 're using libexec or pstream or anything else
 
 add icons to move list
 

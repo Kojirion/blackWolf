@@ -20,6 +20,11 @@ void boardMaster::setGameEnded(const int result)
 
 }
 
+bool boardMaster::flipped() const
+{
+    return (flipOffset!=0);
+}
+
 bool boardMaster::pieceHeld()
 {
     return (currentPiece.isValid());
@@ -130,6 +135,14 @@ void boardMaster::newGame(const int whoHuman)
 
     gameEnded = false;
 
+    if (flipped()){
+        if (humanColor==1) flipBoard();
+    }else{
+        if (humanColor==-1) flipBoard();
+    }
+
+    resetRects();
+
     idCount = 1;
     pieces.clear();
 
@@ -142,8 +155,6 @@ void boardMaster::newGame(const int whoHuman)
     blackClock.stop();
 
     updateClocks();
-
-    //there should be a flipped bool
 
 }
 
@@ -161,8 +172,19 @@ void boardMaster::initPieces()
 
 }
 
+void boardMaster::resetRects()
+{
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            sf::Vector2f toSet = cellToPosition(i,j);
+            rectGrid[i][j].left = toSet.x;
+            rectGrid[i][j].top = toSet.y;
+        }
+    }
+}
+
 boardMaster::boardMaster(sf::Window &theWindow):
-    flipOffset(0,0),
+    flipOffset(0),
     window_(sfg::Canvas::Create()),
     bigWindow(theWindow),
     turnLabel_(sfg::Label::Create("White to play")),
@@ -228,13 +250,13 @@ boardMaster::boardMaster(sf::Window &theWindow):
     }
 
     whiteClockText.setFont(font);
-    whiteClockText.setCharacterSize(20);
-    //whiteClockText.setPosition(0.f, 0.f);
+    whiteClockText.setCharacterSize(30);
+    whiteClockText.setPosition(22.f,8.f);
     whiteClockText.setColor(sf::Color(0, 140, 190));
 
     blackClockText.setFont(font);
-    blackClockText.setCharacterSize(20);
-    //blackClockText.setPosition(70.f, 150.f);
+    blackClockText.setCharacterSize(30);
+    blackClockText.setPosition(22.f, 8.f);
     blackClockText.setColor(sf::Color(0, 140, 190));
 
     whiteClockCanvas_->SetRequisition(sf::Vector2f(100,50));
@@ -276,7 +298,7 @@ void boardMaster::display()
 
 sf::Vector2f boardMaster::cellToPosition(const int row, const int col) const
 {
-    return sf::Vector2f(flipOffset.x * (7 - 2*col) + 20 + 50 * col, -flipOffset.y * (7 - 2*row) + 420 - 50 * (row+1));
+    return sf::Vector2f(flipOffset * (7 - 2*col) + 20 + 50 * col, -flipOffset * (7 - 2*row) + 420 - 50 * (row+1));
 }
 
 const sf::Texture &boardMaster::idToTexture(const int pieceId) const
@@ -416,21 +438,15 @@ void boardMaster::processEnterCanvas()
 
 void boardMaster::flipBoard()
 {
-    if (flipOffset!=sf::Vector2f()) flipOffset = sf::Vector2f();
-    else flipOffset = sf::Vector2f(50.f,50.f);
+    if (flipped()) flipOffset = 0;
+    else flipOffset = 50;
 
     for (auto &piece : pieces){
         auto toFlip = pieces[piece];
         toFlip.sendTo(cellToPosition(toFlip.getRow(), toFlip.getCol()));
     }
 
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            sf::Vector2f toSet = cellToPosition(i,j);
-            rectGrid[i][j].left = toSet.x;
-            rectGrid[i][j].top = toSet.y;
-        }
-    }
+    resetRects();
 }
 
 void boardMaster::resign()

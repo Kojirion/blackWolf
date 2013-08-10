@@ -10,6 +10,7 @@ void guiManager::run()
     boardMaster boss(window);
 
     sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
+    moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(boss.moveList);
 

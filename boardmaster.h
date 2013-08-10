@@ -22,7 +22,7 @@ private:
 
     sf::Font font;
 
-    sf::Vector2f flipOffset;
+    int flipOffset;
 
     sf::Texture boardTexture_;
     sf::Sprite boardSprite_;    
@@ -49,6 +49,8 @@ private:
     void setGameEnded(const int result);
     chessEngine chessAi;
 
+    bool flipped() const;
+
     //std::map<squareId, pieceSprite> pieces;
     std::vector<std::vector<sf::FloatRect> > rectGrid;
 
@@ -73,9 +75,10 @@ private:
 
     void destroy(const int row, const int col); //will destroy the sprite in given location
 
-    void newGame();
+    void newGame(const int whoHuman);
 
     void initPieces();
+    void resetRects();
 
 
 public:
