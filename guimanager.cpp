@@ -16,17 +16,29 @@ void guiManager::run()
     sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
     flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
 
+    sfg::Button::Ptr resignButton(sfg::Button::Create("Resign"));
+    resignButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, &boss);
+
+    sfg::Button::Ptr drawButton(sfg::Button::Create("Offer draw"));
+    drawButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, &boss);
+
 
     sfg::Table::Ptr buttonLayout(sfg::Table::Create());
-    buttonLayout->Attach(flipButton,{0,0,1,1});
+    buttonLayout->SetRowSpacings(3.f);
+    buttonLayout->SetColumnSpacings(3.f);
+
+    buttonLayout->Attach(resignButton,{0,0,1,1});
+    buttonLayout->Attach(drawButton,{0,1,1,1});
+    buttonLayout->Attach(flipButton,{1,0,1,1});
 
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
+    mainLayout->SetRowSpacings(5.f);
     mainLayout->Attach(boss.window_,{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
     mainLayout->Attach(boss.whiteClockCanvas_,{1, 0, 1, 1});
-    mainLayout->Attach(boss.blackClockCanvas_,{1, 2, 1, 1});
-    mainLayout->Attach(boss.turnLabel_,{1, 3, 1, 1});
-    mainLayout->Attach(moveListWindow,{1, 4, 1, 4});
+    mainLayout->Attach(boss.blackClockCanvas_,{1, 1, 1, 1});
+    mainLayout->Attach(boss.turnLabel_,{1, 2, 1, 1});
+    mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
     mainLayout->Attach(buttonLayout,{0,8,2,2});
 
 

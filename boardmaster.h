@@ -112,6 +112,8 @@ public:
     void processMouseRelease();
     void processEnterCanvas();
     void flipBoard();
+    void resign();
+    void offerDraw();
 
 
 };

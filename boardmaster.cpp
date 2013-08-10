@@ -383,6 +383,24 @@ void boardMaster::flipBoard()
         auto toFlip = pieces[piece];
         toFlip.sendTo(cellToPosition(toFlip.getRow(), toFlip.getCol()));
     }
+
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            sf::Vector2f toSet = cellToPosition(i,j);
+            rectGrid[i][j].left = toSet.x;
+            rectGrid[i][j].top = toSet.y;
+        }
+    }
+}
+
+void boardMaster::resign()
+{
+    setGameEnded(-humanColor);
+}
+
+void boardMaster::offerDraw()
+{
+    return; //ai rejects all offers for now
 }
 
 std::string boardMaster::toString(sf::Time value) const
