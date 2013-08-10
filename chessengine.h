@@ -36,6 +36,9 @@ private:
 
     std::string moveList;
 
+    void toEngine(const std::string toPut);
+    std::string fromEngine();
+
 };
 
 #endif // CHESSENGINE_H

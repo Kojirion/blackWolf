@@ -135,6 +135,8 @@ void boardMaster::newGame()
     //display();
     //where will to play label be set??
 
+    //NEED TO TELL ENGINE NEW GAME
+
     //there should be a flipped bool
 
 }
@@ -150,6 +152,7 @@ void boardMaster::initPieces()
             idCount++;
         }
     }
+
 }
 
 boardMaster::boardMaster(sf::Window &theWindow):
@@ -204,15 +207,7 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteKingT.loadFromFile("Graphics/Pieces/WhiteK.png");
     whitePawnT.loadFromFile("Graphics/Pieces/WhiteP.png");
 
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            const int pieceId = currentPosition[i][j];
-            if (pieceId==0) continue;
-            pieceSprite toAdd(idToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
-            pieces[i][j].insert(toAdd);
-            idCount++;
-        }
-    }
+    initPieces();
 
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){

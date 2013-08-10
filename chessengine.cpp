@@ -2,11 +2,9 @@
 
 void chessEngine::waitForOk()
 {
-    process.in() << "isready" << std::endl;
+    toEngine("isready");
 
-    std::string str;
-    while (str!="readyok"){
-        process.out() >> str;
+    while (fromEngine()!="readyok"){
     }
 }
 
@@ -59,6 +57,18 @@ chessEngine::move chessEngine::stringToTuple(const std::string theString) const
     return std::make_tuple(row1,col1,row2,col2);
 }
 
+void chessEngine::toEngine(const std::string toPut)
+{
+    process.in() << toPut << std::endl;
+}
+
+std::string chessEngine::fromEngine()
+{
+    std::string toReturn;
+    process.out() >> toReturn;
+    return toReturn;
+}
+
 
 chessEngine::chessEngine()
 {
@@ -75,33 +85,30 @@ void chessEngine::makeMove(const int row1, const int col1, const int row2, const
 
 void chessEngine::newGame()
 {
-    process.in() << "ucinewgame" << std::endl;
-    //process << redi::pstreambuf::kill() << std::endl;
+    toEngine("ucinewgame");
+    moveList.clear();
     waitForOk();
 }
 
 chessEngine::move chessEngine::getMove()
 {
-    process.in() << ("position startpos moves " + moveList) << std::endl;
-    process.in() << "go depth 8" << std::endl;
+    toEngine("position startpos moves " + moveList);
+    toEngine("go depth 8");
 
-    std::string str;
-
-    while (process.out() >> str){
-        if (str=="bestmove"){
-            process.out() >> str;
-            return stringToTuple(str);
+    while(true){
+        if (fromEngine()=="bestmove")
+        {
+            return stringToTuple(fromEngine());
         }
     }
 }
 
 bool chessEngine::load()
 {
-    process.in() << "uci" << std::endl;
+    toEngine("uci");
 
-    std::string str;
-    while (str!="uciok"){
-        process.out() >> str;
+    while (fromEngine()!="uciok")
+    {
     }
 
     waitForOk();
@@ -111,8 +118,5 @@ bool chessEngine::load()
 
 void chessEngine::unLoad()
 {
-    process.in() << "quit" << std::endl;
-    //process.rdbuf->kill();
-    //while (!process.rdbuf()->exited()){}
-    //process.rdbuf()->status(); //throw away the exit status
+    toEngine("quit");
 }
