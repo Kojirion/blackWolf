@@ -22,6 +22,8 @@ public:
 
     void unLoad();
 
+    int getPromotionChoice() const;
+
 private:
     exec_stream_t process;
 
@@ -32,12 +34,16 @@ private:
     std::string colToString(const int col) const;
     int stringToCol(const std::string stringedCol) const;
 
-    move stringToTuple(const std::string theString) const;
+    move stringToTuple(const std::string theString);
 
     std::string moveList;
 
     void toEngine(const std::string toPut);
     std::string fromEngine();
+
+
+    int symbolToInt(std::string symbol) const;
+    int promotedChoice;
 
 };
 

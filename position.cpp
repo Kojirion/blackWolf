@@ -1,4 +1,5 @@
 #include "position.h"
+//#include <boost/assert.hpp>
 
 position::position()
 {
@@ -100,13 +101,11 @@ position::position(const position &givenPos, const int row1, const int col1, con
     //check if promotion - set to Queen for now
     if (pieceCode==5){
         if (row2==7){
-            wasPromotion = true;
-            cells[row2][col2] = 4;
+            wasPromotion = true;            
         }
     }else if (pieceCode==-5){
         if (row2==0){
-            wasPromotion = true;
-            cells[row2][col2] = -4;
+            wasPromotion = true;            
         }
     }
 
@@ -151,4 +150,9 @@ void position::init()
         }
     }
 
+}
+
+void position::setPromotion(const int row, const int col, const int chosenPiece)
+{
+    cells[row][col] = chosenPiece;
 }

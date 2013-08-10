@@ -7,7 +7,9 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
-    boardMaster boss(window);
+    sfg::Window::Ptr boardWindow(sfg::Window::Create());
+
+    boardMaster boss(window, boardWindow);
 
     sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
     moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
@@ -49,12 +51,14 @@ void guiManager::run()
 
 
 
-    sfg::Window::Ptr boardWindow(sfg::Window::Create());
+
     //boardWindow->SetTitle( "Board" );
     boardWindow->Add(mainLayout);
 
-    sfg::Desktop desktop;
-    desktop.Add(boardWindow);
+
+    boss.desktop.Add(boss.choiceWindow);
+    boss.desktop.Add(boardWindow);
+
 
     window.resetGLStates();
     sf::Clock clock;
@@ -64,7 +68,7 @@ void guiManager::run()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            desktop.HandleEvent(event);
+            boss.desktop.HandleEvent(event);
 
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -73,7 +77,7 @@ void guiManager::run()
             }
         }
 
-        desktop.Update(clock.restart().asSeconds());
+        boss.desktop.Update(clock.restart().asSeconds());
 
         window.clear();
         boss.display();

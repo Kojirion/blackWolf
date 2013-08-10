@@ -47,12 +47,14 @@ int chessEngine::stringToCol(const std::string stringedCol) const
     else if (stringedCol=="h") return 7;
 }
 
-chessEngine::move chessEngine::stringToTuple(const std::string theString) const
+chessEngine::move chessEngine::stringToTuple(const std::string theString)
 {
     const int row1 = std::stoi(theString.substr(1,1)) - 1;
     const int col1 = stringToCol(theString.substr(0,1));
     const int row2 = std::stoi(theString.substr(3,1)) - 1;
     const int col2 = stringToCol(theString.substr(2,1));
+
+    if (theString.size()==5) promotedChoice = symbolToInt(theString.substr(4,1));
 
     return std::make_tuple(row1,col1,row2,col2);
 }
@@ -67,6 +69,14 @@ std::string chessEngine::fromEngine()
     std::string toReturn;
     process.out() >> toReturn;
     return toReturn;
+}
+
+int chessEngine::symbolToInt(std::string symbol) const
+{
+    if (symbol=="q") return 4;
+    if (symbol=="b") return 2;
+    if (symbol=="k") return 3;
+    if (symbol=="r") return 1;
 }
 
 
@@ -119,4 +129,9 @@ bool chessEngine::load()
 void chessEngine::unLoad()
 {
     toEngine("quit");
+}
+
+int chessEngine::getPromotionChoice() const
+{
+    return promotedChoice;
 }

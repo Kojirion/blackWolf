@@ -4,6 +4,8 @@
 #include <SFGUI/Canvas.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Table.hpp>
+#include <SFGUI/Window.hpp>
+#include <SFGUI/Desktop.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
 #include "piecesbimap.h"
 #include "piecesprite.h"
@@ -80,10 +82,15 @@ private:
     void initPieces();
     void resetRects();
 
+    int toPromoteRow;
+    int toPromoteCol;
+
 
 public:
-    boardMaster(sf::Window &theWindow);
+    boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow);
     ~boardMaster();
+
+    sfg::Desktop desktop;
 
     sfg::Canvas::Ptr window_;
     sfg::Label::Ptr turnLabel_;
@@ -92,6 +99,8 @@ public:
     sf::Text whiteClockText;
     sf::Text blackClockText;
     sfg::Table::Ptr moveList;
+    sfg::Window::Ptr choiceWindow;
+    sfg::Window::Ptr boardWindow;
 
     void display();
 
@@ -122,6 +131,11 @@ public:
     void resign();
     void offerDraw();
     void requestNewGame();
+    void promotionChoiceMade(const int whichPiece);
+    void promoteQueen();
+    void promoteBishop();
+    void promoteKnight();
+    void promoteRook();
 
 
 };

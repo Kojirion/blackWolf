@@ -43,6 +43,8 @@ public:
     bool wasEnPassant;
     bool wasPromotion;
 
+    void setPromotion(const int row, const int col, const int chosenPiece);
+
 private:
     int cells[8][8];
 
@@ -53,7 +55,6 @@ private:
 
     void init();
 
-    void setPromotion(const int row, const int col, const int chosenPiece);
 
 };
 

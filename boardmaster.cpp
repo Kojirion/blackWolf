@@ -1,6 +1,8 @@
 #include "boardmaster.h"
 #include <sstream>
 #include <boost/assert.hpp>
+#include <SFGUI/Button.hpp>
+#include <SFGUI/Box.hpp>
 
 void boardMaster::setGameEnded(const int result)
 {
@@ -74,11 +76,16 @@ void boardMaster::handleEnPassant(const int row, const int col)
 
 void boardMaster::handlePromotion(const int row, const int col)
 {
-    const int whichSide = pieces[row][col].getSide();
-    destroy(row,col);
-    pieceSprite toAdd(idToTexture(whichSide*4),cellToPosition(row,col),whichSide,idCount);
-    pieces[row][col].insert(toAdd);
-    idCount++;
+    toPromoteRow = row;
+    toPromoteCol = col;
+
+    if (humanColor==getTurnColor()){
+        choiceWindow->Show(true);
+        desktop.BringToFront(choiceWindow);
+        boardWindow->SetState(sfg::Widget::INSENSITIVE);
+    }else{
+        promotionChoiceMade(chessAi.getPromotionChoice());
+    }
 }
 
 void boardMaster::moveMake(const completeMove &move)
@@ -183,7 +190,40 @@ void boardMaster::resetRects()
     }
 }
 
-boardMaster::boardMaster(sf::Window &theWindow):
+void boardMaster::promotionChoiceMade(const int whichPiece)
+{
+    const int whichSide = pieces[toPromoteRow][toPromoteCol].getSide();
+    destroy(toPromoteRow,toPromoteCol);
+    pieceSprite toAdd(idToTexture(whichSide*whichPiece),cellToPosition(toPromoteRow,toPromoteCol),whichSide,idCount);
+    pieces[toPromoteRow][toPromoteCol].insert(toAdd);
+    idCount++;
+    currentPosition.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
+
+    choiceWindow->Show(false);
+    boardWindow->SetState(sfg::Widget::NORMAL);
+}
+
+void boardMaster::promoteQueen()
+{
+    promotionChoiceMade(4);
+}
+
+void boardMaster::promoteBishop()
+{
+    promotionChoiceMade(2);
+}
+
+void boardMaster::promoteKnight()
+{
+    promotionChoiceMade(3);
+}
+
+void boardMaster::promoteRook()
+{
+    promotionChoiceMade(1);
+}
+
+boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow):
     flipOffset(0),
     window_(sfg::Canvas::Create()),
     bigWindow(theWindow),
@@ -191,15 +231,38 @@ boardMaster::boardMaster(sf::Window &theWindow):
     whiteClockCanvas_(sfg::Canvas::Create()),
     blackClockCanvas_(sfg::Canvas::Create()),
     moveList(sfg::Table::Create()),
-    plyCounter(0),
-    humanColor(1),
-    humanBoth(false),
-    gameEnded(false),
+    plyCounter(0), humanColor(1), humanBoth(false), gameEnded(false),
     currentPiece(&pieces),
-    idCount(1)
+    idCount(1),
+    choiceWindow(sfg::Window::Create()),
+    boardWindow(theBoardWindow),
+    toPromoteRow(0), toPromoteCol(0)
 {
     if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;
+
+    sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
+    sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
+    sfg::Button::Ptr knightButton(sfg::Button::Create("Knight"));
+    sfg::Button::Ptr rookButton(sfg::Button::Create("Rook"));
+
+    sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::HORIZONTAL, 3.f));
+
+    promotionBox->Pack(queenButton);
+    promotionBox->Pack(bishopButton);
+    promotionBox->Pack(knightButton);
+    promotionBox->Pack(rookButton);
+
+    choiceWindow->Add(promotionBox);
+
+    choiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
+
+    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteQueen,this);
+    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteBishop,this);
+    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteKnight,this);
+    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteRook,this);
+
+    choiceWindow->Show(false);
 
     whiteClock.connect(std::bind(&boardMaster::flagDown, this, 1));
     blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));

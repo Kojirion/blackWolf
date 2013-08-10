@@ -62,12 +62,20 @@ is initialization done in order?
 
 try catch for loading the engine
 
+can put the clocks into their own layouter to make smaller
+
 
 
 split up newGame into cleanup and init, so the latter can be used in ctor
 
 
 add icons to move list
+
+write a promotion handler mini-class
+
+IT IS ASSUMED THAT STOCKFISH DENOTES THE KNIGHT BY K
+
+class with static enums that can be used for pieceCodes
 
 
 
