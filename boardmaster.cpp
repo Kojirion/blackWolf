@@ -111,14 +111,23 @@ void boardMaster::destroy(const int row, const int col)
     pieces[row][col].erase();
 }
 
-void boardMaster::newGame()
+void boardMaster::newGame(const int whoHuman)
 {
     currentPosition = position();
 
     plyCounter = 0;
     moveList->RemoveAll();
+    turnLabel_->SetText("White to play");
 
-    humanColor = 1;
+    if (whoHuman==2){
+        humanColor = 1;
+        humanBoth = true;
+    }else{
+        humanColor = whoHuman;
+        humanBoth = false;
+    }
+
+
     gameEnded = false;
 
     idCount = 1;
@@ -126,16 +135,13 @@ void boardMaster::newGame()
 
     initPieces();
 
+    chessAi.newGame();
+
     whiteClock.restart(sf::seconds(300));
     blackClock.restart(sf::seconds(300));
     blackClock.stop();
 
     updateClocks();
-
-    //display();
-    //where will to play label be set??
-
-    //NEED TO TELL ENGINE NEW GAME
 
     //there should be a flipped bool
 
@@ -439,7 +445,7 @@ void boardMaster::offerDraw()
 
 void boardMaster::requestNewGame()
 {
-    newGame();
+    newGame(1);
 }
 
 std::string boardMaster::toString(sf::Time value) const
