@@ -76,7 +76,7 @@ int chessEngine::symbolToInt(std::string symbol) const
 {
     if (symbol=="q") return 4;
     if (symbol=="b") return 2;
-    if (symbol=="k") return 3;
+    if (symbol=="n") return 3;
     if (symbol=="r") return 1;
 }
 
@@ -84,7 +84,7 @@ std::string chessEngine::intToSymbol(const int which) const
 {
     if (which == 4) return "q";
     if (which == 2) return "b";
-    if (which == 3) return "k";
+    if (which == 3) return "n";
     if (which == 1) return "r";
 }
 

@@ -73,11 +73,11 @@ add icons to move list
 
 write a promotion handler mini-class
 
-IT IS ASSUMED THAT STOCKFISH DENOTES THE KNIGHT BY K
-
 class with static enums that can be used for pieceCodes
 
 is player able to resign after game ended?
+
+have to write all drawing conditions now
 
 
 
