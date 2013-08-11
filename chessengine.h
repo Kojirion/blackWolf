@@ -1,8 +1,10 @@
 #ifndef CHESSENGINE_H
 #define CHESSENGINE_H
-#include <libExecStream/exec-stream.h>
+#include <boost/process.hpp>
 #include <iostream>
 #include <tuple>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
 
 class chessEngine
 {
@@ -26,7 +28,17 @@ public:
 
 
 private:
-    exec_stream_t process;
+    boost::process::pipe engineOut;
+    boost::process::pipe engineIn;
+
+    boost::iostreams::file_descriptor_sink engineOutSink;
+    boost::iostreams::file_descriptor_source engineOutSource;
+
+    boost::iostreams::file_descriptor_sink engineInSink;
+    boost::iostreams::file_descriptor_source engineInSource;
+
+    boost::iostreams::stream<boost::iostreams::file_descriptor_source> engineOutStream;
+    boost::iostreams::stream<boost::iostreams::file_descriptor_sink> engineInStream;
 
     void waitForOk();
 

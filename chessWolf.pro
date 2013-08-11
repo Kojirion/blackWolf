@@ -11,12 +11,11 @@ SOURCES += main.cpp \
     completemove.cpp \
     chessengine.cpp \
     piecesbimap.cpp \
-    exec-stream.cpp
+    file_descriptor.cpp
 
-QMAKE_CXXFLAGS += -std=c++11 -pthread
+QMAKE_CXXFLAGS += -std=c++11
 
-
-LIBS += -pthread
+LIBS += /usr/local/lib/libboost_system.so
 LIBS += /usr/local/lib/libsfgui.so
 LIBS += /usr/local/lib/libthor.so
 LIBS += /usr/local/lib/libsfml-graphics.so.2

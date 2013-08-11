@@ -1,5 +1,6 @@
 #include "chessengine.h"
 
+
 void chessEngine::waitForOk()
 {
     toEngine("isready");
@@ -61,13 +62,13 @@ chessEngine::move chessEngine::stringToTuple(const std::string theString)
 
 void chessEngine::toEngine(const std::string toPut)
 {
-    process.in() << toPut << std::endl;
+    engineInStream << toPut << std::endl;
 }
 
 std::string chessEngine::fromEngine()
 {
     std::string toReturn;
-    process.out() >> toReturn;
+    engineOutStream >> toReturn;
     return toReturn;
 }
 
@@ -89,11 +90,17 @@ std::string chessEngine::intToSymbol(const int which) const
 
 
 
-chessEngine::chessEngine()
+chessEngine::chessEngine():
+    engineOut(boost::process::create_pipe()),
+    engineIn(boost::process::create_pipe()),
+    engineOutSink(engineOut.sink, boost::iostreams::close_handle),
+    engineOutSource(engineOut.source, boost::iostreams::close_handle),
+    engineInSink(engineIn.sink, boost::iostreams::close_handle),
+    engineInSource(engineIn.source, boost::iostreams::close_handle),
+    engineOutStream(engineOutSource),
+    engineInStream(engineInSink)
 {
-    process.set_wait_timeout(exec_stream_t::s_all,60000);
 
-    process.start("./stockfish","");
 }
 
 void chessEngine::makeMove(const int row1, const int col1, const int row2, const int col2, const int pieceChoice)
@@ -125,6 +132,14 @@ chessEngine::move chessEngine::getMove()
 
 bool chessEngine::load()
 {
+
+
+    //("./stockfish");
+
+    boost::process::execute(boost::process::initializers::run_exe("./stockfish"),
+                            boost::process::initializers::bind_stdout(engineOutSink),
+                            boost::process::initializers::bind_stdin(engineInSource));
+
     toEngine("uci");
 
     while (fromEngine()!="uciok")
