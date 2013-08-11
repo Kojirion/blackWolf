@@ -120,7 +120,7 @@ void chessEngine::newGame()
 chessEngine::move chessEngine::getMove()
 {
     toEngine("position startpos moves " + moveList);
-    toEngine("go depth 2");
+    toEngine("go depth 8");
 
     while(true){
         if (fromEngine()=="bestmove")
