@@ -9,7 +9,7 @@ int main()
     }
     catch (exception& e)
     {
-        cerr << "Exception: " << e.what() << "\n";
+        std::cerr << "Exception: " << e.what() << std::endl;
     }
 
 
