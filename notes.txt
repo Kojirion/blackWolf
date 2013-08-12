@@ -79,6 +79,10 @@ is player able to resign after game ended?
 
 have to write all drawing conditions now
 
+Thor arrows
+Play on Fics
+animate piece movement, multiple pieces
+
 
 
 
