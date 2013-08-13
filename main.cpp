@@ -1,16 +1,12 @@
 #include "guimanager.h"
+#include <iostream>
 
 int main()
 {
-    try {
-        guiManager app;
+    guiManager app;
 
-        app.run();
-    }
-    catch (exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
+    app.run();
+
 
 
     return 0;

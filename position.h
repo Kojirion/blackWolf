@@ -4,6 +4,7 @@
 #ifndef POSITION_H
 #define POSITION_H
 #include <vector>
+#include <array>
 
 class position{
 public:
@@ -46,7 +47,7 @@ public:
     void setPromotion(const int row, const int col, const int chosenPiece);
 
 private:
-    int cells[8][8];
+    std::array<std::array<int, 8>, 8> cells;
 
     friend class positionRow;
     const int&   pget(int row,int col) const{

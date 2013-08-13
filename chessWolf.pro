@@ -32,7 +32,8 @@ HEADERS += \
     boardmove.h \
     completemove.h \
     chessengine.h \
-    piecesbimap.h
+    piecesbimap.h \
+    blackWolf.h
 
 OTHER_FILES += \
     notes.txt \

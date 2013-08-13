@@ -469,32 +469,32 @@ void boardMaster::switchTurn()
 }
 
 
-    void boardMaster::sendBack()
-    {
-        BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
+void boardMaster::sendBack()
+{
+    BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-        pieces[currentPiece].sendTo(cellToPosition(currentPiece.getRow(),currentPiece.getCol()));
-        
-        releasePiece();
-    }
+    pieces[currentPiece].sendTo(cellToPosition(currentPiece.getRow(),currentPiece.getCol()));
 
-    void boardMaster::processLeftClick()
-    {
-        if (gameEnded) return;
-        if (humanColor != getTurnColor()) return; //must alter this for pre-move in future
+    releasePiece();
+}
 
-        clickedPoint = getMousePosition();
+void boardMaster::processLeftClick()
+{
+    if (gameEnded) return;
+    if (humanColor != getTurnColor()) return; //must alter this for pre-move in future
 
-        const int whoseTurn = getTurnColor();
+    clickedPoint = getMousePosition();
 
-        for (auto &piece : pieces){
-            if (piece.getSide()!=whoseTurn) continue;
-            if (piece.contains(clickedPoint)){
-                currentPiece = pieces.spriteToIt(piece);
-                break;
-            }
+    const int whoseTurn = getTurnColor();
+
+    for (auto &piece : pieces){
+        if (piece.getSide()!=whoseTurn) continue;
+        if (piece.contains(clickedPoint)){
+            currentPiece = pieces.spriteToIt(piece);
+            break;
         }
     }
+}
 
 void boardMaster::processMouseMove()
 {
@@ -563,18 +563,17 @@ void boardMaster::requestNewGame()
     boardWindow->SetState(sfg::Widget::INSENSITIVE);
 }
 
-std::string boardMaster::toString(sf::Time value) const
+std::string boardMaster::timeToString(const sf::Time value) const
 {
-    int minutes = value.asSeconds()/60;
-    int seconds = static_cast<int>(value.asSeconds())%60;
+    const int totalSeconds = static_cast<int>(std::ceil(value.asSeconds()));
+    int minutes = totalSeconds/60;
+    int seconds = totalSeconds%60;
 
-    std::ostringstream stream;
-    stream.setf(std::ios_base::fixed);
-    stream.precision(2);
-    stream << minutes << ":";
-    if (seconds<10) stream << "0";
-    stream << seconds;
-    return stream.str();
+    std::string toReturn = std::to_string(minutes) + ":";
+    if (seconds<10) toReturn += "0" + std::to_string(seconds);
+    else toReturn += std::to_string(seconds);
+
+    return toReturn;
 }
 
 std::string boardMaster::colToString(const int col) const
@@ -612,12 +611,12 @@ std::string boardMaster::cellToString(const int row, const int col) const
 void boardMaster::updateClocks()
 {
     whiteClock.update();
-    whiteClockText.setString(toString(whiteClock.getRemainingTime()));
+    whiteClockText.setString(timeToString(whiteClock.getRemainingTime()));
     whiteClockCanvas_->Clear();
     whiteClockCanvas_->Draw(whiteClockText);
 
     blackClock.update();
-    blackClockText.setString(toString(blackClock.getRemainingTime()));
+    blackClockText.setString(timeToString(blackClock.getRemainingTime()));
     blackClockCanvas_->Clear();
     blackClockCanvas_->Draw(blackClockText);    
 }
