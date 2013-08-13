@@ -12,6 +12,7 @@
 #include "position.h"
 #include "completemove.h"
 #include "chessengine.h"
+#include "resourcemanager.h"
 
 
 
@@ -23,6 +24,7 @@ private:
     sf::Window &bigWindow; //only to know its position
 
     sf::Font font;
+    resourceManager resources;
 
     int flipOffset;
 
@@ -30,18 +32,7 @@ private:
     sf::Sprite boardSprite_;    
     position currentPosition;
 
-    sf::Texture blackRookT;
-    sf::Texture blackBishopT;
-    sf::Texture blackKnightT;
-    sf::Texture blackQueenT;
-    sf::Texture blackKingT;
-    sf::Texture blackPawnT;
-    sf::Texture whiteRookT;
-    sf::Texture whiteBishopT;
-    sf::Texture whiteKnightT;
-    sf::Texture whiteQueenT;
-    sf::Texture whiteKingT;
-    sf::Texture whitePawnT;
+
 
     piecesBimap pieces;
 
