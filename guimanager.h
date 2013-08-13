@@ -9,6 +9,7 @@ class guiManager
 private:
     sfg::SFGUI sfgui_;
     sf::RenderWindow window;
+    sf::Image icon;
 
 public:
     guiManager();

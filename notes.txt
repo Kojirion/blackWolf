@@ -83,6 +83,6 @@ Thor arrows
 Play on Fics
 animate piece movement, multiple pieces
 
-
+names of properties can be put in a property tree to allow users to create their own
 
 
