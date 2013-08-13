@@ -28,7 +28,19 @@ private:
 public:
     resourceManager();
 
-    const sf::Texture& getWhiteRook();
+    const sf::Texture& getWhiteRook() const;
+    const sf::Texture& getWhiteBishop() const;
+    const sf::Texture& getWhiteKnight() const;
+    const sf::Texture& getWhiteQueen() const;
+    const sf::Texture& getWhitePawn() const;
+    const sf::Texture& getWhiteKing() const ;
+    const sf::Texture& getBlackRook() const;
+    const sf::Texture& getBlackBishop() const;
+    const sf::Texture& getBlackKnight() const;
+    const sf::Texture& getBlackQueen() const;
+    const sf::Texture& getBlackPawn() const;
+    const sf::Texture& getBlack() const;
+
 
     void load();
 };
