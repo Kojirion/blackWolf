@@ -3,8 +3,10 @@
 guiManager::guiManager():
     window(sf::VideoMode(600, 600), "Black Wolf")
 {
-    icon.loadFromFile("Graphics/Boardbrown.jpg");
-    window.setIcon(256,256,icon.getPixelsPtr());
+    window.setFramerateLimit(60);
+
+    //icon.loadFromFile("Graphics/Pieces/Boardbrown.jpg");
+    //window.setIcon(32,32,icon.getPixelsPtr());
 }
 
 void guiManager::run()
