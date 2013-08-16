@@ -2,44 +2,12 @@
 #include <iostream>
 
 resourceManager::resourceManager():
-    whitePrefix("White"),
-    blackPrefix("Black"),
-    boardSuffix("brown")
+    whitePrefix("Blue"),
+    blackPrefix("Yellow"),
+    boardSuffix("brown"),
+    pathToPieces("Graphics/Pieces/")
 {
-    thor::ResourceKey<sf::Texture> blackRookT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackR.png");
-    thor::ResourceKey<sf::Texture> blackBishopT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackB.png");
-    thor::ResourceKey<sf::Texture> blackKnightT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackN.png");
-    thor::ResourceKey<sf::Texture> blackQueenT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackQ.png");
-    thor::ResourceKey<sf::Texture> blackKingT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackK.png");
-    thor::ResourceKey<sf::Texture> blackPawnT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/BlackP.png");
-    thor::ResourceKey<sf::Texture> whiteRookT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteR.png");
-    thor::ResourceKey<sf::Texture> whiteBishopT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteB.png");
-    thor::ResourceKey<sf::Texture> whiteKnightT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteN.png");
-    thor::ResourceKey<sf::Texture> whiteQueenT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteQ.png");
-    thor::ResourceKey<sf::Texture> whiteKingT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteK.png");
-    thor::ResourceKey<sf::Texture> whitePawnT = thor::Resources::fromFile<sf::Texture>("Graphics/Pieces/WhiteP.png");
-
-    try
-    {
-        whiteRook = cache.acquire(whiteRookT);
-        whiteBishop = cache.acquire(whiteBishopT);
-        whiteKnight = cache.acquire(whiteKnightT);
-        whiteQueen = cache.acquire(whiteQueenT);
-        whitePawn = cache.acquire(whitePawnT);
-        whiteKing = cache.acquire(whiteKingT);
-        blackRook = cache.acquire(blackRookT);
-        blackBishop = cache.acquire(blackBishopT);
-        blackKnight = cache.acquire(blackKnightT);
-        blackQueen = cache.acquire(blackQueenT);
-        blackPawn = cache.acquire(blackPawnT);
-        blackKing = cache.acquire(blackKingT);
-
-    }
-    catch (thor::ResourceLoadingException& e)
-    {
-        std::cerr << e.what() << std::endl;
-        //throw - the gui must catch it
-    }
+    load();
 }
 
 const sf::Texture &resourceManager::typeToTexture(const int pieceType) const
@@ -74,5 +42,37 @@ const sf::Texture &resourceManager::typeToTexture(const int pieceType) const
 
 void resourceManager::load()
 {
+    thor::ResourceKey<sf::Texture> blackRookT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "R.png");
+    thor::ResourceKey<sf::Texture> blackBishopT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "B.png");
+    thor::ResourceKey<sf::Texture> blackKnightT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "N.png");
+    thor::ResourceKey<sf::Texture> blackQueenT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "Q.png");
+    thor::ResourceKey<sf::Texture> blackKingT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "K.png");
+    thor::ResourceKey<sf::Texture> blackPawnT = thor::Resources::fromFile<sf::Texture>(pathToPieces + blackPrefix + "P.png");
+    thor::ResourceKey<sf::Texture> whiteRookT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "R.png");
+    thor::ResourceKey<sf::Texture> whiteBishopT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "B.png");
+    thor::ResourceKey<sf::Texture> whiteKnightT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "N.png");
+    thor::ResourceKey<sf::Texture> whiteQueenT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "Q.png");
+    thor::ResourceKey<sf::Texture> whiteKingT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "K.png");
+    thor::ResourceKey<sf::Texture> whitePawnT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "P.png");
 
+    try
+    {
+        whiteRook = cache.acquire(whiteRookT);
+        whiteBishop = cache.acquire(whiteBishopT);
+        whiteKnight = cache.acquire(whiteKnightT);
+        whiteQueen = cache.acquire(whiteQueenT);
+        whitePawn = cache.acquire(whitePawnT);
+        whiteKing = cache.acquire(whiteKingT);
+        blackRook = cache.acquire(blackRookT);
+        blackBishop = cache.acquire(blackBishopT);
+        blackKnight = cache.acquire(blackKnightT);
+        blackQueen = cache.acquire(blackQueenT);
+        blackPawn = cache.acquire(blackPawnT);
+        blackKing = cache.acquire(blackKingT);
+    }
+    catch (thor::ResourceLoadingException& e)
+    {
+        std::cerr << e.what() << std::endl;
+        //throw - the gui must catch it
+    }
 }

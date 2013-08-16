@@ -5,7 +5,7 @@ guiManager::guiManager():
 {
     window.setFramerateLimit(60);
 
-    //icon.loadFromFile("Graphics/Pieces/Boardbrown.jpg");
+    //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());
 }
 

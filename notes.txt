@@ -14,17 +14,8 @@ since we ensure boost::sign won't return 0, could we have better results with a 
 
  --is there a way to turn parts of code off?
 
-For castle to work, it's not enough to update the cells - the boardManager must somehow receive a signal to adjust the rook's position.
-Therefore, position will have a wasCastle bool member the value of which is set in it ctor,
-which both boardMove and boardManager can check.
 
-introduce an optional modifier on construction of move/position to avoid same color error on castling
-
-make a move make function
-checkmate checking
-rook couldn't move bug
-
-dummy cell
+?introduce an optional modifier on construction of move/position to avoid same color error on castling
 
 add enums instead of pieceCodes
 
@@ -85,4 +76,12 @@ animate piece movement, multiple pieces
 
 names of properties can be put in a property tree to allow users to create their own
 
+is knightLegal can be improved
+unit tests
 
+make boardManager, guiManager, resourceManager etc non-copyable
+
+a game class that holds info like humanboth, game ended etc
+move list class, clock class, promotionHandler class
+
+isCheck reusable?

@@ -102,7 +102,7 @@ void boardMaster::moveMake(const completeMove &move)
     currentPosition = move.getNewBoard(); //set currentPosition to the new board of the move
     if (currentPosition.wasCastle) handleCastle(destRow,destCol);
     if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
-    //handle promoition AND update the engine, depending on whether it was or not
+    //handle promotion AND update the engine, depending on whether it was or not
     if (currentPosition.wasPromotion){
         handlePromotion(destRow, destCol);
          if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
