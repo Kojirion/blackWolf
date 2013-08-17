@@ -1,8 +1,8 @@
 #include "boardmaster.h"
 #include <sstream>
 #include <boost/assert.hpp>
-#include <SFGUI/Button.hpp>
 #include <SFGUI/Box.hpp>
+#include <SFGUI/ScrolledWindow.hpp>
 
 void boardMaster::setGameEnded(const int result)
 {
@@ -280,7 +280,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     choiceWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
-    desktop(theDesktop)
+    desktop(theDesktop),
+    settingsButton(sfg::Button::Create("Settings"))
 {
     if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;
@@ -343,6 +344,77 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
         }
     }
 
+    //gui setup
+    sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
+    moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
+    moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
+    moveListWindow->AddWithViewport(moveList);
+
+    sfg::Button::Ptr resignButton(sfg::Button::Create("Resign"));
+    resignButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
+
+    sfg::Button::Ptr drawButton(sfg::Button::Create("Offer draw"));
+    drawButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
+
+    sfg::Button::Ptr newGameButton(sfg::Button::Create("New game"));
+    newGameButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
+
+    sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
+    flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, this);
+
+    sfg::Table::Ptr buttonLayout(sfg::Table::Create());
+    buttonLayout->SetRowSpacings(3.f);
+    buttonLayout->SetColumnSpacings(3.f);
+
+    buttonLayout->Attach(resignButton,{0,0,1,1});
+    buttonLayout->Attach(drawButton,{0,1,1,1});
+    buttonLayout->Attach(newGameButton,{1,0,1,1});
+    buttonLayout->Attach(flipButton,{1,1,1,1});
+    buttonLayout->Attach(settingsButton,{2,0,1,1});
+
+
+    sfg::Table::Ptr mainLayout(sfg::Table::Create());
+    mainLayout->SetRowSpacings(5.f);
+    mainLayout->Attach(window_,{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(whiteClockCanvas_,{1, 0, 1, 1});
+    mainLayout->Attach(blackClockCanvas_,{1, 1, 1, 1});
+    mainLayout->Attach(turnLabel_,{1, 2, 1, 1});
+    mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
+    mainLayout->Attach(buttonLayout,{0,8,2,2});
+
+    //when making new game
+    sideChoiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
+    sideChoiceWindow->SetRequisition(sf::Vector2f(200.f,200.f));
+    sideChoiceWindow->SetTitle("Choose color");
+
+    sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::VERTICAL, 5.f));
+    sfg::Button::Ptr whiteSide(sfg::Button::Create("White"));
+    sfg::Button::Ptr blackSide(sfg::Button::Create("Black"));
+    sfg::Button::Ptr bothSide(sfg::Button::Create("Both"));
+
+    whiteSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::whiteNewGame, this);
+    blackSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::blackNewGame, this);
+    bothSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::bothNewGame, this);
+
+    sideChoiceBox->Pack(whiteSide);
+    sideChoiceBox->Pack(blackSide);
+    sideChoiceBox->Pack(bothSide);
+    sideChoiceWindow->Add(sideChoiceBox);
+    sideChoiceWindow->Show(false);
+    desktop.Add(sideChoiceWindow);
+
+
+
+
+
+    //boardWindow->SetTitle( "Board" );
+    boardWindow->Add(mainLayout);
+
+
+    desktop.Add(choiceWindow);
+    desktop.Add(boardWindow);
+
+
     whiteClockText.setFont(font);
     whiteClockText.setCharacterSize(30);
     whiteClockText.setPosition(22.f,8.f);
@@ -354,7 +426,6 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     blackClockText.setColor(sf::Color(0, 140, 190));
 
     whiteClockCanvas_->SetRequisition(sf::Vector2f(100,50));
-    blackClockCanvas_ = sfg::Canvas::Create();
     blackClockCanvas_->SetRequisition(sf::Vector2f(100,50));
 
     whiteClock.restart(sf::seconds(300));

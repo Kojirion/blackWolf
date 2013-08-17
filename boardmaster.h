@@ -6,6 +6,7 @@
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Desktop.hpp>
+#include <SFGUI/Button.hpp>
 #include <Thor/Time/CallbackTimer.hpp>
 #include "piecesbimap.h"
 #include "piecesprite.h"
@@ -96,6 +97,7 @@ public:
     sfg::Window::Ptr choiceWindow;
     sfg::Window::Ptr boardWindow;
     sfg::Window::Ptr sideChoiceWindow;
+    sfg::Button::Ptr settingsButton;
 
     void display();
 
