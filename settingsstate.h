@@ -12,6 +12,7 @@ public:
     sfg::Window::Ptr window;
     //sfg::Desktop& desktop;
     settingsState();
+    void makeVisible();
 };
 
 #endif // SETTINGSSTATE_H

@@ -86,3 +86,5 @@ move list class, clock class, promotionHandler class
 
 isCheck reusable?
 on checkSafe: boardMove or completeMove?
+
+communication with engine: Asio vs polling

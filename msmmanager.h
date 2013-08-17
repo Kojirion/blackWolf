@@ -39,27 +39,29 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
     struct settingsEntry
     {
         template <class Event,class FSM,class STATE>
-        void operator()(Event const&,FSM&,STATE& )
+        void operator()(Event const&,FSM& fsm,STATE& )
         {
-            //settingsData.window->Show(true);
+            fsm.settingsData.makeVisible();
             //desktop.BringToFront(settingsData.window);
         }
     };
+    struct settingsExit
+    {
+        template <class Event,class FSM,class STATE>
+        void operator()(Event const&,FSM&,STATE& )
+        {
+            //settingsData.makeVisible();
+            //desktop.BringToFront(settingsData.window);
+        }
+    };
+
     struct settingsTag
     {
         //settingsState settings;
     };
-    typedef msm::front::euml::func_state<settingsTag> settings;
+    typedef msm::front::euml::func_state<settingsTag,settingsEntry,settingsExit> settings;
 
     //transitions
-    /*struct TestFct
-    {
-        template <class EVT,class FSM,class SourceState,class TargetState>
-        void operator()(EVT const&, FSM&,SourceState& ,TargetState& )
-        {
-            cout << "transition with event:" << typeid(EVT).name() << endl;
-        }
-    };*/
 
     //initial state
     typedef gameOn initial_state;
