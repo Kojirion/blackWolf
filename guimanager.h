@@ -15,12 +15,11 @@ private:
     //sf::Image icon;
 
     void settingsClicked();
-
+    void settingsClosed();
 public:
     guiManager();
 
     void run();
-
 };
 
 #endif // GUIMANAGER_H

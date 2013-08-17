@@ -5,6 +5,11 @@ void guiManager::settingsClicked()
     stateManager.process_event(settingsOpen());
 }
 
+void guiManager::settingsClosed()
+{
+    stateManager.process_event(settingsClose());
+}
+
 guiManager::guiManager():
     window(sf::VideoMode(600, 600), "Black Wolf"),
     stateManager(boost::ref(desktop))
@@ -18,6 +23,9 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
+    stateManager.settingsData.closeButton->
+            GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClosed, this);
+
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
     sfg::Window::Ptr sideChoiceWindow(sfg::Window::Create());
 

@@ -33,6 +33,22 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
     }
 
     //states
+    struct gameOnEntry
+    {
+        template <class Event,class FSM,class STATE>
+        void operator()(Event const&,FSM& fsm,STATE& )
+        {
+
+        }
+    };
+    struct gameOnExit
+    {
+        template <class Event,class FSM,class STATE>
+        void operator()(Event const&,FSM& fsm,STATE& )
+        {
+
+        }
+    };
     struct gameOnTag{};
     typedef msm::front::euml::func_state<gameOnTag> gameOn;
 
@@ -42,16 +58,15 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
         void operator()(Event const&,FSM& fsm,STATE& )
         {
             fsm.settingsData.makeVisible();
-            //desktop.BringToFront(settingsData.window);
+            fsm.desktop.BringToFront(fsm.settingsData.window);
         }
     };
     struct settingsExit
     {
         template <class Event,class FSM,class STATE>
-        void operator()(Event const&,FSM&,STATE& )
+        void operator()(Event const&,FSM& fsm,STATE& )
         {
-            //settingsData.makeVisible();
-            //desktop.BringToFront(settingsData.window);
+            fsm.settingsData.window->Show(false);
         }
     };
 
