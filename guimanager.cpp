@@ -1,9 +1,16 @@
 #include "guimanager.h"
 
+void guiManager::settingsClicked()
+{
+    stateManager.process_event(settingsOpen());
+}
+
 guiManager::guiManager():
-    window(sf::VideoMode(600, 600), "Black Wolf")
+    window(sf::VideoMode(600, 600), "Black Wolf"),
+    stateManager(boost::ref(desktop))
 {
     window.setFramerateLimit(60);
+    stateManager.start();
 
     //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());
@@ -11,8 +18,6 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
-    sfg::Desktop desktop;
-
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
     sfg::Window::Ptr sideChoiceWindow(sfg::Window::Create());
 
@@ -36,7 +41,7 @@ void guiManager::run()
     flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
 
     sfg::Button::Ptr settingsButton(sfg::Button::Create("Settings"));
-    //settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect()
+    settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClicked, this);
 
 
     sfg::Table::Ptr buttonLayout(sfg::Table::Create());

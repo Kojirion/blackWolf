@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     piecesbimap.cpp \
     file_descriptor.cpp \
     resourcemanager.cpp \
-    msmmanager.cpp
+    msmmanager.cpp \
+    settingsstate.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -37,7 +38,8 @@ HEADERS += \
     piecesbimap.h \
     blackWolf.h \
     resourcemanager.h \
-    msmmanager.h
+    msmmanager.h \
+    settingsstate.h
 
 OTHER_FILES += \
     notes.txt \

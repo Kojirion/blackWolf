@@ -10,8 +10,11 @@ class guiManager
 private:
     sfg::SFGUI sfgui_;
     sf::RenderWindow window;
-    msmManager stateManager;
+    sfg::Desktop desktop;
+    stateMachine stateManager;
     //sf::Image icon;
+
+    void settingsClicked();
 
 public:
     guiManager();

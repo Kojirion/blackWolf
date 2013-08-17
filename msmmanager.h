@@ -8,6 +8,10 @@
 #include <boost/msm/front/euml/operator.hpp>
 #include <boost/msm/front/euml/state_grammar.hpp>
 #include "boardmaster.h"
+#include "settingsstate.h"
+#include <SFGUI/Desktop.hpp>
+
+namespace {
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
@@ -19,12 +23,45 @@ struct settingsClose{};
 //front end
 struct msmManager : public msm::front::state_machine_def<msmManager>
 {
+    settingsState settingsData;
+    sfg::Desktop& desktop;
+
+    msmManager(sfg::Desktop& theDesktop):
+        desktop(theDesktop)
+    {
+        desktop.Add(settingsData.window);
+    }
+
+    //states
     struct gameOnTag{};
     typedef msm::front::euml::func_state<gameOnTag> gameOn;
 
-    struct settingsTag{};
+    struct settingsEntry
+    {
+        template <class Event,class FSM,class STATE>
+        void operator()(Event const&,FSM&,STATE& )
+        {
+            //settingsData.window->Show(true);
+            //desktop.BringToFront(settingsData.window);
+        }
+    };
+    struct settingsTag
+    {
+        //settingsState settings;
+    };
     typedef msm::front::euml::func_state<settingsTag> settings;
 
+    //transitions
+    /*struct TestFct
+    {
+        template <class EVT,class FSM,class SourceState,class TargetState>
+        void operator()(EVT const&, FSM&,SourceState& ,TargetState& )
+        {
+            cout << "transition with event:" << typeid(EVT).name() << endl;
+        }
+    };*/
+
+    //initial state
     typedef gameOn initial_state;
 
     struct transition_table : mpl::vector<
@@ -34,7 +71,8 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
 
 };
 
-typedef msm::back::state_machine<msmManager> machine;
+typedef msm::back::state_machine<msmManager> stateMachine;
+} //namespace
 
 
 #endif // MSMMANAGER_H
