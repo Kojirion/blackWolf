@@ -81,10 +81,11 @@ private:
 
 
 public:
-    boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow);
+    boardMaster(sf::Window& theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow,
+                sfg::Desktop& theDesktop);
     ~boardMaster();
 
-    sfg::Desktop desktop;
+    sfg::Desktop& desktop;
 
     sfg::Canvas::Ptr window_;
     sfg::Label::Ptr turnLabel_;

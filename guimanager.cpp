@@ -11,10 +11,12 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
+    sfg::Desktop desktop;
+
     sfg::Window::Ptr boardWindow(sfg::Window::Create());
     sfg::Window::Ptr sideChoiceWindow(sfg::Window::Create());
 
-    boardMaster boss(window, boardWindow, sideChoiceWindow);
+    boardMaster boss(window, boardWindow, sideChoiceWindow, desktop);
 
     sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
     moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
@@ -33,6 +35,9 @@ void guiManager::run()
     sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
     flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, &boss);
 
+    sfg::Button::Ptr settingsButton(sfg::Button::Create("Settings"));
+    //settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect()
+
 
     sfg::Table::Ptr buttonLayout(sfg::Table::Create());
     buttonLayout->SetRowSpacings(3.f);
@@ -42,6 +47,7 @@ void guiManager::run()
     buttonLayout->Attach(drawButton,{0,1,1,1});
     buttonLayout->Attach(newGameButton,{1,0,1,1});
     buttonLayout->Attach(flipButton,{1,1,1,1});
+    buttonLayout->Attach(settingsButton,{2,0,1,1});
 
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());

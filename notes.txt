@@ -85,3 +85,4 @@ a game class that holds info like humanboth, game ended etc
 move list class, clock class, promotionHandler class
 
 isCheck reusable?
+on checkSafe: boardMove or completeMove?

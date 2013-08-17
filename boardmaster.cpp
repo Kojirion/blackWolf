@@ -266,7 +266,7 @@ void boardMaster::bothNewGame()
     newGame(2);
 }
 
-boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow):
+boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow, sfg::Desktop &theDesktop):
     flipOffset(0),
     window_(sfg::Canvas::Create()),
     bigWindow(theWindow),
@@ -279,7 +279,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow,
     idCount(1),
     choiceWindow(sfg::Window::Create()), sideChoiceWindow(theSideChoiceWindow),
     boardWindow(theBoardWindow),
-    toPromoteRow(0), toPromoteCol(0), promotionChoice(0)
+    toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
+    desktop(theDesktop)
 {
     if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;

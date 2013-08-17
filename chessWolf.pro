@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     chessengine.cpp \
     piecesbimap.cpp \
     file_descriptor.cpp \
-    resourcemanager.cpp
+    resourcemanager.cpp \
+    msmmanager.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -35,7 +36,8 @@ HEADERS += \
     chessengine.h \
     piecesbimap.h \
     blackWolf.h \
-    resourcemanager.h
+    resourcemanager.h \
+    msmmanager.h
 
 OTHER_FILES += \
     notes.txt \
