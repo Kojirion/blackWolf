@@ -9,6 +9,7 @@
 #include <boost/msm/front/euml/state_grammar.hpp>
 #include "boardmaster.h"
 #include "settingsstate.h"
+#include "boardmaster.h"
 #include <SFGUI/Desktop.hpp>
 
 namespace {

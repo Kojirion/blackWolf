@@ -23,13 +23,12 @@ guiManager::guiManager():
 
 void guiManager::run()
 {
+    //connect settings close to button to signal
+    //guiManager's involment could be done away with
     stateManager.settingsData.closeButton->
             GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClosed, this);
 
-    sfg::Window::Ptr boardWindow(sfg::Window::Create());
-    sfg::Window::Ptr sideChoiceWindow(sfg::Window::Create());
-
-    boardMaster boss(window, boardWindow, sideChoiceWindow, desktop);
+    boardMaster boss(window, desktop);
 
     sfg::ScrolledWindow::Ptr moveListWindow(sfg::ScrolledWindow::Create());
     moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
@@ -89,20 +88,20 @@ void guiManager::run()
     sideChoiceBox->Pack(whiteSide);
     sideChoiceBox->Pack(blackSide);
     sideChoiceBox->Pack(bothSide);
-    sideChoiceWindow->Add(sideChoiceBox);
-    sideChoiceWindow->Show(false);
-    boss.desktop.Add(sideChoiceWindow);
+    boss.sideChoiceWindow->Add(sideChoiceBox);
+    boss.sideChoiceWindow->Show(false);
+    boss.desktop.Add(boss.sideChoiceWindow);
 
 
 
 
 
     //boardWindow->SetTitle( "Board" );
-    boardWindow->Add(mainLayout);
+    boss.boardWindow->Add(mainLayout);
 
 
     boss.desktop.Add(boss.choiceWindow);
-    boss.desktop.Add(boardWindow);
+    boss.desktop.Add(boss.boardWindow);
 
 
     window.resetGLStates();

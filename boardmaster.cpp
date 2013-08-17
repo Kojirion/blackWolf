@@ -266,7 +266,7 @@ void boardMaster::bothNewGame()
     newGame(2);
 }
 
-boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow, sfg::Desktop &theDesktop):
+boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     flipOffset(0),
     window_(sfg::Canvas::Create()),
     bigWindow(theWindow),
@@ -277,8 +277,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Window::Ptr theBoardWindow,
     plyCounter(0), humanColor(1), humanBoth(false), gameEnded(false),
     currentPiece(&pieces),
     idCount(1),
-    choiceWindow(sfg::Window::Create()), sideChoiceWindow(theSideChoiceWindow),
-    boardWindow(theBoardWindow),
+    choiceWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
+    boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
     desktop(theDesktop)
 {

@@ -81,8 +81,7 @@ private:
 
 
 public:
-    boardMaster(sf::Window& theWindow, sfg::Window::Ptr theBoardWindow, sfg::Window::Ptr theSideChoiceWindow,
-                sfg::Desktop& theDesktop);
+    boardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
     ~boardMaster();
 
     sfg::Desktop& desktop;

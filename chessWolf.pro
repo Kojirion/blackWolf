@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     file_descriptor.cpp \
     resourcemanager.cpp \
     msmmanager.cpp \
-    settingsstate.cpp
+    settingsstate.cpp \
+    boardstate.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -39,7 +40,8 @@ HEADERS += \
     blackWolf.h \
     resourcemanager.h \
     msmmanager.h \
-    settingsstate.h
+    settingsstate.h \
+    boardstate.h
 
 OTHER_FILES += \
     notes.txt \
