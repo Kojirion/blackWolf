@@ -16,7 +16,9 @@ SOURCES += main.cpp \
     msmmanager.cpp \
     settingsstate.cpp \
     boardstate.cpp \
-    moveview.cpp
+    moveview.cpp \
+    boardcanvas.cpp \
+    clocksview.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -43,7 +45,9 @@ HEADERS += \
     msmmanager.h \
     settingsstate.h \
     boardstate.h \
-    moveview.h
+    moveview.h \
+    boardcanvas.h \
+    clocksview.h
 
 OTHER_FILES += \
     notes.txt \

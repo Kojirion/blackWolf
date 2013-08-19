@@ -14,6 +14,7 @@
 #include "completemove.h"
 #include "chessengine.h"
 #include "resourcemanager.h"
+#include "boardcanvas.h"
 
 
 
@@ -22,20 +23,16 @@
 class boardMaster
 {
 private:
-    sf::Window &bigWindow; //only to know its position
+    boardCanvas board;
 
-    sf::Font font;
+
     resourceManager resources;
 
-    int flipOffset;
-
-    sf::Texture boardTexture_;
-    sf::Sprite boardSprite_;    
     position currentPosition;
 
 
 
-    piecesBimap pieces;
+
 
     int humanColor;
     bool humanBoth; //if both players are human
@@ -43,15 +40,19 @@ private:
     void setGameEnded(const int result);
     chessEngine chessAi;
 
-    bool flipped() const;
 
-    //std::map<squareId, pieceSprite> pieces;
-    std::vector<std::vector<sf::FloatRect> > rectGrid;
+    //move was promotion
+    //so pop the window for selection or have ai choose
+    void handlePromotion(const int row, const int col);
 
-    piecesBimap::iterator currentPiece;
-    bool pieceHeld();
-    void releasePiece();
-    sf::Vector2f clickedPoint;
+    int toPromoteRow;
+    int toPromoteCol;
+    int promotionChoice; //which piece was chosen by either ai or player
+
+
+
+
+
 
     thor::CallbackTimer whiteClock;
     thor::CallbackTimer blackClock;
@@ -59,15 +60,10 @@ private:
     void flagDown(const int side);
 
     int plyCounter;
-    int idCount; //pieces ids
-
-    void handleCastle(const int row, const int col); //move was castle with destination the given square
-    void handleEnPassant(const int row, const int col);
-    void handlePromotion(const int row, const int col);
 
     void moveMake (const completeMove &move);
 
-    void destroy(const int row, const int col); //will destroy the sprite in given location
+
 
     void newGame(const int whoHuman);
 
@@ -76,45 +72,27 @@ private:
 
     void aiTurn();
 
-    int toPromoteRow;
-    int toPromoteCol;
-    int promotionChoice; //which piece was chosen by either ai or player
-
 
 public:
     boardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
     ~boardMaster();
 
     sfg::Desktop& desktop;
+    sfg::Window::Ptr promotionWindow;
 
-    sfg::Canvas::Ptr window_;
     sfg::Label::Ptr turnLabel_;
-    sfg::Canvas::Ptr whiteClockCanvas_;
-    sfg::Canvas::Ptr blackClockCanvas_;
-    sf::Text whiteClockText;
-    sf::Text blackClockText;
-    sfg::Table::Ptr moveList;
-    sfg::Window::Ptr choiceWindow;
+
     sfg::Window::Ptr boardWindow;
     sfg::Window::Ptr sideChoiceWindow;
     sfg::Button::Ptr settingsButton;
 
     void display();
 
-    sf::Vector2f cellToPosition(const int row, const int col) const;    
-
-    sf::Vector2f getMousePosition(); //mouse position in the canvas' coords
-
     int getTurnColor() const;
 
     void switchTurn();
 
-    void sendBack(); //sends the current piece back
 
-    std::string timeToString(const sf::Time value) const;
-    std::string colToString(const int col) const;
-    std::string moveToString(const int row1, const int col1, const int row2, const int col2) const;
-    std::string cellToString(const int row, const int col) const;
 
     void updateClocks();
 
@@ -136,9 +114,6 @@ public:
     void whiteNewGame();
     void blackNewGame();
     void bothNewGame();
-
-    void reloadSprites(const std::string& whitePrefix,
-        const std::string& blackPrefix, const std::string& boardSuffix);
 
 
 };
