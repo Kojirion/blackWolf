@@ -137,6 +137,9 @@ public:
     void blackNewGame();
     void bothNewGame();
 
+    void reloadSprites(const std::string& whitePrefix,
+        const std::string& blackPrefix, const std::string& boardSuffix);
+
 
 };
 

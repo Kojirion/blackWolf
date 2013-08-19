@@ -76,3 +76,10 @@ void resourceManager::load()
         //throw - the gui must catch it
     }
 }
+
+void resourceManager::reload(const std::string &theWhitePrefix, const std::string &theBlackPrefix, const std::string &theBoardSuffix)
+{
+    whitePrefix = theWhitePrefix;
+    blackPrefix = theBlackPrefix;
+    boardSuffix = theBoardSuffix;
+}

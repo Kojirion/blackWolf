@@ -9,7 +9,6 @@
 #include <boost/msm/front/euml/state_grammar.hpp>
 #include "boardmaster.h"
 #include "settingsstate.h"
-#include "boardmaster.h"
 #include <SFGUI/Desktop.hpp>
 
 namespace {
@@ -24,11 +23,15 @@ struct settingsClose{};
 //front end
 struct msmManager : public msm::front::state_machine_def<msmManager>
 {
+    sf::Window& bigWindow;
     settingsState settingsData;
     sfg::Desktop& desktop;
+    boardMaster boardData;
 
-    msmManager(sfg::Desktop& theDesktop):
-        desktop(theDesktop)
+    msmManager(sfg::Desktop& theDesktop, sf::Window& theBigWindow):
+        desktop(theDesktop),
+        bigWindow(theBigWindow),
+        boardData(bigWindow, desktop)
     {
         desktop.Add(settingsData.window);
     }
@@ -39,7 +42,7 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
         template <class Event,class FSM,class STATE>
         void operator()(Event const&,FSM& fsm,STATE& )
         {
-
+            fsm.boardData.boardWindow->SetState(sfg::Widget::NORMAL);
         }
     };
     struct gameOnExit
@@ -47,11 +50,11 @@ struct msmManager : public msm::front::state_machine_def<msmManager>
         template <class Event,class FSM,class STATE>
         void operator()(Event const&,FSM& fsm,STATE& )
         {
-
+            fsm.boardData.boardWindow->SetState(sfg::Widget::INSENSITIVE);
         }
     };
     struct gameOnTag{};
-    typedef msm::front::euml::func_state<gameOnTag> gameOn;
+    typedef msm::front::euml::func_state<gameOnTag,gameOnEntry,gameOnExit> gameOn;
 
     struct settingsEntry
     {

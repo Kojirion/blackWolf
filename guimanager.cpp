@@ -12,7 +12,7 @@ void guiManager::settingsClosed()
 
 guiManager::guiManager():
     window(sf::VideoMode(600, 600), "Black Wolf"),
-    stateManager(boost::ref(desktop))
+    stateManager(boost::ref(desktop), boost::ref(window))
 {
     window.setFramerateLimit(60);
     stateManager.start();
@@ -28,9 +28,9 @@ void guiManager::run()
     stateManager.settingsData.closeButton->
             GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClosed, this);
 
-    boardMaster boss(window, desktop);
+    //boardMaster boss(window, desktop);
 
-    boss.settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClicked, this);
+    stateManager.boardData.settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClicked, this);
 
     window.resetGLStates();
     sf::Clock clock;
@@ -40,7 +40,7 @@ void guiManager::run()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            boss.desktop.HandleEvent(event);
+            stateManager.boardData.desktop.HandleEvent(event);
 
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -49,10 +49,10 @@ void guiManager::run()
             }
         }
 
-        boss.desktop.Update(clock.restart().asSeconds());
+        stateManager.boardData.desktop.Update(clock.restart().asSeconds());
 
         window.clear();
-        boss.display();
+        stateManager.boardData.display();
         sfgui_.Display(window);
         window.display();
     }

@@ -88,3 +88,9 @@ isCheck reusable?
 on checkSafe: boardMove or completeMove?
 
 communication with engine: Asio vs polling
+
+boost signals
+
+notebook for settings window
+
+boost.Test

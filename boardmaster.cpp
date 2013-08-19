@@ -266,6 +266,11 @@ void boardMaster::bothNewGame()
     newGame(2);
 }
 
+void boardMaster::reloadSprites(const std::string &whitePrefix, const std::string &blackPrefix, const std::string &boardSuffix)
+{
+    resources.reload(whitePrefix,blackPrefix,boardSuffix);
+}
+
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     flipOffset(0),
     window_(sfg::Canvas::Create()),

@@ -19,6 +19,9 @@ public:
 
     void load();
 
+    void reload(const std::string& theWhitePrefix,
+        const std::string& theBlackPrefix, const std::string& theBoardSuffix);
+
 private:
     thor::MultiResourceCache cache;
     std::string whitePrefix;

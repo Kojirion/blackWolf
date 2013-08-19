@@ -3,6 +3,7 @@
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Button.hpp>
+#include <SFGUI/RadioButton.hpp>
 #include <SFML/System/NonCopyable.hpp>
 
 class settingsState : private sf::NonCopyable
