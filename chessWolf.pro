@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     moveview.cpp \
     boardcanvas.cpp \
     clocksview.cpp \
-    gamedata.cpp
+    gamedata.cpp \
+    blackWolf.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 

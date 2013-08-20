@@ -5,7 +5,7 @@
 #define POSITION_H
 #include <vector>
 #include <array>
-#include "blackWolf.h"
+//#include "blackWolf.h"
 
 class position{
 public:

@@ -1,5 +1,6 @@
-#ifndef BLACKWOLF_H
-#define BLACKWOLF_H
+#pragma once
+//#ifndef BLACKWOLF_H
+//#define BLACKWOLF_H
 #include <boost/assert.hpp>
 
 enum class bw
@@ -15,28 +16,10 @@ enum class bw
     Black  = 1 << 7
 };
 
-bw operator-(const bw rhs)
-{
-    if (rhs==bw::White) return bw::Black;
-    if (rhs==bw::Black) return bw::White;
-    return rhs;
-//    if (rhs==bw::None) return bw::None;
-//    if (rhs==(bw::White | bw::Black)) return (bw::White | bw::Black);
-}
+bw operator-(const bw rhs);
 
-bw operator&(const bw lhs, const bw rhs)
-{
-    return (lhs & rhs);
-}
+bw operator&(const bw lhs, const bw rhs);
 
-/*bool operator==(const bw lhs, const bw rhs)
-{
-    return (lhs == rhs);
-}*/
+bool check(const bw toCheck);
 
-bool check(const bw toCheck)
-{
-    return (toCheck != bw::None);
-}
-
-#endif // BLACKWOLF_H
+//#endif // BLACKWOLF_H
