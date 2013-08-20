@@ -11,7 +11,7 @@ bw operator-(const bw rhs)
 
 bw operator&(const bw lhs, const bw rhs)
 {
-    return (lhs & rhs);
+    return static_cast<bw>(static_cast<int>(lhs) & static_cast<int>(rhs));
 }
 
 /*bool operator==(const bw lhs, const bw rhs)
@@ -22,4 +22,10 @@ bw operator&(const bw lhs, const bw rhs)
 bool check(const bw toCheck)
 {
     return (toCheck != bw::None);
+}
+
+
+bw operator |(const bw lhs, const bw rhs)
+{
+    return static_cast<bw>(static_cast<int>(lhs) | static_cast<int>(rhs));
 }

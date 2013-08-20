@@ -19,6 +19,8 @@ bw operator-(const bw rhs);
 
 bw operator&(const bw lhs, const bw rhs);
 
+bw operator|(const bw lhs, const bw rhs);
+
 bool check(const bw toCheck);
 
 #endif // BLACKWOLF_H

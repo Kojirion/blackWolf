@@ -11,6 +11,8 @@ public:
     statusView();
     void setToPlay(const bw side); //set the status to denote side to play
     void setResult(const bw winner); //set status to show winner
+
+    sfg::Widget::Ptr getView();
 };
 
 #endif // STATUSVIEW_H

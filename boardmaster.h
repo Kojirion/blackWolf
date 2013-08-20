@@ -16,6 +16,7 @@
 #include "resourcemanager.h"
 #include "boardcanvas.h"
 #include "gamedata.h"
+#include "statusview.h"
 
 
 
@@ -30,6 +31,8 @@ private:
     boardCanvas board;
 
     gameData game;
+
+    statusView status;
 
 
 
@@ -69,8 +72,6 @@ public:
 
     sfg::Desktop& desktop;
     sfg::Window::Ptr promotionWindow;
-
-    sfg::Label::Ptr turnLabel_;
 
     sfg::Window::Ptr boardWindow;
     sfg::Window::Ptr sideChoiceWindow;

@@ -64,17 +64,17 @@ void boardMaster::moveMake(const completeMove &move)
     //update move counter and move list widget
 
     //check for game end or switch turn
-    //if (move.isCheckmate()) setGameEnded(-getTurnColor());
-    //if (move.isStalemate()) setGameEnded(0);
-    //if (!gameEnded) switchTurn();
+    if (move.isCheckmate()) game.setResult(-game.turnColor());
+    if (move.isStalemate()) game.setResult(bw::White | bw::Black);
+    if (!game.ended()) switchTurn();
 }
 
 void boardMaster::newGame(const int whoHuman)
 {
     //moveList->RemoveAll();
-    turnLabel_->SetText("White to play");
+    status.setToPlay(bw::White);
 
-   /*if (flipped()){
+    /*if (flipped()){
         if (humanColor==1) flipBoard();
     }else{
         if (humanColor==-1) flipBoard();
@@ -164,6 +164,8 @@ void boardMaster::bothNewGame()
 
 bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 {
+    if (!game.userTurn()) return false;
+
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
         moveMake(toCheck);
@@ -173,7 +175,6 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 }
 
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
-    turnLabel_(sfg::Label::Create("White to play")),
     promotionWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
@@ -238,7 +239,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
     //mainLayout->Attach(whiteClockCanvas_,{1, 0, 1, 1});
     //mainLayout->Attach(blackClockCanvas_,{1, 1, 1, 1});
-    mainLayout->Attach(turnLabel_,{1, 2, 1, 1});
+    mainLayout->Attach(status.getView(),{1, 2, 1, 1});
     //mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
     mainLayout->Attach(buttonLayout,{0,8,2,2});
 
@@ -263,6 +264,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sideChoiceWindow->Show(false);
     desktop.Add(sideChoiceWindow);
 
+    status.setToPlay(bw::White);
+
 
 
 
@@ -272,6 +275,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
+
+    game.newGame(bw::White | bw::Black);
 
     board.setPosition(game.getPosition());
 
@@ -302,16 +307,11 @@ int boardMaster::getTurnColor() const
 
 void boardMaster::switchTurn()
 {
-    if (getTurnColor() == 1){
-        turnLabel_->SetText("White to play");
-    }else{
-        turnLabel_->SetText("Black to play");
-    }
+    status.setToPlay(game.turnColor());
 
-
-    if (!game.userTurn()){
-        aiTurn();
-    }
+//    if (!game.userTurn()){
+//        aiTurn();
+//    }
 }
 
 

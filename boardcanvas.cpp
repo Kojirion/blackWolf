@@ -178,8 +178,9 @@ void boardCanvas::slotMouseRelease()
                 if (rectGrid[i][j].contains(centrePos)){
                     const int originRow = currentPiece.getRow();
                     const int originCol = currentPiece.getCol();
+                    //send request move signal to controller
                     if (!(*requestMove(originRow, originCol, i, j)))
-                        sendBack();
+                        sendBack(); //if rejected send piece back
                     return;
                 }
             }
