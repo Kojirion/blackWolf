@@ -237,8 +237,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(5.f);
     mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 8},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
-    //mainLayout->Attach(whiteClockCanvas_,{1, 0, 1, 1});
-    //mainLayout->Attach(blackClockCanvas_,{1, 1, 1, 1});
+    mainLayout->Attach(clocks.getWhiteClock(),{1, 0, 1, 1});
+    mainLayout->Attach(clocks.getBlackClock(),{1, 1, 1, 1});
     mainLayout->Attach(status.getView(),{1, 2, 1, 1});
     //mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
     mainLayout->Attach(buttonLayout,{0,8,2,2});
@@ -308,6 +308,7 @@ int boardMaster::getTurnColor() const
 void boardMaster::switchTurn()
 {
     status.setToPlay(game.turnColor());
+    game.switchTurn();
 
 //    if (!game.userTurn()){
 //        aiTurn();
@@ -334,8 +335,6 @@ void boardMaster::requestNewGame()
 
 void boardMaster::updateClocks()
 {
-    game.update();
-    //whiteClockText.setString(timeToString(whiteClock.getRemainingTime()));
-
-    //blackClockText.setString(timeToString(blackClock.getRemainingTime()));
+    game.update(); //update model
+    clocks.update(game.getWhiteTime(), game.getBlackTime()); //update view
 }

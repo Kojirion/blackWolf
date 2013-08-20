@@ -32,6 +32,16 @@ void clocksView::update(const sf::Time &whiteTime, const sf::Time &blackTime)
     blackClockCanvas->Draw(blackClockText);
 }
 
+sfg::Widget::Ptr clocksView::getWhiteClock()
+{
+    return whiteClockCanvas;
+}
+
+sfg::Widget::Ptr clocksView::getBlackClock()
+{
+    return blackClockCanvas;
+}
+
 std::string clocksView::timeToString(const sf::Time& value) const
 {
     const int totalSeconds = static_cast<int>(std::ceil(value.asSeconds()));

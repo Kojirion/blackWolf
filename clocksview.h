@@ -17,6 +17,8 @@ private:
 public:
     clocksView();
     void update(const sf::Time& whiteTime, const sf::Time& blackTime);
+    sfg::Widget::Ptr getWhiteClock();
+    sfg::Widget::Ptr getBlackClock();
 };
 
 #endif // CLOCKSVIEW_H

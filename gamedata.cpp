@@ -76,3 +76,13 @@ void gameData::switchTurn()
         blackClock.start();
     }
 }
+
+sf::Time gameData::getWhiteTime() const
+{
+    return whiteClock.getRemainingTime();
+}
+
+sf::Time gameData::getBlackTime() const
+{
+    return blackClock.getRemainingTime();
+}

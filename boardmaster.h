@@ -17,6 +17,7 @@
 #include "boardcanvas.h"
 #include "gamedata.h"
 #include "statusview.h"
+#include "clocksview.h"
 
 
 
@@ -33,6 +34,8 @@ private:
     gameData game;
 
     statusView status;
+
+    clocksView clocks;
 
 
 

@@ -32,6 +32,9 @@ public:
     void newGame(const bw whoUser);
     void update();
     void switchTurn();
+
+    sf::Time getWhiteTime() const;
+    sf::Time getBlackTime() const;
 };
 
 #endif // GAMEDATA_H
