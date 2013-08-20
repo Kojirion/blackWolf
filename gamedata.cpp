@@ -13,7 +13,18 @@ bool gameData::ended() const
 
 bool gameData::userTurn() const
 {
-    return (turnColor & userColor);
+    return check(turnColor() & userColor);
+}
+
+bw gameData::turnColor() const
+{
+    if (currentPosition.turnColor==1) return bw::White;
+    return bw::Black;
+}
+
+bw gameData::getUserColor() const
+{
+    return userColor;
 }
 
 void gameData::setResult(const bw winner)
@@ -25,7 +36,7 @@ void gameData::newGame(const bw whoUser)
 {
     plyCounter = 0;
 
-    turnColor = bw::White;
+    currentPosition = position();
 
     userColor = whoUser;
 
@@ -46,11 +57,11 @@ void gameData::update()
 
 void gameData::switchTurn()
 {
-    if (turnColor == bw::White){
+    if (turnColor() == bw::White){
         blackClock.stop();
         whiteClock.start();
     }else{
-        BOOST_ASSERT_MSG(turnColor==bw::Black, "Turn color invalid");
+        BOOST_ASSERT_MSG(turnColor()==bw::Black, "Turn color invalid");
         whiteClock.stop();
         blackClock.start();
     }

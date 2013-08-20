@@ -7,6 +7,7 @@
 #include "piecesbimap.h"
 #include "resourcemanager.h"
 #include "completemove.h"
+#include "position.h"
 
 class boardCanvas
 {
@@ -63,7 +64,6 @@ private:
     void slotLeftClick();
     void slotEnterCanvas();
 
-    void initPieces();
     void resetRects();
 
 public:
@@ -72,6 +72,7 @@ public:
     void moveMake(const completeMove move);
 
     sfg::Widget::Ptr getBoardWidget() const;
+    void setPosition(const position &givenPosition);
 };
 
 #endif // BOARDCANVAS_H

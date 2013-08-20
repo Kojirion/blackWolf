@@ -11,8 +11,6 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
     boardSprite_.setTexture(boardTexture_);
 
-    initPieces();
-
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){
         rectGrid[i].resize(8);
@@ -201,11 +199,11 @@ void boardCanvas::slotEnterCanvas()
     }
 }
 
-void boardCanvas::initPieces()
+void boardCanvas::setPosition(const position& givenPosition)
 {
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const int pieceId = currentPosition[i][j];
+            const int pieceId = givenPosition[i][j];
             if (pieceId==0) continue;
             pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces[i][j].insert(toAdd);

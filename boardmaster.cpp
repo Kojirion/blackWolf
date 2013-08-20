@@ -82,12 +82,12 @@ void boardMaster::newGame(const int whoHuman)
         if (humanColor==-1) flipBoard();
     }*/
 
-    resetRects();
+    //resetRects();
 
     //idCount = 1;
     //pieces.clear();
 
-    initPieces();
+    //initPieces();
 
     chessAi.newGame();
 
@@ -211,7 +211,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     newGameButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
 
     sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
-    flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, this);
+    //flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, this);
 
     sfg::Table::Ptr buttonLayout(sfg::Table::Create());
     buttonLayout->SetRowSpacings(3.f);
@@ -291,20 +291,13 @@ int boardMaster::getTurnColor() const
 void boardMaster::switchTurn()
 {
     if (getTurnColor() == 1){
-        blackClock.stop();
-        whiteClock.start();
         turnLabel_->SetText("White to play");
     }else{
-        whiteClock.stop();
-        blackClock.start();
         turnLabel_->SetText("Black to play");
     }
 
 
-    if (humanBoth) {
-        humanColor = getTurnColor();
-    }
-    else if (humanColor != getTurnColor()){
+    if (!game.userTurn()){
         aiTurn();
     }
 }
@@ -312,7 +305,7 @@ void boardMaster::switchTurn()
 
 void boardMaster::resign()
 {
-    game.setResult(-humanColor);
+    game.setResult(-game.getUserColor());
 }
 
 void boardMaster::offerDraw()
@@ -329,9 +322,8 @@ void boardMaster::requestNewGame()
 
 void boardMaster::updateClocks()
 {
-    whiteClock.update();
+    game.update();
     //whiteClockText.setString(timeToString(whiteClock.getRemainingTime()));
 
-    blackClock.update();
     //blackClockText.setString(timeToString(blackClock.getRemainingTime()));
 }

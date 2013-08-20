@@ -2,11 +2,12 @@
 #define GAMEDATA_H
 #include <Thor/Time/CallbackTimer.hpp>
 #include "blackWolf.h"
+#include "position.h"
 
 class gameData
 {
 private:
-    bw turnColor; //whose turn
+    position currentPosition;
     bw userColor; //color(s) of user
     bw result; //who won
 
@@ -20,6 +21,9 @@ public:
 
     bool ended() const;
     bool userTurn() const;
+
+    bw turnColor() const; //whose turn
+    bw getUserColor() const;
 
     void setResult(const bw winner);
     void newGame(const bw whoUser);

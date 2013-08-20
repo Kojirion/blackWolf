@@ -61,9 +61,6 @@ private:
 
     void newGame(const int whoHuman);
 
-    void initPieces();
-    void resetRects();
-
     void aiTurn();
 
 
@@ -95,7 +92,6 @@ public:
     void processMouseMove();
     void processMouseRelease();
     void processEnterCanvas();
-    void flipBoard();
     void resign();
     void offerDraw();
     void requestNewGame();
