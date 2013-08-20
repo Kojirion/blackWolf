@@ -25,6 +25,9 @@ public:
     bw turnColor() const; //whose turn
     bw getUserColor() const;
 
+    const position getPosition() const;
+    void setPosition(position toSet);
+
     void setResult(const bw winner);
     void newGame(const bw whoUser);
     void update();

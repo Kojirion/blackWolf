@@ -1,6 +1,5 @@
-#pragma once
-//#ifndef BLACKWOLF_H
-//#define BLACKWOLF_H
+#ifndef BLACKWOLF_H
+#define BLACKWOLF_H
 #include <boost/assert.hpp>
 
 enum class bw
@@ -22,4 +21,4 @@ bw operator&(const bw lhs, const bw rhs);
 
 bool check(const bw toCheck);
 
-//#endif // BLACKWOLF_H
+#endif // BLACKWOLF_H

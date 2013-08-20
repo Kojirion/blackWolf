@@ -176,15 +176,11 @@ void boardCanvas::slotMouseRelease()
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
-                    /*const int originRow = currentPiece.getRow();
+                    const int originRow = currentPiece.getRow();
                     const int originCol = currentPiece.getCol();
-                    completeMove toCheck(currentPosition,originRow,originCol,i,j);
-                    if (toCheck.isLegal()){
-                        moveMake(toCheck);
-                    }else{
+                    if (!(*requestMove(originRow, originCol, i, j)))
                         sendBack();
-                    }
-                    return;*/
+                    return;
                 }
             }
         }
@@ -211,6 +207,11 @@ void boardCanvas::setPosition(const position& givenPosition)
         }
     }
 
+}
+
+boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
+{
+    return requestMove;
 }
 
 void boardCanvas::resetRects()

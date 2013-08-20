@@ -1,3 +1,6 @@
+//'Controller' class
+//owns a gameData 'model' and several 'view' classes
+
 #ifndef BOARDMASTER_H
 #define BOARDMASTER_H
 #include <SFML/Graphics.hpp>
@@ -26,8 +29,6 @@ private:
 
     boardCanvas board;
 
-    position currentPosition;
-
     gameData game;
 
 
@@ -52,8 +53,6 @@ private:
 
 
     void flagDown(const int side);
-
-    int plyCounter;
 
     void moveMake (const completeMove &move);
 
@@ -104,6 +103,9 @@ public:
     void whiteNewGame();
     void blackNewGame();
     void bothNewGame();
+
+    //boost slots
+    bool requestMove(int row1, int col1, int row2, int col2);
 
 
 };

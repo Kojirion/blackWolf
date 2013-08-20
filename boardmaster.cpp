@@ -50,10 +50,11 @@ void boardMaster::moveMake(const completeMove &move)
     const int destRow = move.getRow2();
     const int destCol = move.getCol2();
 
-    //board handle move...
+    board.moveMake(move); //update view
+    game.setPosition(move.getNewBoard()); //update model
 
     //handle promotion AND update the engine, depending on whether it was or not
-    if (currentPosition.wasPromotion){
+    if (game.getPosition().wasPromotion){
         handlePromotion(destRow, destCol);
          //if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
@@ -61,7 +62,6 @@ void boardMaster::moveMake(const completeMove &move)
     }
 
     //update move counter and move list widget
-    plyCounter++;
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-getTurnColor());
@@ -71,8 +71,6 @@ void boardMaster::moveMake(const completeMove &move)
 
 void boardMaster::newGame(const int whoHuman)
 {
-    currentPosition = position();
-
     //moveList->RemoveAll();
     turnLabel_->SetText("White to play");
 
@@ -103,7 +101,7 @@ void boardMaster::aiTurn()
     const int destRow = std::get<2>(moveToMake);
     const int destCol = std::get<3>(moveToMake);
 
-    completeMove toCheck(currentPosition,originRow,originCol,destRow,destCol);
+    completeMove toCheck(game.getPosition(),originRow,originCol,destRow,destCol);
     BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
     moveMake(toCheck);
@@ -164,9 +162,18 @@ void boardMaster::bothNewGame()
     newGame(2);
 }
 
+bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
+{
+    completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
+    if (toCheck.isLegal()){
+        moveMake(toCheck);
+        return true;
+    }
+    return false;
+}
+
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     turnLabel_(sfg::Label::Create("White to play")),
-    plyCounter(0),
     promotionWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
@@ -176,6 +183,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     //if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;
+
+    board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
 
     sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
     sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
@@ -264,6 +273,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
+    board.setPosition(game.getPosition());
+
 
     updateClocks();
 
@@ -280,12 +291,13 @@ boardMaster::~boardMaster()
 
 void boardMaster::display()
 {
+    board.display();
     if (!game.ended()) updateClocks();
 }
 
 int boardMaster::getTurnColor() const
 {
-    return currentPosition.turnColor;
+    return 1; //currentPosition.turnColor;
 }
 
 void boardMaster::switchTurn()

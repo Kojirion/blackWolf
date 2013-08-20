@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     boardcanvas.cpp \
     clocksview.cpp \
     gamedata.cpp \
-    blackWolf.cpp
+    blackWolf.cpp \
+    statusview.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -50,7 +51,8 @@ HEADERS += \
     moveview.h \
     boardcanvas.h \
     clocksview.h \
-    gamedata.h
+    gamedata.h \
+    statusview.h
 
 OTHER_FILES += \
     notes.txt \

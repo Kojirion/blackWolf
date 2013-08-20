@@ -4,6 +4,7 @@
 #ifndef BOARDCANVAS_H
 #define BOARDCANVAS_H
 #include <SFGUI/Canvas.hpp>
+#include <boost/signals2.hpp>
 #include "piecesbimap.h"
 #include "resourcemanager.h"
 #include "completemove.h"
@@ -58,6 +59,9 @@ private:
     //so destroy the real pawn
     void handleEnPassant(const int row, const int col);
 
+    //signals
+    boost::signals2::signal<bool (int, int, int, int)> requestMove;
+
     //slots
     void slotMouseMove();
     void slotMouseRelease();
@@ -73,6 +77,8 @@ public:
 
     sfg::Widget::Ptr getBoardWidget() const;
     void setPosition(const position &givenPosition);
+
+    boost::signals2::signal<bool (int, int, int, int)> &getSignal();
 };
 
 #endif // BOARDCANVAS_H

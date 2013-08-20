@@ -27,6 +27,16 @@ bw gameData::getUserColor() const
     return userColor;
 }
 
+const position gameData::getPosition() const
+{
+    return currentPosition;
+}
+
+void gameData::setPosition(position toSet)
+{
+    currentPosition = toSet;
+}
+
 void gameData::setResult(const bw winner)
 {
     result = winner;
