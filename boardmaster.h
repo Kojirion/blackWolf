@@ -7,14 +7,12 @@
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Button.hpp>
-#include <Thor/Time/CallbackTimer.hpp>
-#include "piecesbimap.h"
-#include "piecesprite.h"
 #include "position.h"
 #include "completemove.h"
 #include "chessengine.h"
 #include "resourcemanager.h"
 #include "boardcanvas.h"
+#include "gamedata.h"
 
 
 
@@ -23,21 +21,20 @@
 class boardMaster
 {
 private:
-    boardCanvas board;
-
 
     resourceManager resources;
 
+    boardCanvas board;
+
     position currentPosition;
 
+    gameData game;
 
 
 
 
-    int humanColor;
-    bool humanBoth; //if both players are human
-    bool gameEnded;
-    void setGameEnded(const int result);
+
+
     chessEngine chessAi;
 
 
@@ -53,9 +50,6 @@ private:
 
 
 
-
-    thor::CallbackTimer whiteClock;
-    thor::CallbackTimer blackClock;
 
     void flagDown(const int side);
 

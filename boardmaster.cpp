@@ -4,7 +4,7 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 
-void boardMaster::setGameEnded(const int result)
+/*void boardMaster::setGameEnded(const int result)
 {
     gameEnded = true;
 
@@ -20,13 +20,13 @@ void boardMaster::setGameEnded(const int result)
         break;
     }
 
-}
+}*/
 
 void boardMaster::flagDown(const int side)
 {
     //if (side==1) whiteClockText.setColor(sf::Color::Yellow);
     //else blackClockText.setColor(sf::Color::Yellow);
-    setGameEnded(-side);
+    //setGameEnded(-side);
 }
 
 void boardMaster::handlePromotion(const int row, const int col)
@@ -34,7 +34,7 @@ void boardMaster::handlePromotion(const int row, const int col)
     toPromoteRow = row;
     toPromoteCol = col;
 
-    if (humanColor!=getTurnColor()){
+    if (game.userTurn()){
         promotionWindow->Show(true);
         desktop.BringToFront(promotionWindow);
         boardWindow->SetState(sfg::Widget::INSENSITIVE);
@@ -55,40 +55,28 @@ void boardMaster::moveMake(const completeMove &move)
     //handle promotion AND update the engine, depending on whether it was or not
     if (currentPosition.wasPromotion){
         handlePromotion(destRow, destCol);
-         if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+         //if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
-         if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol);
+         //if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol);
     }
 
     //update move counter and move list widget
     plyCounter++;
 
     //check for game end or switch turn
-    if (move.isCheckmate()) setGameEnded(-getTurnColor());
-    if (move.isStalemate()) setGameEnded(0);
-    if (!gameEnded) switchTurn();
+    //if (move.isCheckmate()) setGameEnded(-getTurnColor());
+    //if (move.isStalemate()) setGameEnded(0);
+    //if (!gameEnded) switchTurn();
 }
 
 void boardMaster::newGame(const int whoHuman)
 {
     currentPosition = position();
 
-    plyCounter = 0;
     //moveList->RemoveAll();
     turnLabel_->SetText("White to play");
 
-    if (whoHuman==2){
-        humanColor = 1;
-        humanBoth = true;
-    }else{
-        humanColor = whoHuman;
-        humanBoth = false;
-    }
-
-
-    gameEnded = false;
-
-    /*if (flipped()){
+   /*if (flipped()){
         if (humanColor==1) flipBoard();
     }else{
         if (humanColor==-1) flipBoard();
@@ -103,13 +91,7 @@ void boardMaster::newGame(const int whoHuman)
 
     chessAi.newGame();
 
-    whiteClock.restart(sf::seconds(300));
-    blackClock.restart(sf::seconds(300));
-    blackClock.stop();
-
-    updateClocks();
-
-    if (humanColor!=getTurnColor()) aiTurn();
+    if (!game.userTurn()) aiTurn();
 
 }
 
@@ -129,7 +111,7 @@ void boardMaster::aiTurn()
 
 void boardMaster::promotionChoiceMade(const int whichPiece)
 {
-    promotionChoice = whichPiece;
+    /*promotionChoice = whichPiece;
     const int whichSide = pieces[toPromoteRow][toPromoteCol].getSide();
     destroy(toPromoteRow,toPromoteCol);
     pieceSprite toAdd(resources.typeToTexture(whichSide*whichPiece),cellToPosition(toPromoteRow,toPromoteCol),whichSide,idCount);
@@ -138,7 +120,7 @@ void boardMaster::promotionChoiceMade(const int whichPiece)
     currentPosition.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
 
     promotionWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);
+    boardWindow->SetState(sfg::Widget::NORMAL);*/
 }
 
 void boardMaster::promoteQueen()
@@ -184,14 +166,15 @@ void boardMaster::bothNewGame()
 
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     turnLabel_(sfg::Label::Create("White to play")),
-    plyCounter(0), humanColor(1), humanBoth(false), gameEnded(false),
+    plyCounter(0),
     promotionWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
     desktop(theDesktop),
-    settingsButton(sfg::Button::Create("Settings"))
+    settingsButton(sfg::Button::Create("Settings")),
+    board(theWindow,resources)
 {
-    if (!chessAi.load()) humanBoth = true;
+    //if (!chessAi.load()) humanBoth = true;
     //humanBoth = true;
 
     sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
@@ -216,9 +199,6 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&boardMaster::promoteRook,this);
 
     promotionWindow->Show(false);
-
-    whiteClock.connect(std::bind(&boardMaster::flagDown, this, 1));
-    blackClock.connect(std::bind(&boardMaster::flagDown, this, -1));
 
     //gui setup
     sfg::Button::Ptr resignButton(sfg::Button::Create("Resign"));
@@ -285,11 +265,6 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(boardWindow);
 
 
-    whiteClock.restart(sf::seconds(300));
-    blackClock.restart(sf::seconds(300));
-    blackClock.stop();
-
-
     updateClocks();
 
 
@@ -300,12 +275,12 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 boardMaster::~boardMaster()
 {
-    if (!humanBoth) chessAi.unLoad();
+    //if (!humanBoth) chessAi.unLoad();
 }
 
 void boardMaster::display()
 {
-    if (!gameEnded) updateClocks();
+    if (!game.ended()) updateClocks();
 }
 
 int boardMaster::getTurnColor() const
@@ -337,7 +312,7 @@ void boardMaster::switchTurn()
 
 void boardMaster::resign()
 {
-    setGameEnded(-humanColor);
+    game.setResult(-humanColor);
 }
 
 void boardMaster::offerDraw()

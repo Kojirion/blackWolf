@@ -2,20 +2,20 @@
 
 void guiManager::settingsClicked()
 {
-    stateManager.process_event(settingsOpen());
+    //stateManager.process_event(settingsOpen());
 }
 
 void guiManager::settingsClosed()
 {
-    stateManager.process_event(settingsClose());
+    //stateManager.process_event(settingsClose());
 }
 
 guiManager::guiManager():
-    window(sf::VideoMode(600, 600), "Black Wolf"),
-    stateManager(boost::ref(desktop), boost::ref(window))
+    window(sf::VideoMode(600, 600), "Black Wolf")
+    //stateManager(boost::ref(desktop), boost::ref(window))
 {
     window.setFramerateLimit(60);
-    stateManager.start();
+    //stateManager.start();
 
     //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());
@@ -25,12 +25,12 @@ void guiManager::run()
 {
     //connect settings close to button to signal
     //guiManager's involment could be done away with
-    stateManager.settingsData.closeButton->
-            GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClosed, this);
+//    stateManager.settingsData.closeButton->
+//            GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClosed, this);
 
-    //boardMaster boss(window, desktop);
+    boardMaster boss(window, desktop);
 
-    stateManager.boardData.settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClicked, this);
+//    stateManager.boardData.settingsButton->GetSignal(sfg::Button::OnLeftClick).Connect(&guiManager::settingsClicked, this);
 
     window.resetGLStates();
     sf::Clock clock;
@@ -40,7 +40,7 @@ void guiManager::run()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            stateManager.boardData.desktop.HandleEvent(event);
+            boss.desktop.HandleEvent(event);
 
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -49,10 +49,10 @@ void guiManager::run()
             }
         }
 
-        stateManager.boardData.desktop.Update(clock.restart().asSeconds());
+        boss.desktop.Update(clock.restart().asSeconds());
 
         window.clear();
-        stateManager.boardData.display();
+        boss.display();
         sfgui_.Display(window);
         window.display();
     }

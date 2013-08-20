@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     boardstate.cpp \
     moveview.cpp \
     boardcanvas.cpp \
-    clocksview.cpp
+    clocksview.cpp \
+    gamedata.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -47,7 +48,8 @@ HEADERS += \
     boardstate.h \
     moveview.h \
     boardcanvas.h \
-    clocksview.h
+    clocksview.h \
+    gamedata.h
 
 OTHER_FILES += \
     notes.txt \

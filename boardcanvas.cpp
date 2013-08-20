@@ -1,11 +1,12 @@
 #include "boardcanvas.h"
 
-boardCanvas::boardCanvas(sf::Window& theWindow):
+boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     flipOffset(0),
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
     currentPiece(&pieces),
-    idCount(1)
+    idCount(1),
+    resources(theResources)
 {
     boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
     boardSprite_.setTexture(boardTexture_);
@@ -90,7 +91,7 @@ sf::Vector2f boardCanvas::cellToPosition(const int row, const int col) const
 
 sf::Vector2f boardCanvas::getMousePosition() const
 {
-    return (static_cast<sf::Vector2f>(sf::Mouse::getPosition(bigWindow)) - window_->GetAbsolutePosition());
+    return (static_cast<sf::Vector2f>(sf::Mouse::getPosition(bigWindow)) - window->GetAbsolutePosition());
 }
 
 void boardCanvas::sendBack()
