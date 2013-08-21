@@ -4,23 +4,14 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 
-/*void boardMaster::setGameEnded(const int result)
+void boardMaster::setGameEnded(bw result)
 {
-    gameEnded = true;
+    //update model
+    game.setResult(result);
 
-    switch (result) {
-    case 1:
-        turnLabel_->SetText("White wins!");
-        break;
-    case -1:
-        turnLabel_->SetText("Black wins!");
-        break;
-    case 0:
-        turnLabel_->SetText("Draw!");
-        break;
-    }
-
-}*/
+    //update view
+    status.setResult(result);
+}
 
 void boardMaster::flagDown(const int side)
 {
@@ -35,8 +26,11 @@ void boardMaster::handlePromotion(const int row, const int col)
     toPromoteCol = col;
 
     if (game.userTurn()){
+        //enable promotion window
         promotionWindow->Show(true);
         desktop.BringToFront(promotionWindow);
+
+        //disable board window
         boardWindow->SetState(sfg::Widget::INSENSITIVE);
     }else{
         promotionChoiceMade(chessAi.getPromotionChoice());
@@ -65,14 +59,14 @@ void boardMaster::moveMake(const completeMove &move)
     moveList.addMove(originRow,originCol,destRow,destCol,game.getPlyCount());
 
     //check for game end or switch turn
-    if (move.isCheckmate()) game.setResult(-game.turnColor());
-    if (move.isStalemate()) game.setResult(bw::White | bw::Black);
+    if (move.isCheckmate()) setGameEnded(-game.turnColor());
+    if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
     if (!game.ended()) switchTurn();
 }
 
 void boardMaster::newGame(const int whoHuman)
 {
-    //moveList->RemoveAll();
+    moveList.reset();
     status.setToPlay(bw::White);
 
     /*if (flipped()){

@@ -16,12 +16,12 @@ SOURCES += main.cpp \
     msmmanager.cpp \
     settingsstate.cpp \
     boardstate.cpp \
-    moveview.cpp \
-    boardcanvas.cpp \
-    clocksview.cpp \
+    views/moveview.cpp \
+    views/boardcanvas.cpp \
+    views/clocksview.cpp \
     gamedata.cpp \
     blackWolf.cpp \
-    statusview.cpp
+    views/statusview.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -48,11 +48,11 @@ HEADERS += \
     msmmanager.h \
     settingsstate.h \
     boardstate.h \
-    moveview.h \
-    boardcanvas.h \
-    clocksview.h \
+    views/moveview.h \
+    views/boardcanvas.h \
+    views/clocksview.h \
     gamedata.h \
-    statusview.h
+    views/statusview.h
 
 OTHER_FILES += \
     notes.txt \

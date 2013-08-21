@@ -14,11 +14,11 @@
 #include "completemove.h"
 #include "chessengine.h"
 #include "resourcemanager.h"
-#include "boardcanvas.h"
+#include "views/boardcanvas.h"
 #include "gamedata.h"
-#include "statusview.h"
-#include "clocksview.h"
-#include "moveview.h"
+#include "views/statusview.h"
+#include "views/clocksview.h"
+#include "views/moveview.h"
 
 
 
@@ -71,6 +71,8 @@ private:
 
     void aiTurn();
 
+    void setGameEnded(bw result);
+
 
 public:
     boardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
@@ -112,8 +114,7 @@ public:
     void bothNewGame();
 
     //boost slots
-    bool requestMove(int row1, int col1, int row2, int col2);
-
+    bool requestMove(int row1, int col1, int row2, int col2);    
 
 };
 

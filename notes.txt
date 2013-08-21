@@ -94,3 +94,5 @@ boost signals
 notebook for settings window
 
 boost.Test
+
+still need to ensure that while waiting for promotion choice the right clock is ticking
