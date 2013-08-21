@@ -67,7 +67,7 @@ private:
 
 
 
-    void newGame(const int whoHuman);
+    void newGame(const bw whoUser);
 
     void aiTurn();
 

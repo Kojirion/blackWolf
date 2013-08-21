@@ -64,25 +64,21 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::newGame(const int whoHuman)
+void boardMaster::newGame(const bw whoUser)
 {
+    game.newGame(whoUser);
+
+    board.resetFor(whoUser);
+
+    board.setPosition(game.getPosition());
+
     moveList.reset();
+
     status.setToPlay(bw::White);
 
-    /*if (flipped()){
-        if (humanColor==1) flipBoard();
-    }else{
-        if (humanColor==-1) flipBoard();
-    }*/
+    updateClocks();
 
-    //resetRects();
-
-    //idCount = 1;
-    //pieces.clear();
-
-    //initPieces();
-
-    chessAi.newGame();
+    //chessAi.newGame();
 
     if (!game.userTurn()) aiTurn();
 
@@ -143,21 +139,21 @@ void boardMaster::whiteNewGame()
 {
     sideChoiceWindow->Show(false);
     boardWindow->SetState(sfg::Widget::NORMAL);
-    newGame(1);
+    newGame(bw::White);
 }
 
 void boardMaster::blackNewGame()
 {
     sideChoiceWindow->Show(false);
     boardWindow->SetState(sfg::Widget::NORMAL);
-    newGame(-1);
+    newGame(bw::Black);
 }
 
 void boardMaster::bothNewGame()
 {
     sideChoiceWindow->Show(false);
     boardWindow->SetState(sfg::Widget::NORMAL);
-    newGame(2);
+    newGame(bw::White | bw::Black);
 }
 
 bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
@@ -262,7 +258,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sideChoiceWindow->Show(false);
     desktop.Add(sideChoiceWindow);
 
-    status.setToPlay(bw::White);
+
 
 
 
@@ -274,16 +270,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
-    game.newGame(bw::White | bw::Black);
-
-    board.setPosition(game.getPosition());
-
-
-    updateClocks();
-
-
-
-
+    newGame(bw::White | bw::Black);
 
 }
 
