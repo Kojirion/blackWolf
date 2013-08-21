@@ -21,6 +21,7 @@ public:
 
     bool ended() const;
     bool userTurn() const;
+    bool userBoth() const;
 
     bw turnColor() const; //whose turn
     bw getUserColor() const;
@@ -39,6 +40,9 @@ public:
 
     sf::Time getWhiteTime() const;
     sf::Time getBlackTime() const;
+
+    thor::CallbackTimer &getWhiteTimer();
+    thor::CallbackTimer &getBlackTimer();
 };
 
 #endif // GAMEDATA_H

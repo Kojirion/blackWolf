@@ -50,8 +50,6 @@ private:
 
     void sendBack(); //sends the current piece back
 
-    void flipBoard();
-
     //move was castle with destination the given square
     //so move rook to appropriate square
     void handleCastle(const int row, const int col);
@@ -83,6 +81,8 @@ public:
     boost::signals2::signal<bool (int, int, int, int)> &getSignal();
 
     void setPromotion(const int row, const int col, const int piece);
+
+    void flipBoard();
 };
 
 #endif // BOARDCANVAS_H

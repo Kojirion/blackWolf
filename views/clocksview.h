@@ -1,6 +1,7 @@
 #ifndef CLOCKSVIEW_H
 #define CLOCKSVIEW_H
 #include <SFGUI/Canvas.hpp>
+#include "blackWolf.h"
 
 class clocksView
 {
@@ -19,6 +20,8 @@ public:
     void update(const sf::Time& whiteTime, const sf::Time& blackTime);
     sfg::Widget::Ptr getWhiteClock();
     sfg::Widget::Ptr getBlackClock();
+
+    void setFlagDown(const bw loser);
 };
 
 #endif // CLOCKSVIEW_H

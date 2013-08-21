@@ -42,6 +42,12 @@ sfg::Widget::Ptr clocksView::getBlackClock()
     return blackClockCanvas;
 }
 
+void clocksView::setFlagDown(const bw loser)
+{
+    if (loser == bw::White) whiteClockText.setColor(sf::Color::Yellow);
+    else blackClockText.setColor(sf::Color::Yellow);
+}
+
 std::string clocksView::timeToString(const sf::Time& value) const
 {
     const int totalSeconds = static_cast<int>(std::ceil(value.asSeconds()));

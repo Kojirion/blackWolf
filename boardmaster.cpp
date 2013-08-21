@@ -3,6 +3,7 @@
 #include <boost/assert.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
+#include "components/buttonbox.h"
 
 void boardMaster::setGameEnded(bw result)
 {
@@ -13,11 +14,10 @@ void boardMaster::setGameEnded(bw result)
     status.setResult(result);
 }
 
-void boardMaster::flagDown(const int side)
+void boardMaster::flagDown(const bw loser)
 {
-    //if (side==1) whiteClockText.setColor(sf::Color::Yellow);
-    //else blackClockText.setColor(sf::Color::Yellow);
-    //setGameEnded(-side);
+    clocks.setFlagDown(loser);
+    setGameEnded(-loser);
 }
 
 void boardMaster::handlePromotion(const int row, const int col)
@@ -50,9 +50,9 @@ void boardMaster::moveMake(const completeMove &move)
     //handle promotion AND update the engine, depending on whether it was or not
     if (game.getPosition().wasPromotion){
         handlePromotion(destRow, destCol);
-         //if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+         if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
-         //if (!humanBoth) chessAi.makeMove(originRow,originCol,destRow,destCol);
+         if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
     }
 
     //update move counter and move list widget
@@ -78,7 +78,7 @@ void boardMaster::newGame(const bw whoUser)
 
     updateClocks();
 
-    //chessAi.newGame();
+    if (game.userBoth()) chessAi.newGame();
 
     if (!game.userTurn()) aiTurn();
 
@@ -176,10 +176,10 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow,resources)
 {
-    //if (!chessAi.load()) humanBoth = true;
-    //humanBoth = true;
-
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
+
+    game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
+    game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
 
     sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
     sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
@@ -204,29 +204,11 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     promotionWindow->Show(false);
 
-    //gui setup
-    sfg::Button::Ptr resignButton(sfg::Button::Create("Resign"));
-    resignButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
-
-    sfg::Button::Ptr drawButton(sfg::Button::Create("Offer draw"));
-    drawButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
-
-    sfg::Button::Ptr newGameButton(sfg::Button::Create("New game"));
-    newGameButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
-
-    sfg::Button::Ptr flipButton(sfg::Button::Create("Flip board"));
-    //flipButton->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::flipBoard, this);
-
-    sfg::Table::Ptr buttonLayout(sfg::Table::Create());
-    buttonLayout->SetRowSpacings(3.f);
-    buttonLayout->SetColumnSpacings(3.f);
-
-    buttonLayout->Attach(resignButton,{0,0,1,1});
-    buttonLayout->Attach(drawButton,{0,1,1,1});
-    buttonLayout->Attach(newGameButton,{1,0,1,1});
-    buttonLayout->Attach(flipButton,{1,1,1,1});
-    buttonLayout->Attach(settingsButton,{2,0,1,1});
-
+    buttonBox buttons;
+    buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
+    buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
+    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
+    buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardCanvas::flipBoard, &board);
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(5.f);
@@ -235,7 +217,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(clocks.getBlackClock(),{1, 1, 1, 1});
     mainLayout->Attach(status.getView(),{1, 2, 1, 1});
     mainLayout->Attach(moveList.getView(),{1, 3, 1, 4});
-    mainLayout->Attach(buttonLayout,{0,8,2,2});
+    mainLayout->Attach(buttons.getWidget(),{0,8,2,2});
 
     //when making new game
     sideChoiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
@@ -270,13 +252,16 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
-    newGame(bw::White | bw::Black);
+    if (!chessAi.load()) newGame(bw::White | bw::Black);
+    else newGame(bw::White);
+
+
 
 }
 
 boardMaster::~boardMaster()
 {
-    //if (!humanBoth) chessAi.unLoad();
+    if (!game.userBoth()) chessAi.unLoad();
 }
 
 void boardMaster::display()
@@ -285,25 +270,20 @@ void boardMaster::display()
     if (!game.ended()) updateClocks();
 }
 
-int boardMaster::getTurnColor() const
-{
-    return 1; //currentPosition.turnColor;
-}
-
 void boardMaster::switchTurn()
 {
     status.setToPlay(game.turnColor());
     game.switchTurn();
 
-//    if (!game.userTurn()){
-//        aiTurn();
-//    }
+    if (!game.userTurn()){
+        aiTurn();
+    }
 }
 
 
 void boardMaster::resign()
 {
-    game.setResult(-game.getUserColor());
+    setGameEnded(-game.getUserColor());
 }
 
 void boardMaster::offerDraw()

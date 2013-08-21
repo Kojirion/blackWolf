@@ -61,7 +61,7 @@ private:
 
 
 
-    void flagDown(const int side);
+    void flagDown(const bw loser);
 
     void moveMake (const completeMove &move);
 
@@ -86,8 +86,6 @@ public:
     sfg::Button::Ptr settingsButton;
 
     void display();
-
-    int getTurnColor() const;
 
     void switchTurn();
 

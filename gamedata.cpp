@@ -3,8 +3,8 @@
 
 gameData::gameData()
 {
-    whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
-    blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
+    //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
+    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
 }
 
 bool gameData::ended() const
@@ -15,6 +15,11 @@ bool gameData::ended() const
 bool gameData::userTurn() const
 {
     return check(turnColor() & userColor);
+}
+
+bool gameData::userBoth() const
+{
+    return (userColor == (bw::White | bw::Black));
 }
 
 bw gameData::turnColor() const
@@ -97,4 +102,14 @@ sf::Time gameData::getWhiteTime() const
 sf::Time gameData::getBlackTime() const
 {
     return blackClock.getRemainingTime();
+}
+
+thor::CallbackTimer& gameData::getWhiteTimer()
+{
+    return whiteClock;
+}
+
+thor::CallbackTimer& gameData::getBlackTimer()
+{
+    return blackClock;
 }

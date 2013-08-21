@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     views/clocksview.cpp \
     gamedata.cpp \
     blackWolf.cpp \
-    views/statusview.cpp
+    views/statusview.cpp \
+    components/buttonbox.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -52,7 +53,8 @@ HEADERS += \
     views/boardcanvas.h \
     views/clocksview.h \
     gamedata.h \
-    views/statusview.h
+    views/statusview.h \
+    components/buttonbox.h
 
 OTHER_FILES += \
     notes.txt \

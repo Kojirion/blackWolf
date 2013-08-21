@@ -96,3 +96,4 @@ notebook for settings window
 boost.Test
 
 still need to ensure that while waiting for promotion choice the right clock is ticking
++ connect the callback signals from timers to flagDown
