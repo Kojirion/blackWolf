@@ -27,6 +27,11 @@ bw gameData::getUserColor() const
     return userColor;
 }
 
+int gameData::getPlyCount() const
+{
+    return plyCounter;
+}
+
 const position gameData::getPosition() const
 {
     return currentPosition;
@@ -75,6 +80,7 @@ void gameData::switchTurn()
         whiteClock.stop();
         blackClock.start();
     }
+    plyCounter++;
 }
 
 sf::Time gameData::getWhiteTime() const

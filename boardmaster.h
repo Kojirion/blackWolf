@@ -18,6 +18,7 @@
 #include "gamedata.h"
 #include "statusview.h"
 #include "clocksview.h"
+#include "moveview.h"
 
 
 
@@ -36,6 +37,8 @@ private:
     statusView status;
 
     clocksView clocks;
+
+    moveView moveList;
 
 
 

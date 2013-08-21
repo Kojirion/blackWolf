@@ -25,6 +25,8 @@ public:
     bw turnColor() const; //whose turn
     bw getUserColor() const;
 
+    int getPlyCount() const;
+
     const position getPosition() const;
     void setPosition(position toSet);
 

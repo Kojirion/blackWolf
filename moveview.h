@@ -17,6 +17,8 @@ public:
 
     void addMove(const int row1, const int col1, const int row2, const int col2, const int plyCounter);
 
+    sfg::Widget::Ptr getView();
+
     void reset();
 };
 

@@ -24,6 +24,11 @@ void moveView::addMove(const int row1, const int col1, const int row2, const int
     moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
 }
 
+sfg::Widget::Ptr moveView::getView()
+{
+    return moveListWindow;
+}
+
 void moveView::reset()
 {
     moveList->RemoveAll();

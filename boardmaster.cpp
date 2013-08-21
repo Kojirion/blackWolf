@@ -62,6 +62,7 @@ void boardMaster::moveMake(const completeMove &move)
     }
 
     //update move counter and move list widget
+    moveList.addMove(originRow,originCol,destRow,destCol,game.getPlyCount());
 
     //check for game end or switch turn
     if (move.isCheckmate()) game.setResult(-game.turnColor());
@@ -240,7 +241,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(clocks.getWhiteClock(),{1, 0, 1, 1});
     mainLayout->Attach(clocks.getBlackClock(),{1, 1, 1, 1});
     mainLayout->Attach(status.getView(),{1, 2, 1, 1});
-    //mainLayout->Attach(moveListWindow,{1, 3, 1, 4});
+    mainLayout->Attach(moveList.getView(),{1, 3, 1, 4});
     mainLayout->Attach(buttonLayout,{0,8,2,2});
 
     //when making new game
