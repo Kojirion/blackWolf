@@ -83,6 +83,8 @@ public:
     void setPromotion(const int row, const int col, const int piece);
 
     void flipBoard();
+
+    void reload(const position &givenPosition);
 };
 
 #endif // BOARDCANVAS_H

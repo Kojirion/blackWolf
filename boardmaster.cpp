@@ -43,6 +43,20 @@ void boardMaster::handlePromotion(const int row, const int col)
     }
 }
 
+void boardMaster::settingsClicked()
+{
+    enableWindow(false);
+    settingsWindow.enable(true);
+}
+
+void boardMaster::settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix)
+{
+    settingsWindow.enable(false);
+    enableWindow(true);
+    resources.reload(whitePrefix, blackPrefix, boardSuffix);
+    board.reload(game.getPosition());
+}
+
 void boardMaster::moveMake(const completeMove &move)
 {
     const int originRow = move.getRow1();
@@ -84,7 +98,7 @@ void boardMaster::newGame(const bw whoUser)
 
     updateClocks();
 
-    if (game.userBoth()) chessAi.newGame();
+    if (!game.userBoth()) chessAi.newGame();
 
     if (!game.userTurn()) aiTurn();
 
@@ -181,9 +195,11 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop(theDesktop),
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow,resources),
-    sideChoice(desktop)
+    sideChoice(desktop),
+    settingsWindow(desktop)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
+    settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
 
     game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
@@ -216,6 +232,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
     buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardCanvas::flipBoard, &board);
+    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::settingsClicked, this);
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(5.f);
@@ -232,6 +249,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::bothNewGame, this);
 
     desktop.Add(sideChoice.getWidget());
+    desktop.Add(settingsWindow.getWidget());
 
 
 
@@ -253,6 +271,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 }
 
 boardMaster::~boardMaster()
+
 {
     if (!game.userBoth()) chessAi.unLoad();
 }
@@ -283,6 +302,7 @@ void boardMaster::offerDraw()
 {
     return; //ai rejects all offers for now
 }
+
 
 void boardMaster::requestNewGame()
 {

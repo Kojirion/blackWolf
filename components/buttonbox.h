@@ -12,6 +12,7 @@ private:
     sfg::Button::Ptr drawButton;
     sfg::Button::Ptr newGameButton;
     sfg::Button::Ptr flipButton;
+    sfg::Button::Ptr settingsButton;
 public:
     buttonBox();
 
@@ -21,6 +22,7 @@ public:
     sfg::Widget::Ptr draw();
     sfg::Widget::Ptr newGame();
     sfg::Widget::Ptr flip();
+    sfg::Widget::Ptr settings();
 
 
 };

@@ -5,17 +5,33 @@
 #include <SFGUI/Button.hpp>
 #include <SFGUI/RadioButton.hpp>
 #include <SFML/System/NonCopyable.hpp>
+#include <array>
+#include <boost/signals2.hpp>
 
 class settingsState : private sf::NonCopyable
 {
 private:
+    sfg::Window::Ptr window;
+    sfg::Desktop& desktop;
+    sfg::Button::Ptr closeButton;
+
+    static constexpr std::array<std::string,12> colors =
+    {"Black","Blue","Blue2","Brown","Green","Green2","Red","Red2",
+                                                          "Violet","Violet2","White","Yellow"};
+    std::array<sfg::RadioButton::Ptr,12> whiteButtons;
+
+    void requestClose();
+
+    std::string whitePrefix;
+    std::string blackPrefix;
+    std::string boardSuffix;
 
 public:
-    sfg::Window::Ptr window;
-    //sfg::Desktop& desktop;
-    settingsState();
-    sfg::Button::Ptr closeButton;
-    void makeVisible();
+    settingsState(sfg::Desktop& theDesktop);
+    void enable(bool doEnable = true);
+    sfg::Widget::Ptr getWidget();
+
+    boost::signals2::signal<void (std::string, std::string, std::string)> settingsDone;
 };
 
 #endif // SETTINGSSTATE_H

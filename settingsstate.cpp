@@ -1,9 +1,24 @@
 #include "settingsstate.h"
 #include <SFGUI/Box.hpp>
-#include <array>
+#include <SFGUI/Table.hpp>
 
-settingsState::settingsState()://sfg::Desktop& theDesktop):
-    //desktop(theDesktop)
+void settingsState::requestClose()
+{
+    std::string toSetWhite;
+    for (int i=0; i<colors.size(); ++i)
+    {
+        if (whiteButtons[i]->IsActive())
+        {
+            toSetWhite = colors[i];
+            break;
+        }
+    }
+
+    settingsDone(toSetWhite,"Black","brown");
+}
+
+settingsState::settingsState(sfg::Desktop &theDesktop):
+    desktop(theDesktop),
     window(sfg::Window::Create()),
     closeButton(sfg::Button::Create("Close"))
 {
@@ -11,24 +26,33 @@ settingsState::settingsState()://sfg::Desktop& theDesktop):
     window->SetTitle("Settings");
     window->Show(false);
 
-    std::array<std::string,12> colors = {"Black","Blue","Blue2","Brown","Green","Green2","Red","Red2",
-                                         "Violet","Violet2","White","Yellow"};
-
     sfg::Box::Ptr buttonLayout = sfg::Box::Create(sfg::Box::VERTICAL);
     sfg::RadioButtonGroup::Ptr buttonGroup(sfg::RadioButtonGroup::Create());
 
-    for (auto& color : colors)
+    for (int i=0; i<colors.size(); ++i)
     {
-        sfg::RadioButton::Ptr button(sfg::RadioButton::Create(color,buttonGroup));
-        if (color=="Black") button->SetActive(true);
-        buttonLayout->Pack(button);
+        whiteButtons[i] = (sfg::RadioButton::Create(colors[i],buttonGroup));
+        if (colors[i]=="Black") whiteButtons[i]->SetActive(true);
+        buttonLayout->Pack(whiteButtons[i]);
     }
 
-    window->Add(buttonLayout);
-    window->Add(closeButton);
+    sfg::Table::Ptr mainLayout(sfg::Table::Create());
+    mainLayout->Attach(buttonLayout,{0,0,1,1});
+    mainLayout->Attach(closeButton,{1,1,1,1});
+
+    closeButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&settingsState::requestClose,this);
+
+    window->Add(mainLayout);
 }
 
-void settingsState::makeVisible()
+void settingsState::enable(bool doEnable)
 {
-    window->Show(true);
+    if (doEnable) desktop.BringToFront(window);
+    window->Show(doEnable);
 }
+
+sfg::Widget::Ptr settingsState::getWidget()
+{
+    return window;
+}
+

@@ -4,7 +4,7 @@
 resourceManager::resourceManager():
     whitePrefix("Blue"),
     blackPrefix("Yellow"),
-    boardSuffix("brown"),
+    boardSuffix("Brown"),
     pathToPieces("Graphics/Pieces/")
 {
     load();
@@ -82,4 +82,6 @@ void resourceManager::reload(const std::string &theWhitePrefix, const std::strin
     whitePrefix = theWhitePrefix;
     blackPrefix = theBlackPrefix;
     boardSuffix = theBoardSuffix;
+
+    load();
 }

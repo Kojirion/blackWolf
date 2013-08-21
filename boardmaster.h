@@ -20,6 +20,7 @@
 #include "views/clocksview.h"
 #include "views/moveview.h"
 #include "components/sidechoicewindow.h"
+#include "settingsstate.h"
 
 
 
@@ -82,6 +83,8 @@ private:
 
     sideChoiceWindow sideChoice;
 
+    settingsState settingsWindow;
+
 
 
 
@@ -99,8 +102,8 @@ private:
     int promotionChoice; //which piece was chosen by either ai or player
 
 
-
-
+    void settingsClicked();
+    void settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix);
 
 
     void flagDown(const bw loser);

@@ -5,7 +5,8 @@ buttonBox::buttonBox():
     resignButton(sfg::Button::Create("Resign")),
     drawButton(sfg::Button::Create("Offer draw")),
     newGameButton(sfg::Button::Create("New game")),
-    flipButton(sfg::Button::Create("Flip board"))
+    flipButton(sfg::Button::Create("Flip board")),
+    settingsButton(sfg::Button::Create("Settings"))
 {
     buttonLayout->SetRowSpacings(3.f);
     buttonLayout->SetColumnSpacings(3.f);
@@ -14,7 +15,7 @@ buttonBox::buttonBox():
     buttonLayout->Attach(drawButton,{0,1,1,1});
     buttonLayout->Attach(newGameButton,{1,0,1,1});
     buttonLayout->Attach(flipButton,{1,1,1,1});
-    //buttonLayout->Attach(settingsButton,{2,0,1,1});
+    buttonLayout->Attach(settingsButton,{2,0,1,1});
 }
 
 sfg::Widget::Ptr buttonBox::getWidget()
@@ -40,4 +41,9 @@ sfg::Widget::Ptr buttonBox::newGame()
 sfg::Widget::Ptr buttonBox::flip()
 {
     return flipButton;
+}
+
+sfg::Widget::Ptr buttonBox::settings()
+{
+    return settingsButton;
 }

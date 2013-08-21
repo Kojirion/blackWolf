@@ -97,3 +97,5 @@ boost.Test
 
 still need to ensure that while waiting for promotion choice the right clock is ticking
 + connect the callback signals from timers to flagDown
+
+thor resource manager might not be necessary at the moment

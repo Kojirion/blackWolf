@@ -114,6 +114,12 @@ public:
             return piece;
         }
 
+        pieceSprite changeTexture(pieceSprite piece, const sf::Texture& toSet) const
+        {
+            piece.setTexture(toSet);
+            return piece;
+        }
+
     public:
         spriteHelper(piecesBimap &p, const int theRowId, const int theColId):
             parent(p), rowId(theRowId), colId(theColId)
@@ -146,6 +152,11 @@ public:
         void moveTo(const int destRow, const int destCol, const sf::Vector2f position){
             parent.pieces.right.modify_data(pieceToUse, boost::bimaps::_data = squareId(destRow,destCol));
             parent.pieces.right.modify_key(pieceToUse, boost::bimaps::_key = changePosition(pieceToUse->first,position));
+        }
+
+        void setTexture(const sf::Texture& toSet)
+        {
+            parent.pieces.right.modify_key(pieceToUse, boost::bimaps::_key = changeTexture(pieceToUse->first,toSet));
         }
 
         sf::Vector2f getPosition()

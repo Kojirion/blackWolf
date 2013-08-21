@@ -8,7 +8,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     idCount(1),
     resources(theResources)
 {
-    boardTexture_.loadFromFile("Graphics/Boardbrown.jpg");
+    boardTexture_.loadFromFile("Graphics/BoardBrown.jpg");
     boardSprite_.setTexture(boardTexture_);
 
     rectGrid.resize(8);
@@ -114,6 +114,12 @@ void boardCanvas::flipBoard()
     resetRects();
 }
 
+void boardCanvas::reload(const position &givenPosition)
+{
+    pieces.clear();
+    setPosition(givenPosition);
+}
+
 void boardCanvas::handleCastle(const int row, const int col)
 {
     if (row==0){
@@ -201,7 +207,7 @@ void boardCanvas::setPosition(const position& givenPosition)
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const int pieceId = givenPosition[i][j];
-            if (pieceId==0) continue;
+            if ((pieceId==0)||(pieceId==7)||(pieceId==-7)) continue;
             pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces[i][j].insert(toAdd);
             idCount++;
