@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     gamedata.cpp \
     blackWolf.cpp \
     views/statusview.cpp \
-    components/buttonbox.cpp
+    components/buttonbox.cpp \
+    components/sidechoicewindow.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -54,7 +55,8 @@ HEADERS += \
     views/clocksview.h \
     gamedata.h \
     views/statusview.h \
-    components/buttonbox.h
+    components/buttonbox.h \
+    components/sidechoicewindow.h
 
 OTHER_FILES += \
     notes.txt \

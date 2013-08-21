@@ -14,6 +14,12 @@ void boardMaster::setGameEnded(bw result)
     status.setResult(result);
 }
 
+void boardMaster::enableWindow(const bool enable)
+{
+    if (enable) boardWindow->SetState(sfg::Widget::NORMAL);
+    else boardWindow->SetState(sfg::Widget::INSENSITIVE);
+}
+
 void boardMaster::flagDown(const bw loser)
 {
     clocks.setFlagDown(loser);
@@ -31,7 +37,7 @@ void boardMaster::handlePromotion(const int row, const int col)
         desktop.BringToFront(promotionWindow);
 
         //disable board window
-        boardWindow->SetState(sfg::Widget::INSENSITIVE);
+        enableWindow(false);
     }else{
         promotionChoiceMade(chessAi.getPromotionChoice());
     }
@@ -112,7 +118,7 @@ void boardMaster::promotionChoiceMade(const int whichPiece)
     game.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
 
     promotionWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);
+    enableWindow(true);
 }
 
 void boardMaster::promoteQueen()
@@ -137,22 +143,22 @@ void boardMaster::promoteRook()
 
 void boardMaster::whiteNewGame()
 {
-    sideChoiceWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);
+    sideChoice.enable(false);
+    enableWindow(true);
     newGame(bw::White);
 }
 
 void boardMaster::blackNewGame()
 {
-    sideChoiceWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);
+    sideChoice.enable(false);
+    enableWindow(true);
     newGame(bw::Black);
 }
 
 void boardMaster::bothNewGame()
 {
-    sideChoiceWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);
+    sideChoice.enable(false);
+    enableWindow(true);
     newGame(bw::White | bw::Black);
 }
 
@@ -169,12 +175,13 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 }
 
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
-    promotionWindow(sfg::Window::Create()), sideChoiceWindow(sfg::Window::Create()),
+    promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
     toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
     desktop(theDesktop),
     settingsButton(sfg::Button::Create("Settings")),
-    board(theWindow,resources)
+    board(theWindow,resources),
+    sideChoice(desktop)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
 
@@ -220,25 +227,11 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(buttons.getWidget(),{0,8,2,2});
 
     //when making new game
-    sideChoiceWindow->SetPosition(sf::Vector2f(200.f,200.f));
-    sideChoiceWindow->SetRequisition(sf::Vector2f(200.f,200.f));
-    sideChoiceWindow->SetTitle("Choose color");
+    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::whiteNewGame, this);
+    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::blackNewGame, this);
+    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::bothNewGame, this);
 
-    sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::VERTICAL, 5.f));
-    sfg::Button::Ptr whiteSide(sfg::Button::Create("White"));
-    sfg::Button::Ptr blackSide(sfg::Button::Create("Black"));
-    sfg::Button::Ptr bothSide(sfg::Button::Create("Both"));
-
-    whiteSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::whiteNewGame, this);
-    blackSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::blackNewGame, this);
-    bothSide->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::bothNewGame, this);
-
-    sideChoiceBox->Pack(whiteSide);
-    sideChoiceBox->Pack(blackSide);
-    sideChoiceBox->Pack(bothSide);
-    sideChoiceWindow->Add(sideChoiceBox);
-    sideChoiceWindow->Show(false);
-    desktop.Add(sideChoiceWindow);
+    desktop.Add(sideChoice.getWidget());
 
 
 
@@ -293,9 +286,8 @@ void boardMaster::offerDraw()
 
 void boardMaster::requestNewGame()
 {
-    sideChoiceWindow->Show(true);
-    desktop.BringToFront(sideChoiceWindow);
-    boardWindow->SetState(sfg::Widget::INSENSITIVE);
+    sideChoice.enable(true);
+    enableWindow(false);
 }
 
 void boardMaster::updateClocks()

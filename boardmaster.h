@@ -19,6 +19,7 @@
 #include "views/statusview.h"
 #include "views/clocksview.h"
 #include "views/moveview.h"
+#include "components/sidechoicewindow.h"
 
 
 
@@ -26,6 +27,45 @@
 
 class boardMaster
 {
+public:
+    boardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
+    ~boardMaster();
+
+    sfg::Desktop& desktop;
+    sfg::Window::Ptr promotionWindow;
+
+    sfg::Window::Ptr boardWindow;
+    sfg::Button::Ptr settingsButton;
+
+    void display();
+
+    void switchTurn();
+
+
+
+    void updateClocks();
+
+    //slots
+    void processLeftClick();
+    void processMouseMove();
+    void processMouseRelease();
+    void processEnterCanvas();
+    void resign();
+    void offerDraw();
+    void requestNewGame();
+    void promotionChoiceMade(const int whichPiece);
+    void promoteQueen();
+    void promoteBishop();
+    void promoteKnight();
+    void promoteRook();
+
+    void whiteNewGame();
+    void blackNewGame();
+    void bothNewGame();
+
+    //boost slots
+    bool requestMove(int row1, int col1, int row2, int col2);
+
 private:
 
     resourceManager resources;
@@ -39,6 +79,8 @@ private:
     clocksView clocks;
 
     moveView moveList;
+
+    sideChoiceWindow sideChoice;
 
 
 
@@ -73,46 +115,7 @@ private:
 
     void setGameEnded(bw result);
 
-
-public:
-    boardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
-    ~boardMaster();
-
-    sfg::Desktop& desktop;
-    sfg::Window::Ptr promotionWindow;
-
-    sfg::Window::Ptr boardWindow;
-    sfg::Window::Ptr sideChoiceWindow;
-    sfg::Button::Ptr settingsButton;
-
-    void display();
-
-    void switchTurn();
-
-
-
-    void updateClocks();
-
-    //slots
-    void processLeftClick();
-    void processMouseMove();
-    void processMouseRelease();
-    void processEnterCanvas();
-    void resign();
-    void offerDraw();
-    void requestNewGame();
-    void promotionChoiceMade(const int whichPiece);
-    void promoteQueen();
-    void promoteBishop();
-    void promoteKnight();
-    void promoteRook();
-
-    void whiteNewGame();
-    void blackNewGame();
-    void bothNewGame();
-
-    //boost slots
-    bool requestMove(int row1, int col1, int row2, int col2);    
+    void enableWindow(const bool enable = true);
 
 };
 
