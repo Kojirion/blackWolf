@@ -110,16 +110,19 @@ void boardMaster::aiTurn()
 
 void boardMaster::promotionChoiceMade(const int whichPiece)
 {
-    /*promotionChoice = whichPiece;
-    const int whichSide = pieces[toPromoteRow][toPromoteCol].getSide();
-    destroy(toPromoteRow,toPromoteCol);
-    pieceSprite toAdd(resources.typeToTexture(whichSide*whichPiece),cellToPosition(toPromoteRow,toPromoteCol),whichSide,idCount);
-    pieces[toPromoteRow][toPromoteCol].insert(toAdd);
-    idCount++;
-    currentPosition.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
+    promotionChoice = whichPiece;
+
+    //update view
+    board.setPromotion(toPromoteRow, toPromoteCol, whichPiece);
+
+    //update model
+    int whichSide;
+    if (game.turnColor()==bw::White) whichSide = 1;
+    else whichSide = 1;
+    game.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
 
     promotionWindow->Show(false);
-    boardWindow->SetState(sfg::Widget::NORMAL);*/
+    boardWindow->SetState(sfg::Widget::NORMAL);
 }
 
 void boardMaster::promoteQueen()

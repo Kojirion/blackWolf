@@ -79,6 +79,8 @@ public:
     void setPosition(const position &givenPosition);
 
     boost::signals2::signal<bool (int, int, int, int)> &getSignal();
+
+    void setPromotion(const int row, const int col, const int piece);
 };
 
 #endif // BOARDCANVAS_H

@@ -35,6 +35,8 @@ public:
     void update();
     void switchTurn();
 
+    void setPromotion(const int row, const int col, const int piece);
+
     sf::Time getWhiteTime() const;
     sf::Time getBlackTime() const;
 };

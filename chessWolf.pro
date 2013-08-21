@@ -11,7 +11,7 @@ SOURCES += main.cpp \
     completemove.cpp \
     chessengine.cpp \
     piecesbimap.cpp \
-    file_descriptor.cpp \
+    ext/file_descriptor.cpp \
     resourcemanager.cpp \
     msmmanager.cpp \
     settingsstate.cpp \

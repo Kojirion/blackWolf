@@ -1,4 +1,5 @@
 #include "blackWolf.h"
+//#include <boost/assert.hpp>
 
 bw operator-(const bw rhs)
 {

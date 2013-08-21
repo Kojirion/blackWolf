@@ -1,6 +1,5 @@
 #ifndef BLACKWOLF_H
 #define BLACKWOLF_H
-#include <boost/assert.hpp>
 
 enum class bw
 {

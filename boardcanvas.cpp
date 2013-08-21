@@ -215,6 +215,15 @@ boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
     return requestMove;
 }
 
+void boardCanvas::setPromotion(const int row, const int col, const int piece)
+{
+    const int whichSide = pieces[row][col].getSide();
+    destroy(row,col);
+    pieceSprite toAdd(resources.typeToTexture(whichSide*piece),cellToPosition(row,col),whichSide,idCount);
+    pieces[row][col].insert(toAdd);
+    idCount++;
+}
+
 void boardCanvas::resetRects()
 {
     for (int i=0; i<8; ++i){

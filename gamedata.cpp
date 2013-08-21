@@ -1,4 +1,5 @@
 #include "gamedata.h"
+#include <boost/assert.hpp>
 
 gameData::gameData()
 {
@@ -81,6 +82,11 @@ void gameData::switchTurn()
         blackClock.start();
     }
     plyCounter++;
+}
+
+void gameData::setPromotion(const int row, const int col, const int piece)
+{
+    currentPosition.setPromotion(row, col, piece);
 }
 
 sf::Time gameData::getWhiteTime() const
