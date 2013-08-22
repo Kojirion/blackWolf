@@ -17,6 +17,10 @@ private:
 
     std::array<std::string,12> colors;
     std::array<sfg::RadioButton::Ptr,12> whiteButtons;
+    std::array<sfg::RadioButton::Ptr,12> blackButtons;
+
+    std::array<std::string,3> boardColors;
+    std::array<sfg::RadioButton::Ptr,3> boardButtons;
 
     void requestClose();
 
