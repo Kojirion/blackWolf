@@ -2,7 +2,7 @@
 #define GUIMANAGER_H
 #include <SFML/Graphics.hpp>
 #include <SFGUI/SFGUI.hpp>
-#include "boardmaster.h"
+#include "controller/boardmaster.h"
 //#include "msmmanager.h"
 
 class guiManager

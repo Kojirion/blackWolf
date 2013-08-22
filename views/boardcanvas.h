@@ -5,7 +5,7 @@
 #define BOARDCANVAS_H
 #include <SFGUI/Canvas.hpp>
 #include <boost/signals2.hpp>
-#include "piecesbimap.h"
+#include "views/components/piecesbimap.h"
 #include "resourcemanager.h"
 #include "completemove.h"
 #include "position.h"

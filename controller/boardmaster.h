@@ -4,23 +4,17 @@
 #ifndef BOARDMASTER_H
 #define BOARDMASTER_H
 #include <SFML/Graphics.hpp>
-#include <SFGUI/Canvas.hpp>
-#include <SFGUI/Label.hpp>
-#include <SFGUI/Table.hpp>
-#include <SFGUI/Window.hpp>
-#include <SFGUI/Desktop.hpp>
-#include <SFGUI/Button.hpp>
 #include "position.h"
 #include "completemove.h"
 #include "chessengine.h"
 #include "resourcemanager.h"
 #include "views/boardcanvas.h"
-#include "gamedata.h"
+#include "model/gamedata.h"
 #include "views/statusview.h"
 #include "views/clocksview.h"
 #include "views/moveview.h"
-#include "components/sidechoicewindow.h"
-#include "settingsstate.h"
+#include "controller/components/sidechoicewindow.h"
+#include "controller/components/settingsstate.h"
 
 
 

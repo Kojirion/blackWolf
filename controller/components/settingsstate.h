@@ -15,9 +15,7 @@ private:
     sfg::Desktop& desktop;
     sfg::Button::Ptr closeButton;
 
-    static constexpr std::array<std::string,12> colors =
-    {"Black","Blue","Blue2","Brown","Green","Green2","Red","Red2",
-                                                          "Violet","Violet2","White","Yellow"};
+    std::array<std::string,12> colors;
     std::array<sfg::RadioButton::Ptr,12> whiteButtons;
 
     void requestClose();

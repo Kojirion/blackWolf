@@ -2,7 +2,7 @@
 #define PIECESBIMAP_H
 #include <boost/bimap.hpp>
 #include <boost/bimap/support/lambda.hpp>
-#include "piecesprite.h"
+#include "views/components/piecesprite.h"
 
 class squareId{
 public:
