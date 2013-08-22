@@ -20,7 +20,6 @@ private:
     //offset used in positioning the pieces to achieve flip
     int flipOffset;
 
-    sf::Texture boardTexture_;
     sf::Sprite boardSprite_;
     sf::Window& bigWindow; //only to know its position
 

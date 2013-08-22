@@ -134,6 +134,9 @@ completeMove::completeMove(const position &thePosition, const int theRow1, const
 
 bool completeMove::isLegal() const
 {
+    if (pieceCode*board.turnColor<0) return false;
+    //assumes that color has been switched if necessary
+
     if (newBoard.wasCastle) return handleCastle();
 
     if (!boardMove::isLegal()) return false;

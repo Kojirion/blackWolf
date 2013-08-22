@@ -5,8 +5,6 @@
 
 void settingsState::requestClose()
 {
-    std::string toSetWhite;
-    std::string toSetBlack;
     for (int i=0; i<colors.size(); ++i)
     {
         if (whiteButtons[i]->IsActive())
@@ -20,7 +18,6 @@ void settingsState::requestClose()
         }
     }
 
-    std::string toSetBoard;
     for (int i=0; i<boardColors.size(); ++i)
     {
         if (boardButtons[i]->IsActive())
@@ -62,9 +59,6 @@ settingsState::settingsState(sfg::Desktop &theDesktop):
         buttonLayout2->Pack(blackButtons[i]);
     }
 
-    whiteButtons[0]->SetActive(true);
-    blackButtons[1]->SetActive(true);
-
     sfg::Frame::Ptr frame1(sfg::Frame::Create("White"));
     frame1->Add(buttonLayout1);
 
@@ -77,6 +71,7 @@ settingsState::settingsState(sfg::Desktop &theDesktop):
     for (int i=0; i<boardColors.size(); ++i)
     {
         boardButtons[i] = sfg::RadioButton::Create(boardColors[i],buttonGroup3);
+
         buttonLayout3->Pack(boardButtons[i]);
     }
 
@@ -106,5 +101,25 @@ void settingsState::enable(bool doEnable)
 sfg::Widget::Ptr settingsState::getWidget()
 {
     return window;
+}
+
+void settingsState::setTree(const boost::property_tree::ptree pt)
+{
+    toSetWhite = pt.get<std::string>("whitePrefix");
+    toSetBlack = pt.get<std::string>("blackPrefix");
+    toSetBoard = pt.get<std::string>("boardSuffix");
+
+    for (int i=0; i<colors.size(); ++i)
+    {
+        if (colors[i] == toSetWhite) whiteButtons[i]->SetActive(true);
+        if (colors[i] == toSetBlack) blackButtons[i]->SetActive(true);
+    }
+
+    for (int i=0; i<boardColors.size(); ++i)
+    {
+       if (boardColors[i] == toSetBoard) boardButtons[i]->SetActive(true);
+    }
+
+
 }
 

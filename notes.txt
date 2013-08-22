@@ -99,3 +99,6 @@ still need to ensure that while waiting for promotion choice the right clock is 
 + connect the callback signals from timers to flagDown
 
 thor resource manager might not be necessary at the moment
+
+the ONLY reason a move with opponent's color is legal on construction is for the purposes of checking castling
+legitimacy

@@ -2,6 +2,7 @@
 #define RESOURCEMANAGER_H
 #include <SFML/Graphics/Texture.hpp>
 #include <Thor/Resources.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 class resourceManager
 {
@@ -22,6 +23,8 @@ public:
     void reload(const std::string& theWhitePrefix,
         const std::string& theBlackPrefix, const std::string& theBoardSuffix);
 
+    boost::property_tree::ptree getTree() const;
+
 private:
     thor::MultiResourceCache cache;
     std::string whitePrefix;
@@ -41,6 +44,8 @@ private:
     std::shared_ptr<sf::Texture>    blackQueen;
     std::shared_ptr<sf::Texture>    blackPawn;
     std::shared_ptr<sf::Texture>    blackKing;
+
+    std::shared_ptr<sf::Texture> board;
 
 
 

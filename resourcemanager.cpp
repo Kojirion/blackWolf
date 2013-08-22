@@ -2,9 +2,9 @@
 #include <iostream>
 
 resourceManager::resourceManager():
-    whitePrefix("Blue"),
-    blackPrefix("Yellow"),
-    boardSuffix("Brown"),
+    whitePrefix("Blue2"),
+    blackPrefix("Blue"),
+    boardSuffix("Black"),
     pathToPieces("Graphics/Pieces/")
 {
     load();
@@ -37,6 +37,8 @@ const sf::Texture &resourceManager::typeToTexture(const int pieceType) const
         return *blackPawn;
     case -6:
         return *blackKing;
+    case 10: //let 10 denote the board for now
+        return *board;
     }
 }
 
@@ -55,6 +57,8 @@ void resourceManager::load()
     thor::ResourceKey<sf::Texture> whiteKingT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "K.png");
     thor::ResourceKey<sf::Texture> whitePawnT = thor::Resources::fromFile<sf::Texture>(pathToPieces + whitePrefix + "P.png");
 
+    thor::ResourceKey<sf::Texture> boardTexture = thor::Resources::fromFile<sf::Texture>("Graphics/Board" + boardSuffix + ".jpg");
+
     try
     {
         whiteRook = cache.acquire(whiteRookT);
@@ -69,6 +73,8 @@ void resourceManager::load()
         blackQueen = cache.acquire(blackQueenT);
         blackPawn = cache.acquire(blackPawnT);
         blackKing = cache.acquire(blackKingT);
+
+        board = cache.acquire(boardTexture);
     }
     catch (thor::ResourceLoadingException& e)
     {
@@ -84,4 +90,13 @@ void resourceManager::reload(const std::string &theWhitePrefix, const std::strin
     boardSuffix = theBoardSuffix;
 
     load();
+}
+
+boost::property_tree::ptree resourceManager::getTree() const
+{
+    boost::property_tree::ptree pt;
+    pt.put("whitePrefix",whitePrefix);
+    pt.put("blackPrefix",blackPrefix);
+    pt.put("boardSuffix",boardSuffix);
+    return pt;
 }

@@ -46,6 +46,7 @@ void boardMaster::handlePromotion(const int row, const int col)
 void boardMaster::settingsClicked()
 {
     enableWindow(false);
+    settingsWindow.setTree(resources.getTree());
     settingsWindow.enable(true);
 }
 

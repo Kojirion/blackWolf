@@ -7,6 +7,7 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <array>
 #include <boost/signals2.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 class settingsState : private sf::NonCopyable
 {
@@ -24,9 +25,9 @@ private:
 
     void requestClose();
 
-    std::string whitePrefix;
-    std::string blackPrefix;
-    std::string boardSuffix;
+    std::string toSetWhite;
+    std::string toSetBlack;
+    std::string toSetBoard;
 
 public:
     settingsState(sfg::Desktop& theDesktop);
@@ -34,6 +35,8 @@ public:
     sfg::Widget::Ptr getWidget();
 
     boost::signals2::signal<void (std::string, std::string, std::string)> settingsDone;
+
+    void setTree(const boost::property_tree::ptree pt);
 };
 
 #endif // SETTINGSSTATE_H

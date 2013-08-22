@@ -8,8 +8,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     idCount(1),
     resources(theResources)
 {
-    boardTexture_.loadFromFile("Graphics/BoardBrown.jpg");
-    boardSprite_.setTexture(boardTexture_);
+    boardSprite_.setTexture(resources.typeToTexture(10));
 
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){
@@ -118,6 +117,7 @@ void boardCanvas::reload(const position &givenPosition)
 {
     pieces.clear();
     setPosition(givenPosition);
+    boardSprite_.setTexture(resources.typeToTexture(10));
 }
 
 void boardCanvas::handleCastle(const int row, const int col)
