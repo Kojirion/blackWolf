@@ -108,7 +108,7 @@ public:
         int colId;
         cellsNpieces::right_iterator pieceToUse;
 
-        pieceSprite changePosition(pieceSprite piece, const sf::Vector2f position) const
+        pieceSprite changePosition(pieceSprite piece, const sf::Vector2f& position) const
         {
             piece.setPosition(position);
             return piece;
@@ -137,9 +137,9 @@ public:
 
         spriteHelper(piecesBimap &p, iterator piece):
             parent(p),
-            pieceToUse(piece.getRI()),
             rowId(piece.getRow()),
-            colId(piece.getCol())
+            colId(piece.getCol()),
+            pieceToUse(piece.getRI())
         {
 
 

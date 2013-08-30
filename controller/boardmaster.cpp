@@ -1,5 +1,4 @@
 #include "boardmaster.h"
-#include <sstream>
 #include <boost/assert.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>

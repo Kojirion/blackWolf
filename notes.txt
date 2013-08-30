@@ -77,7 +77,6 @@ animate piece movement, multiple pieces
 names of properties can be put in a property tree to allow users to create their own
 
 is knightLegal can be improved
-unit tests
 
 make boardManager, guiManager, resourceManager etc non-copyable
 
@@ -96,9 +95,16 @@ notebook for settings window
 boost.Test
 
 still need to ensure that while waiting for promotion choice the right clock is ticking
-+ connect the callback signals from timers to flagDown
 
 thor resource manager might not be necessary at the moment
 
 the ONLY reason a move with opponent's color is legal on construction is for the purposes of checking castling
 legitimacy
+completeMove will now return false if the color hasn't been switched.
+It's possible to make this check outside completeMove.
+
+engine output + options
+
+move list does not write rows correctly
+
+error on promotion - user given the choice of promoted piece, then not allowed to move
