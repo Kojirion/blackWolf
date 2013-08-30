@@ -1,4 +1,6 @@
 #include "chessengine.h"
+#include "options.h"
+#include <boost/ptr_container/ptr_vector.hpp>
 
 
 void chessEngine::waitForOk()
@@ -132,18 +134,20 @@ chessEngine::move chessEngine::getMove()
 
 bool chessEngine::load()
 {
-
-
-    //("./stockfish");
-
     boost::process::execute(boost::process::initializers::run_exe("./stockfish"),
                             boost::process::initializers::bind_stdout(engineOutSink),
                             boost::process::initializers::bind_stdin(engineInSource));
 
     toEngine("uci");
 
+    //boost::ptr_vector<option> options;
+
     while (fromEngine()!="uciok")
     {
+        if (fromEngine()=="option")
+        {
+            std::string name = fromEngine();
+        }
     }
 
     waitForOk();

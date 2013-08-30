@@ -13,9 +13,7 @@ SOURCES += main.cpp \
     views/components/piecesbimap.cpp \
     ext/file_descriptor.cpp \
     resourcemanager.cpp \
-    msmmanager.cpp \
     controller/components/settingsstate.cpp \
-    boardstate.cpp \
     views/moveview.cpp \
     views/boardcanvas.cpp \
     views/clocksview.cpp \
@@ -23,7 +21,7 @@ SOURCES += main.cpp \
     blackWolf.cpp \
     views/statusview.cpp \
     controller/components/buttonbox.cpp \
-    controller/components/sidechoicewindow.cpp
+    controller/components/sidechoicewindow.cpp \
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -47,16 +45,15 @@ HEADERS += \
     views/components/piecesbimap.h \
     blackWolf.h \
     resourcemanager.h \
-    msmmanager.h \
     controller/components/settingsstate.h \
-    boardstate.h \
     views/moveview.h \
     views/boardcanvas.h \
     views/clocksview.h \
     model/gamedata.h \
     views/statusview.h \
     controller/components/buttonbox.h \
-    controller/components/sidechoicewindow.h
+    controller/components/sidechoicewindow.h \
+    options.h
 
 OTHER_FILES += \
     notes.txt \

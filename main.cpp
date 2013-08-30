@@ -1,5 +1,6 @@
 #include "guimanager.h"
 #include <iostream>
+#include "options.h"
 
 int main()
 {

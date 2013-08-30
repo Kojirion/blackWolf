@@ -108,3 +108,7 @@ engine output + options
 move list does not write rows correctly
 
 error on promotion - user given the choice of promoted piece, then not allowed to move
+
+piecesBimap can be lightened
+check algorithm reuse
+might need to change engine input to parse lines instead
