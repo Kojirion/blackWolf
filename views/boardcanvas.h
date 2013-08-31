@@ -7,9 +7,10 @@
 #include <boost/signals2.hpp>
 #include "views/components/piecesbimap.h"
 #include "resourcemanager.h"
-#include "completemove.h"
-#include "position.h"
+#include "common/completemove.h"
+#include "common/position.h"
 #include "blackWolf.h"
+#include "views/components/firework.h"
 
 class boardCanvas
 {
@@ -29,6 +30,13 @@ private:
     piecesBimap pieces;
 
     bool flipped() const;
+
+    //firework system
+    sf::Texture particle;
+    std::unique_ptr<thor::ParticleSystem> system;
+
+    //a clock to update firework system - but possible to use the one from guimanager?
+    sf::Clock frameClock;
 
     //grid of rects to check where a piece sprite is dropped
     std::vector<std::vector<sf::FloatRect> > rectGrid;

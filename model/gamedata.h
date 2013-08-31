@@ -2,7 +2,7 @@
 #define GAMEDATA_H
 #include <Thor/Time/CallbackTimer.hpp>
 #include "blackWolf.h"
-#include "position.h"
+#include "common/position.h"
 
 class gameData
 {

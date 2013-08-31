@@ -10,6 +10,9 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
 {
     boardSprite_.setTexture(resources.typeToTexture(10));
 
+    particle.loadFromFile("Graphics/particle.png");
+    system.reset(new thor::ParticleSystem(particle));
+
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){
         rectGrid[i].resize(8);
@@ -46,14 +49,18 @@ void boardCanvas::releasePiece()
 
 void boardCanvas::destroy(const int row, const int col)
 {
-    pieces[row][col].erase();
+    if (pieces[row][col].erase()) //if true then firework
+        system->addEmitter(FireworkEmitter(cellToPosition(row,col) + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
 }
 
 void boardCanvas::display()
 {
+    system->update(frameClock.restart());
+
     window->Clear();
 
     window->Draw(boardSprite_);
+    window->Draw(*system, sf::BlendAdd);
 
     for (auto& piece : pieces){
         window->Draw(piece);

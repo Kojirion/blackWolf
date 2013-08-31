@@ -144,10 +144,10 @@ bool chessEngine::load()
 
     while (fromEngine()!="uciok")
     {
-        if (fromEngine()=="option")
+        /*if (fromEngine()=="option")
         {
             std::string name = fromEngine();
-        }
+        }*/
     }
 
     waitForOk();

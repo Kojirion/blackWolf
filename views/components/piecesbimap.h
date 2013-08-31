@@ -164,10 +164,10 @@ public:
             return pieceToUse->first.getPosition();
         }
 
-        void erase(){
+        bool erase(){ //returns true if element erased
             squareId toDelete(rowId,colId);
 
-            parent.pieces.left.erase(toDelete);
+            return (parent.pieces.left.erase(toDelete));
         }
 
         void insert(const pieceSprite &toAdd){

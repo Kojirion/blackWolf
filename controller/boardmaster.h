@@ -4,8 +4,8 @@
 #ifndef BOARDMASTER_H
 #define BOARDMASTER_H
 #include <SFML/Graphics.hpp>
-#include "position.h"
-#include "completemove.h"
+#include "common/position.h"
+#include "common/completemove.h"
 #include "chessengine.h"
 #include "resourcemanager.h"
 #include "views/boardcanvas.h"

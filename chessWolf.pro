@@ -5,10 +5,10 @@ CONFIG -= qt
 SOURCES += main.cpp \
     controller/boardmaster.cpp \
     views/components/piecesprite.cpp \
-    position.cpp \
+    common/position.cpp \
     guimanager.cpp \
-    boardmove.cpp \
-    completemove.cpp \
+    common/boardmove.cpp \
+    common/completemove.cpp \
     chessengine.cpp \
     views/components/piecesbimap.cpp \
     ext/file_descriptor.cpp \
@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     views/statusview.cpp \
     controller/components/buttonbox.cpp \
     controller/components/sidechoicewindow.cpp \
+    views/components/firework.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -37,10 +38,10 @@ LIBS += -L/usr/local/lib -lGLU
 HEADERS += \
     controller/boardmaster.h \
     views/components/piecesprite.h \
-    position.h \
+    common/position.h \
     guimanager.h \
-    boardmove.h \
-    completemove.h \
+    common/boardmove.h \
+    common/completemove.h \
     chessengine.h \
     views/components/piecesbimap.h \
     blackWolf.h \
@@ -53,7 +54,8 @@ HEADERS += \
     views/statusview.h \
     controller/components/buttonbox.h \
     controller/components/sidechoicewindow.h \
-    options.h
+    options.h \
+    views/components/firework.h
 
 OTHER_FILES += \
     notes.txt \
