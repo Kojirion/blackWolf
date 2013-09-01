@@ -92,6 +92,8 @@ public:
     void flipBoard();
 
     void reload(const position &givenPosition);
+
+    void setResult(bw result);
 };
 
 #endif // BOARDCANVAS_H

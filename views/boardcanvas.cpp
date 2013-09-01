@@ -12,6 +12,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
 
     particle.loadFromFile("Graphics/particle.png");
     system.reset(new thor::ParticleSystem(particle));
+    system->addAffector(FireworkAffector());
 
     rectGrid.resize(8);
     for (int i=0; i<8; ++i){
@@ -125,6 +126,18 @@ void boardCanvas::reload(const position &givenPosition)
     pieces.clear();
     setPosition(givenPosition);
     boardSprite_.setTexture(resources.typeToTexture(10));
+}
+
+void boardCanvas::setResult(bw result)
+{
+    /*if (result == bw::White){
+        for (auto& piece : pieces){
+            if (piece.getSide() == 1)
+
+        }
+    }*/
+    //()
+
 }
 
 void boardCanvas::handleCastle(const int row, const int col)
