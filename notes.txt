@@ -112,3 +112,5 @@ error on promotion - user given the choice of promoted piece, then not allowed t
 piecesBimap can be lightened
 check algorithm reuse
 might need to change engine input to parse lines instead
+
+BUG: When playing both colors, user resigning results in draw

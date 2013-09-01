@@ -11,6 +11,7 @@ void boardMaster::setGameEnded(bw result)
 
     //update view
     status.setResult(result);
+    board.setResult(result);
 }
 
 void boardMaster::enableWindow(const bool enable)

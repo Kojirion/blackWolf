@@ -130,13 +130,27 @@ void boardCanvas::reload(const position &givenPosition)
 
 void boardCanvas::setResult(bw result)
 {
-    /*if (result == bw::White){
+    if (result == bw::White){
         for (auto& piece : pieces){
-            if (piece.getSide() == 1)
+            if (piece.getSide() == -1)
+            {
+                system->addEmitter(FireworkEmitter(piece.getPosition() + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
+                pieces.erase(piece);
+            }
+
 
         }
-    }*/
-    //()
+    }else if (result == bw::Black)
+    {
+        for (auto& piece : pieces){
+            if (piece.getSide() == 1)
+            {
+                system->addEmitter(FireworkEmitter(piece.getPosition() + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
+                pieces.erase(piece);
+            }
+        }
+    }
+
 
 }
 

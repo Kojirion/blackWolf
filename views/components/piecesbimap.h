@@ -24,33 +24,14 @@ public:
 class piecesBimap
 {
 public:
-    //friend class spriteHelper;
+
 
     typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
 
-    /*class piecePointer{
-    private:
-        cellsNpieces::right_iterator pointer;
-    public:
-        piecePointer():
-            pointer(pieces.end())
-        {
-
-        }
-
-        bool isValid(){
-            return (pointer != pieces.end());
-        }
-
-        void invalidate(){
-            poitner = pieces.end();
-        }
-
-    };*/
 
     class iterator{
     private:
-        piecesBimap *parent; //necessary?
+        piecesBimap *parent;
         cellsNpieces::right_iterator pos;
     public:
         iterator(piecesBimap *p, cellsNpieces::right_iterator thePos):
@@ -154,11 +135,6 @@ public:
             parent.pieces.right.modify_key(pieceToUse, boost::bimaps::_key = changePosition(pieceToUse->first,position));
         }
 
-        void setTexture(const sf::Texture& toSet)
-        {
-            parent.pieces.right.modify_key(pieceToUse, boost::bimaps::_key = changeTexture(pieceToUse->first,toSet));
-        }
-
         sf::Vector2f getPosition()
         {
             return pieceToUse->first.getPosition();
@@ -236,6 +212,11 @@ public:
     }
 
     void clear();
+
+    void erase(const pieceSprite& sprite)
+    {
+        pieces.right.erase(sprite);
+    }
 
 
     piecesBimap();
