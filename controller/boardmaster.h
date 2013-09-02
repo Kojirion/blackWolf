@@ -15,6 +15,7 @@
 #include "views/moveview.h"
 #include "controller/components/sidechoicewindow.h"
 #include "controller/components/settingsstate.h"
+#include "client.h"
 
 
 
@@ -85,6 +86,7 @@ private:
 
 
     chessEngine chessAi;
+    client fics;
 
 
     //move was promotion
@@ -103,6 +105,7 @@ private:
     void flagDown(const bw loser);
 
     void moveMake (const completeMove &move);
+    void networkMoveMake (const position& newPosition);
 
 
 

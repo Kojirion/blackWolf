@@ -22,6 +22,11 @@ void client::connect()
 
 }
 
+void client::update()
+{
+    if (!io_service.poll()) io_service.reset();
+}
+
 
 void client::handleData(boost::system::error_code ec)
 {

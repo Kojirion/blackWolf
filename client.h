@@ -4,6 +4,7 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include "common/position.h"
+#include <boost/signals2.hpp>
 
 class client
 {
@@ -12,8 +13,10 @@ public:
 
     void connect();
     void update();
-    bool positionReady() const;
+    //bool positionReady() const;
     position getPosition();
+
+    boost::signals2::signal<void (int, int, int, int)> positionReady;
 
 private:
     boost::asio::streambuf data;
@@ -23,6 +26,10 @@ private:
     bool ready; //is a position ready?
 
     void handleData(boost::system::error_code ec);
+
+    int charToInt(char x) const;
+
+
 };
 
 #endif // CLIENT_H

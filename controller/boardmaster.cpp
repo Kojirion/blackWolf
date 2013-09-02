@@ -85,6 +85,29 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
+void boardMaster::networkMoveMake(const position &newPosition)
+{
+    //board.moveMake(move); //update view
+    game.setPosition(newPosition); //update model
+
+    //handle promotion AND update the engine, depending on whether it was or not
+//    if (game.getPosition().wasPromotion){
+//        handlePromotion(destRow, destCol);
+//        if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+//    }else{
+//        if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
+//    }
+
+    //update move counter and move list widget
+    //moveList.addMove(originRow,originCol,destRow,destCol,game.getPlyCount());
+
+    //check for game end or switch turn
+    //if (move.isCheckmate()) setGameEnded(-game.turnColor());
+    //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
+    //if (!game.ended()) switchTurn();
+
+}
+
 void boardMaster::newGame(const bw whoUser)
 {
     game.newGame(whoUser);
@@ -99,9 +122,9 @@ void boardMaster::newGame(const bw whoUser)
 
     updateClocks();
 
-    if (!game.userBoth()) chessAi.newGame();
+    //if (!game.userBoth()) chessAi.newGame();
 
-    if (!game.userTurn()) aiTurn();
+    //if (!game.userTurn()) aiTurn();
 
 }
 
@@ -201,6 +224,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
+    //fics.positionReady().connect(boost::bind(&boardMaster::networkMoveMake, this, _1));
 
     game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
@@ -264,8 +288,10 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
-    if (!chessAi.load()) newGame(bw::White | bw::Black);
-    else newGame(bw::White);
+    fics.connect();
+
+//    if (!chessAi.load()) newGame(bw::White | bw::Black);
+//    else newGame(bw::White);
 
 
 
@@ -277,9 +303,10 @@ boardMaster::~boardMaster()
     if (!game.userBoth()) chessAi.unLoad();
 }
 
-void boardMaster::display()
+void boardMaster::display() //should rename to update
 {
-    board.display();
+    fics.update();
+    board.display();    
     if (!game.ended()) updateClocks();
 }
 
