@@ -12,6 +12,8 @@ public:
 
     position();
 
+    position (int boardArray[8][8]);
+
     position(const position &givenPos, const int row1, const int col1, const int row2, const int col2);
 
     class positionRow{

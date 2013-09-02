@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     views/statusview.cpp \
     controller/components/buttonbox.cpp \
     controller/components/sidechoicewindow.cpp \
-    views/components/firework.cpp
+    views/components/firework.cpp \
+    client.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -55,7 +56,8 @@ HEADERS += \
     controller/components/buttonbox.h \
     controller/components/sidechoicewindow.h \
     options.h \
-    views/components/firework.h
+    views/components/firework.h \
+    client.h
 
 OTHER_FILES += \
     notes.txt \

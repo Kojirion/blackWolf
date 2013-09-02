@@ -150,8 +150,6 @@ void boardCanvas::setResult(bw result)
             }
         }
     }
-
-
 }
 
 void boardCanvas::handleCastle(const int row, const int col)
