@@ -115,3 +115,4 @@ might need to change engine input to parse lines instead
 
 BUG: When playing both colors, user resigning results in draw
 ISSUE: New game assumes that a game was being played
+ENHANCEMENT: string to col function can be put in bw header

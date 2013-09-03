@@ -105,7 +105,7 @@ private:
     void flagDown(const bw loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (const position& newPosition);
+    void networkMoveMake (int row1, int col1, int row2, int col2);
 
 
 

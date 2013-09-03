@@ -20,6 +20,12 @@ void client::connect()
         socket.connect(*endpoint_iterator++, error);
     }
 
+    toClient("Kojijay");
+    toClient("");
+    toClient("match Kojay");
+
+    boost::asio::async_read_until(socket, data, "\n\r",
+            boost::bind(&client::handleData, this, _1));
 }
 
 void client::update()
@@ -32,10 +38,11 @@ void client::handleData(boost::system::error_code ec)
 {
     if (!ec)
     {
-        std::string str((std::istreambuf_iterator<char>(&data)),
-                       std::istreambuf_iterator<char>());
+        std::istream is(&data);
+        std::string str;
+        std::getline(is, str);
 
-        boost::erase_all(str,"\n\r");
+        boost::erase_all(str,"\r");
 
         std::vector<std::string> tokens;
 
@@ -45,15 +52,16 @@ void client::handleData(boost::system::error_code ec)
         {
             if (tokens[0] == "<12>")
             {
-                int toPass[8][8];
-                for (int i=0; i<8; ++i)
-                {
-                    for (int j=0; j<8; ++j)
-                    {
-                        toPass[i][j] = charToInt(tokens[8-i][j]);
-                    }
-                }
-                position serverPos(toPass);
+                const int row1 = std::stoi(tokens[27].substr(3,1)) - 1;
+                const int col1 = stringToCol(tokens[27].substr(2,1));
+                const int row2 = std::stoi(tokens[27].substr(6,1)) - 1;
+                const int col2 = stringToCol(tokens[27].substr(5,1));
+
+                positionReady(row1,col1,row2,col2);
+            }else if (tokens[0] == "Creating:")
+            {
+                if (tokens[1] == "Kojijay") startGame(bw::White);
+                else startGame(bw::Black);
             }
         }
 
@@ -63,19 +71,20 @@ void client::handleData(boost::system::error_code ec)
     }
 }
 
-int client::charToInt(char x) const
+void client::toClient(std::string toWrite)
 {
-    if (x == '-') return 0;
-    else if (x == 'r') return -1;
-    else if (x == 'n') return -3;
-    else if (x == 'b') return -2;
-    else if (x == 'q') return -4;
-    else if (x == 'p') return -5;
-    else if (x == 'k') return -6;
-    else if (x == 'R') return 1;
-    else if (x == 'N') return 3;
-    else if (x == 'B') return 2;
-    else if (x == 'Q') return 4;
-    else if (x == 'P') return 5;
-    else if (x == 'K') return 6;
+    toWrite += "\r\n";
+    socket.write_some(boost::asio::buffer(toWrite));
+}
+
+int client::stringToCol(const std::string stringedCol) const
+{
+    if (stringedCol=="a") return 0;
+    else if (stringedCol=="b") return 1;
+    else if (stringedCol=="c") return 2;
+    else if (stringedCol=="d") return 3;
+    else if (stringedCol=="e") return 4;
+    else if (stringedCol=="f") return 5;
+    else if (stringedCol=="g") return 6;
+    else if (stringedCol=="h") return 7;
 }

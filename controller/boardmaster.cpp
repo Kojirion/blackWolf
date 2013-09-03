@@ -85,10 +85,12 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(const position &newPosition)
+void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2)
 {
-    //board.moveMake(move); //update view
-    game.setPosition(newPosition); //update model
+    completeMove move(game.getPosition(),row1, col1, row2, col2);
+
+    board.moveMake(move); //update view
+    game.setPosition(move.getNewBoard()); //update model
 
     //handle promotion AND update the engine, depending on whether it was or not
 //    if (game.getPosition().wasPromotion){
@@ -224,7 +226,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
-    //fics.positionReady().connect(boost::bind(&boardMaster::networkMoveMake, this, _1));
+    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4));
+    fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1));
 
     game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
@@ -289,6 +292,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(boardWindow);
 
     fics.connect();
+    //newGame(bw::White);
 
 //    if (!chessAi.load()) newGame(bw::White | bw::Black);
 //    else newGame(bw::White);
