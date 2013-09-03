@@ -16,6 +16,8 @@
 class boardCanvas
 {
 private:
+    static const sf::Vector2f offToCenter;
+
     //Canvas onto which board is drawn
     sfg::Canvas::Ptr window;
 

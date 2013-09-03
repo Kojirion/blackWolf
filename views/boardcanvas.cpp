@@ -1,5 +1,7 @@
 #include "boardcanvas.h"
 
+const sf::Vector2f boardCanvas::offToCenter(25.f,25.f);
+
 boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     flipOffset(0),
     window(sfg::Canvas::Create()),
@@ -51,7 +53,7 @@ void boardCanvas::releasePiece()
 void boardCanvas::destroy(const int row, const int col)
 {
     if (pieces[row][col].erase()) //if true then firework
-        system->addEmitter(FireworkEmitter(cellToPosition(row,col) + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
+        system->addEmitter(FireworkEmitter(cellToPosition(row,col) + offToCenter), sf::seconds(1.f));
 }
 
 void boardCanvas::display()
@@ -63,14 +65,14 @@ void boardCanvas::display()
     window->Draw(boardSprite_);
     window->Draw(*system, sf::BlendAdd);
 
-    for (auto& piece : pieces){
-        window->Draw(piece);
-    }
-
     for (auto& arrow : arrows)
     {
         window->Draw(arrow);
     }
+
+    for (auto& piece : pieces){
+        window->Draw(piece);
+    }    
 }
 
 void boardCanvas::moveMake(const completeMove move)
@@ -139,7 +141,7 @@ void boardCanvas::setResult(bw result)
         for (auto& piece : pieces){
             if (piece.getSide() == -1)
             {
-                system->addEmitter(FireworkEmitter(piece.getPosition() + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
+                system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 pieces.erase(piece);
             }
 
@@ -150,7 +152,7 @@ void boardCanvas::setResult(bw result)
         for (auto& piece : pieces){
             if (piece.getSide() == 1)
             {
-                system->addEmitter(FireworkEmitter(piece.getPosition() + sf::Vector2f(25.f,25.f)), sf::seconds(1.f));
+                system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 pieces.erase(piece);
             }
         }
@@ -159,8 +161,8 @@ void boardCanvas::setResult(bw result)
 
 void boardCanvas::setArrow(int row1, int col1, int row2, int col2)
 {
-    sf::Vector2f point1 = cellToPosition(row1,col1) + sf::Vector2f(25.f,25.f);
-    sf::Vector2f point2 = cellToPosition(row2,col2) + sf::Vector2f(25.f,25.f);
+    sf::Vector2f point1 = cellToPosition(row1,col1) + offToCenter;
+    sf::Vector2f point2 = cellToPosition(row2,col2) + offToCenter;
 
     arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0), 5.f);
 }
@@ -221,14 +223,14 @@ void boardCanvas::slotLeftClick()
 void boardCanvas::slotMouseMove()
 {
     if (pieceHeld()){
-        pieces[currentPiece].sendTo(getMousePosition()-sf::Vector2f(25.f,25.f));
+        pieces[currentPiece].sendTo(getMousePosition()-offToCenter);
     }
 }
 
 void boardCanvas::slotMouseRelease()
 {
     if (pieceHeld()){
-        sf::Vector2f centrePos = pieces[currentPiece].getPosition() + sf::Vector2f(25.f,25.f);
+        sf::Vector2f centrePos = pieces[currentPiece].getPosition() + offToCenter;
         for (int i=0; i<8; ++i){
             for (int j=0; j<8; ++j){
                 if (rectGrid[i][j].contains(centrePos)){
