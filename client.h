@@ -20,6 +20,8 @@ public:
     boost::signals2::signal<void (int, int, int, int)> positionReady;
     boost::signals2::signal<void (bw whoUser)> startGame;
 
+    void makeMove(int row1, int col1, int row2, int col2);
+
 private:
     boost::asio::streambuf data;
     boost::asio::io_service io_service;
@@ -31,6 +33,8 @@ private:
     void toClient(std::string toWrite);
 
     int stringToCol(const std::string stringedCol) const;
+    std::string moveString(const int row1, const int col1, const int row2, const int col2) const;
+    std::string colToString(const int col) const;
 
 
 };

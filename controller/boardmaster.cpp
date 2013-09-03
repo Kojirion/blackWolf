@@ -208,7 +208,8 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
-        moveMake(toCheck);
+        //moveMake(toCheck);
+        fics.makeMove(row1, col1, row2, col2);
         return true;
     }
     return false;
@@ -319,9 +320,9 @@ void boardMaster::switchTurn()
     status.setToPlay(game.turnColor());
     game.switchTurn();
 
-    if (!game.userTurn()){
-        aiTurn();
-    }
+//    if (!game.userTurn()){
+//        aiTurn();
+//    }
 }
 
 

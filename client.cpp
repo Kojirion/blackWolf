@@ -22,7 +22,9 @@ void client::connect()
 
     toClient("Kojijay");
     toClient("");
+    toClient("set style 12");
     toClient("match Kojay");
+
 
     boost::asio::async_read_until(socket, data, "\n\r",
             boost::bind(&client::handleData, this, _1));
@@ -50,7 +52,7 @@ void client::handleData(boost::system::error_code ec)
 
         if (!tokens.empty())
         {
-            if (tokens[0] == "<12>")
+            if ((tokens[0] == "<12>")&&(tokens[27]!="none"))
             {
                 const int row1 = std::stoi(tokens[27].substr(3,1)) - 1;
                 const int col1 = stringToCol(tokens[27].substr(2,1));
@@ -87,4 +89,37 @@ int client::stringToCol(const std::string stringedCol) const
     else if (stringedCol=="f") return 5;
     else if (stringedCol=="g") return 6;
     else if (stringedCol=="h") return 7;
+}
+
+std::string client::moveString(const int row1, const int col1, const int row2, const int col2) const
+{
+    return (colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
+}
+
+std::string client::colToString(const int col) const
+{
+    switch (col) {
+    case 0:
+        return "a";
+    case 1:
+        return "b";
+    case 2:
+        return "c";
+    case 3:
+        return "d";
+    case 4:
+        return "e";
+    case 5:
+        return "f";
+    case 6:
+        return "g";
+    case 7:
+        return "h";
+    }
+}
+
+
+void client::makeMove(int row1, int col1, int row2, int col2)
+{
+    toClient(moveString(row1,col1,row2,col2));
 }
