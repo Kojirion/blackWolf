@@ -23,7 +23,8 @@ void client::connect()
     toClient("Kojijay");
     toClient("");
     toClient("set style 12");
-    toClient("match Kojay");
+    //toClient("match Kojay");
+    toClient("getgame");
 
 
     boost::asio::async_read_until(socket, data, "\n\r",
@@ -54,10 +55,46 @@ void client::handleData(boost::system::error_code ec)
         {
             if ((tokens[0] == "<12>")&&(tokens[27]!="none"))
             {
-                const int row1 = std::stoi(tokens[27].substr(3,1)) - 1;
-                const int col1 = stringToCol(tokens[27].substr(2,1));
-                const int row2 = std::stoi(tokens[27].substr(6,1)) - 1;
-                const int col2 = stringToCol(tokens[27].substr(5,1));
+                int row1;
+                int col1;
+                int row2;
+                int col2;
+
+                if (tokens[27]=="o-o")
+                {
+                    if (tokens[9]=="W")
+                    {
+                        row1 = 7;
+                        col1 = 4;
+                        row2 = 7;
+                        col2 = 6;
+                    }else{
+                        row1 = 0;
+                        col1 = 4;
+                        row2 = 0;
+                        col2 = 6;
+                    }
+
+                }else if (tokens[27]=="o-o-o"){
+                    if (tokens[9]=="W")
+                    {
+                        row1 = 7;
+                        col1 = 4;
+                        row2 = 7;
+                        col2 = 2;
+                    }else{
+                        row1 = 0;
+                        col1 = 4;
+                        row2 = 0;
+                        col2 = 2;
+                    }
+
+                }else{
+                    row1 = std::stoi(tokens[27].substr(3,1)) - 1;
+                    col1 = stringToCol(tokens[27].substr(2,1));
+                    row2 = std::stoi(tokens[27].substr(6,1)) - 1;
+                    col2 = stringToCol(tokens[27].substr(5,1));
+                }
 
                 positionReady(row1,col1,row2,col2);
             }else if (tokens[0] == "Creating:")
