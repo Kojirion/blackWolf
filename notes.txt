@@ -116,3 +116,7 @@ might need to change engine input to parse lines instead
 BUG: When playing both colors, user resigning results in draw
 ISSUE: New game assumes that a game was being played
 ENHANCEMENT: string to col function can be put in bw header
+
+auto-queen: could be possible to set it either client or server side
+
+instead of passing row1, col1 etc pass a struct that can take init list?

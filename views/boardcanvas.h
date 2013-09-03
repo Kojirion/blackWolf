@@ -11,6 +11,7 @@
 #include "common/position.h"
 #include "blackWolf.h"
 #include "views/components/firework.h"
+#include <Thor/Shapes/Arrow.hpp>
 
 class boardCanvas
 {
@@ -76,6 +77,8 @@ private:
 
     void resetRects();
 
+    std::vector<thor::Arrow> arrows;
+
 public:
     boardCanvas(sf::Window& theWindow, resourceManager &theResources);
     void display();
@@ -94,6 +97,9 @@ public:
     void reload(const position &givenPosition);
 
     void setResult(bw result);
+
+    void setArrow(int row1, int col1, int row2, int col2);
+    void clearArrows();
 };
 
 #endif // BOARDCANVAS_H

@@ -66,6 +66,11 @@ void boardCanvas::display()
     for (auto& piece : pieces){
         window->Draw(piece);
     }
+
+    for (auto& arrow : arrows)
+    {
+        window->Draw(arrow);
+    }
 }
 
 void boardCanvas::moveMake(const completeMove move)
@@ -150,6 +155,19 @@ void boardCanvas::setResult(bw result)
             }
         }
     }
+}
+
+void boardCanvas::setArrow(int row1, int col1, int row2, int col2)
+{
+    sf::Vector2f point1 = cellToPosition(row1,col1) + sf::Vector2f(25.f,25.f);
+    sf::Vector2f point2 = cellToPosition(row2,col2) + sf::Vector2f(25.f,25.f);
+
+    arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0), 5.f);
+}
+
+void boardCanvas::clearArrows()
+{
+    arrows.clear();
 }
 
 void boardCanvas::handleCastle(const int row, const int col)

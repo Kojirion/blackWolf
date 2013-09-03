@@ -87,11 +87,16 @@ void boardMaster::moveMake(const completeMove &move)
 
 void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime)
 {
+    game.setTime(whiteTime, blackTime);
+
+    //now an ugly way to say: if we already made the move on the board,
+    //we don't care what the client sent
+    if (game.getPosition()[row1][col1]==0) return;
+
     completeMove move(game.getPosition(),row1, col1, row2, col2);
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
-    game.setTime(whiteTime, blackTime);
 
     //handle promotion AND update the engine, depending on whether it was or not
 //    if (game.getPosition().wasPromotion){
@@ -208,12 +213,13 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
     if (!game.userTurn()) //set premove
     {
         premove = std::make_tuple(true,row1,col1,row2,col2);
+        board.setArrow(row1,col1,row2,col2);
         return false;
     }
 
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
-        //moveMake(toCheck);
+        moveMake(toCheck);
         fics.makeMove(row1, col1, row2, col2);
         return true;
     }
@@ -330,6 +336,7 @@ void boardMaster::switchTurn()
     if (std::get<0>(premove))
     {
         std::get<0>(premove) = false;
+        board.clearArrows();
         requestMove(std::get<1>(premove),std::get<2>(premove),std::get<3>(premove),std::get<4>(premove));
     }
 
