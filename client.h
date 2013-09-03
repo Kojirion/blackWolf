@@ -23,6 +23,8 @@ public:
 
     void makeMove(int row1, int col1, int row2, int col2);
 
+    void toClient(std::string toWrite);
+
 private:
     boost::asio::streambuf data;
     boost::asio::io_service io_service;
@@ -30,8 +32,7 @@ private:
 
     bool ready; //is a position ready?
 
-    void handleData(boost::system::error_code ec);
-    void toClient(std::string toWrite);
+    void handleData(boost::system::error_code ec);    
 
     int stringToCol(const std::string stringedCol) const;
     std::string moveString(const int row1, const int col1, const int row2, const int col2) const;

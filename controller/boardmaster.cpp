@@ -205,7 +205,11 @@ void boardMaster::bothNewGame()
 
 bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 {
-    if (!game.userTurn()) return false;
+    if (!game.userTurn()) //set premove
+    {
+        premove = std::make_tuple(true,row1,col1,row2,col2);
+        return false;
+    }
 
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
@@ -224,7 +228,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow,resources),
     sideChoice(desktop),
-    settingsWindow(desktop)
+    settingsWindow(desktop),
+    premove(std::make_tuple(false,0,0,0,0))
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
@@ -321,6 +326,12 @@ void boardMaster::switchTurn()
 {
     status.setToPlay(game.turnColor());
     game.switchTurn();
+
+    if (std::get<0>(premove))
+    {
+        std::get<0>(premove) = false;
+        requestMove(std::get<1>(premove),std::get<2>(premove),std::get<3>(premove),std::get<4>(premove));
+    }
 
 //    if (!game.userTurn()){
 //        aiTurn();
