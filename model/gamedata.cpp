@@ -7,6 +7,12 @@ gameData::gameData()
     //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
 }
 
+void gameData::setTime(int whiteTime, int blackTime)
+{
+    whiteClock.reset(sf::seconds(whiteTime));
+    blackClock.reset(sf::seconds(blackTime));
+}
+
 bool gameData::ended() const
 {
     return (result != bw::None);
@@ -53,7 +59,7 @@ void gameData::setResult(const bw winner)
     result = winner;
 }
 
-void gameData::newGame(const bw whoUser)
+void gameData::newGame(const bw whoUser, int time)
 {
     plyCounter = 0;
 
@@ -63,9 +69,8 @@ void gameData::newGame(const bw whoUser)
 
     result = bw::None;
 
-    whiteClock.restart(sf::seconds(300.f));
-    blackClock.restart(sf::seconds(300.f));
-    blackClock.stop();
+    setTime(time,time);
+    whiteClock.start();
 
     //update
 }

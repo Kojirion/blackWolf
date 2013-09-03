@@ -32,11 +32,12 @@ public:
     void setPosition(position toSet);
 
     void setResult(const bw winner);
-    void newGame(const bw whoUser);
+    void newGame(const bw whoUser, int time);
     void update();
     void switchTurn();
 
     void setPromotion(const int row, const int col, const int piece);
+    void setTime(int whiteTime, int blackTime);
 
     sf::Time getWhiteTime() const;
     sf::Time getBlackTime() const;

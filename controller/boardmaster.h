@@ -105,11 +105,11 @@ private:
     void flagDown(const bw loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (int row1, int col1, int row2, int col2);
+    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime);
 
 
 
-    void newGame(const bw whoUser);
+    void newGame(const bw whoUser, int time);
 
     void aiTurn();
 

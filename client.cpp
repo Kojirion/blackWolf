@@ -74,7 +74,6 @@ void client::handleData(boost::system::error_code ec)
                         row2 = 0;
                         col2 = 6;
                     }
-
                 }else if (tokens[27]=="o-o-o"){
                     if (tokens[9]=="W")
                     {
@@ -96,11 +95,19 @@ void client::handleData(boost::system::error_code ec)
                     col2 = stringToCol(tokens[27].substr(5,1));
                 }
 
-                positionReady(row1,col1,row2,col2);
-            }else if (tokens[0] == "Creating:")
-            {
-                if (tokens[1] == "Kojijay") startGame(bw::White);
-                else startGame(bw::Black);
+                int whiteTime = std::stoi(tokens[24]);
+                int blackTime = std::stoi(tokens[25]);
+
+                positionReady(row1,col1,row2,col2, whiteTime, blackTime);
+            }else if (tokens[0] == "Creating:"){
+                int time = 60*std::stoi(tokens[7]);
+                if (tokens[1] == "Kojijay") startGame(bw::White, time);
+                else startGame(bw::Black, time);
+            }else if (tokens[0] == "{Game"){
+                std::string toCheck = tokens.back();
+                if (toCheck == "1-0") gameEnd(bw::White);
+                else if (toCheck == "0-1") gameEnd(bw::Black);
+                else if (toCheck == "1/2-1/2") gameEnd(bw::White | bw::Black);
             }
         }
 

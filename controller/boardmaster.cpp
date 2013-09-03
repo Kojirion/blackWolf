@@ -85,12 +85,13 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2)
+void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime)
 {
     completeMove move(game.getPosition(),row1, col1, row2, col2);
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
+    game.setTime(whiteTime, blackTime);
 
     //handle promotion AND update the engine, depending on whether it was or not
 //    if (game.getPosition().wasPromotion){
@@ -106,13 +107,13 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2)
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());
     //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
-    //if (!game.ended()) switchTurn();
+    if (!game.ended()) switchTurn();
 
 }
 
-void boardMaster::newGame(const bw whoUser)
+void boardMaster::newGame(const bw whoUser, int time)
 {
-    game.newGame(whoUser);
+    game.newGame(whoUser, time);
 
     board.resetFor(whoUser);
 
@@ -185,21 +186,21 @@ void boardMaster::whiteNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::White);
+    newGame(bw::White, 300);
 }
 
 void boardMaster::blackNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::Black);
+    newGame(bw::Black, 300);
 }
 
 void boardMaster::bothNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::White | bw::Black);
+    newGame(bw::White | bw::Black, 300);
 }
 
 bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
@@ -227,11 +228,12 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
-    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4));
-    fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1));
+    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6));
+    fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2));
+    fics.gameEnd.connect(boost::bind(&boardMaster::setGameEnded, this, _1));
 
-    game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
-    game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
+    //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
+    //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
 
     sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
     sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
@@ -240,10 +242,10 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::HORIZONTAL, 3.f));
 
-    promotionBox->Pack(queenButton);
-    promotionBox->Pack(bishopButton);
-    promotionBox->Pack(knightButton);
-    promotionBox->Pack(rookButton);
+    promotionBox->PackEnd(queenButton);
+    promotionBox->PackEnd(bishopButton);
+    promotionBox->PackEnd(knightButton);
+    promotionBox->PackEnd(rookButton);
 
     promotionWindow->Add(promotionBox);
     promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));

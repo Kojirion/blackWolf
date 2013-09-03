@@ -17,8 +17,9 @@ public:
     //bool positionReady() const;
     position getPosition();
 
-    boost::signals2::signal<void (int, int, int, int)> positionReady;
-    boost::signals2::signal<void (bw whoUser)> startGame;
+    boost::signals2::signal<void (int, int, int, int, int, int)> positionReady;
+    boost::signals2::signal<void (bw, int)> startGame;
+    boost::signals2::signal<void (bw)> gameEnd;
 
     void makeMove(int row1, int col1, int row2, int col2);
 
