@@ -47,8 +47,7 @@ private:
     //piece held by the mouse
     piecesBimap::iterator currentPiece;
 
-    bool pieceHeld();
-    void releasePiece();
+    bool pieceHeld();    
 
     int idCount; //pieces ids for bimap's use
 
@@ -102,6 +101,8 @@ public:
 
     void setArrow(int row1, int col1, int row2, int col2);
     void clearArrows();
+
+    void releasePiece();
 };
 
 #endif // BOARDCANVAS_H

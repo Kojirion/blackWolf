@@ -85,7 +85,6 @@ void boardCanvas::moveMake(const completeMove move)
     destroy(destRow,destCol); //destroy any sprites at destination
     pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition(destRow, destCol));
 
-    releasePiece(); //resets the currentPiece iterator
     position currentPosition = move.getNewBoard();
     if (currentPosition.wasCastle) handleCastle(destRow,destCol);
     if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);

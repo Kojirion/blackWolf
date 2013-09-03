@@ -31,7 +31,7 @@ void boardMaster::handlePromotion(const int row, const int col)
     toPromoteRow = row;
     toPromoteCol = col;
 
-    if (game.userTurn()){
+    if (!game.userTurn()){ //techinically, it still is
         //enable promotion window
         promotionWindow->Show(true);
         desktop.BringToFront(promotionWindow);
@@ -39,7 +39,7 @@ void boardMaster::handlePromotion(const int row, const int col)
         //disable board window
         enableWindow(false);
     }else{
-        promotionChoiceMade(chessAi.getPromotionChoice());
+        //promotionChoiceMade(chessAi.getPromotionChoice());
     }
 }
 
@@ -66,14 +66,15 @@ void boardMaster::moveMake(const completeMove &move)
     const int destCol = move.getCol2();
 
     board.moveMake(move); //update view
+    board.releasePiece(); //release piece
     game.setPosition(move.getNewBoard()); //update model
 
     //handle promotion AND update the engine, depending on whether it was or not
     if (game.getPosition().wasPromotion){
         handlePromotion(destRow, destCol);
-         if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
-         if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
+        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
     }
 
     //update move counter and move list widget
@@ -159,7 +160,7 @@ void boardMaster::promotionChoiceMade(const int whichPiece)
 
     //update model
     int whichSide;
-    if (game.turnColor()==bw::White) whichSide = 1;
+    if (game.turnColor()==bw::White) whichSide = -1;
     else whichSide = 1;
     game.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
 
