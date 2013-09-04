@@ -47,7 +47,10 @@ void client::handleData(boost::system::error_code ec)
 
         boost::erase_all(str,"\r");
 
+        textReady(str);
+
         std::vector<std::string> tokens;
+
 
         boost::split(tokens, str, boost::is_any_of(" "));
 

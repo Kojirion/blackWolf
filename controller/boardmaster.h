@@ -3,7 +3,6 @@
 
 #ifndef BOARDMASTER_H
 #define BOARDMASTER_H
-#include <SFML/Graphics.hpp>
 #include "common/position.h"
 #include "common/completemove.h"
 #include "chessengine.h"
@@ -16,6 +15,7 @@
 #include "controller/components/sidechoicewindow.h"
 #include "controller/components/settingsstate.h"
 #include "client.h"
+#include "netwidgets.h"
 
 
 
@@ -83,6 +83,8 @@ private:
     typedef std::tuple<bool,int,int,int,int> premoveTuple;
 
     premoveTuple premove;
+
+    netWidgets netWindow;
 
 
 

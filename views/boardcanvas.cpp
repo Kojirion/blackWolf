@@ -65,14 +65,15 @@ void boardCanvas::display()
     window->Draw(boardSprite_);
     window->Draw(*system, sf::BlendAdd);
 
-    for (auto& arrow : arrows)
-    {
-        window->Draw(arrow);
-    }
-
     for (auto& piece : pieces){
         window->Draw(piece);
-    }    
+    }
+
+    for (auto& arrow : arrows)
+    {
+        window->Draw(arrow, sf::BlendAdd);
+    }
+
 }
 
 void boardCanvas::moveMake(const completeMove move)
@@ -163,7 +164,7 @@ void boardCanvas::setArrow(int row1, int col1, int row2, int col2)
     sf::Vector2f point1 = cellToPosition(row1,col1) + offToCenter;
     sf::Vector2f point2 = cellToPosition(row2,col2) + offToCenter;
 
-    arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0), 5.f);
+    arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0,125), 5.f);
 }
 
 void boardCanvas::clearArrows()

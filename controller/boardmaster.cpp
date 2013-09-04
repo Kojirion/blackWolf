@@ -3,6 +3,7 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 #include "components/buttonbox.h"
+#include <SFGUI/Notebook.hpp>
 
 void boardMaster::setGameEnded(bw result)
 {
@@ -243,6 +244,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6));
     fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2));
     fics.gameEnd.connect(boost::bind(&boardMaster::setGameEnded, this, _1));
+    fics.textReady.connect(boost::bind(&netWidgets::addLine, netWindow, _1));
 
     //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
@@ -296,11 +298,11 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 
 
+    sfg::Notebook::Ptr notebook(sfg::Notebook::Create());
+    notebook->AppendPage(mainLayout,sfg::Label::Create("Board"));
+    notebook->AppendPage(netWindow.getWidget(),sfg::Label::Create("Server"));
 
-
-
-
-    boardWindow->Add(mainLayout);
+    boardWindow->Add(notebook);
 
 
     desktop.Add(promotionWindow);

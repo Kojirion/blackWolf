@@ -11,7 +11,7 @@ void guiManager::settingsClosed()
 }
 
 guiManager::guiManager():
-    window(sf::VideoMode(600, 600), "Black Wolf")
+    window(sf::VideoMode(800, 800), "Black Wolf")
     //stateManager(boost::ref(desktop), boost::ref(window))
 {
     window.setFramerateLimit(60);

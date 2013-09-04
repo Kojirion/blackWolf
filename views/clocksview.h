@@ -1,11 +1,15 @@
 #ifndef CLOCKSVIEW_H
 #define CLOCKSVIEW_H
+#include <SFGUI/Label.hpp>
 #include <SFGUI/Canvas.hpp>
 #include "blackWolf.h"
 
 class clocksView
 {
 private:
+    sfg::Label::Ptr whiteClockLabel;
+    sfg::Label::Ptr blackClockLabel;
+
     sfg::Canvas::Ptr whiteClockCanvas;
     sfg::Canvas::Ptr blackClockCanvas;
 

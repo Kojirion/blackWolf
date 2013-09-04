@@ -20,6 +20,7 @@ public:
     boost::signals2::signal<void (int, int, int, int, int, int)> positionReady;
     boost::signals2::signal<void (bw, int)> startGame;
     boost::signals2::signal<void (bw)> gameEnd;
+    boost::signals2::signal<void (std::string)> textReady;
 
     void makeMove(int row1, int col1, int row2, int col2);
 

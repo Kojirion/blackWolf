@@ -2,7 +2,9 @@
 
 clocksView::clocksView():
     whiteClockCanvas(sfg::Canvas::Create()),
-    blackClockCanvas(sfg::Canvas::Create())
+    blackClockCanvas(sfg::Canvas::Create()),
+    whiteClockLabel(sfg::Label::Create()),
+    blackClockLabel(sfg::Label::Create())
 {
     font.loadFromFile("DejaVuSans.ttf"); //assert it
 
@@ -18,28 +20,30 @@ clocksView::clocksView():
 
     whiteClockCanvas->SetRequisition(sf::Vector2f(100,50));
     blackClockCanvas->SetRequisition(sf::Vector2f(100,50));
-
 }
 
 void clocksView::update(const sf::Time &whiteTime, const sf::Time &blackTime)
 {
-    whiteClockText.setString(timeToString(whiteTime));
+    whiteClockLabel->SetText(timeToString(whiteTime));
+    blackClockLabel->SetText(timeToString(blackTime));
+
+    //whiteClockText.setString();
     whiteClockCanvas->Clear();
     whiteClockCanvas->Draw(whiteClockText);
 
-    blackClockText.setString(timeToString(blackTime));
+    //blackClockText.setString();
     blackClockCanvas->Clear();
     blackClockCanvas->Draw(blackClockText);
 }
 
 sfg::Widget::Ptr clocksView::getWhiteClock()
 {
-    return whiteClockCanvas;
+    return whiteClockLabel;
 }
 
 sfg::Widget::Ptr clocksView::getBlackClock()
 {
-    return blackClockCanvas;
+    return blackClockLabel;
 }
 
 void clocksView::setFlagDown(const bw loser)
