@@ -244,7 +244,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6));
     fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2));
     fics.gameEnd.connect(boost::bind(&boardMaster::setGameEnded, this, _1));
-    fics.textReady.connect(boost::bind(&netWidgets::addLine, netWindow, _1));
+    fics.textReady.connect(boost::bind(&netWidgets::addLine, &netWindow, _1));
+    netWindow.sendText.connect(boost::bind(&client::toClient, &fics, _1));
 
     //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));

@@ -14,6 +14,8 @@ netWidgets::netWidgets():
     chatLayout->Pack(chatWindow);
     chatLayout->Pack(chatEntry);
 
+    chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(&netWidgets::sendData, this);
+
     //chatWindow->GetSignal(sfg::Adjustment::OnChange).Connect(&netWidgets::autoscroll, this);
 
     //chatEntry->GetSignal(sfg::Entry::OnKeyPress)
@@ -36,4 +38,12 @@ void netWidgets::autoscroll()
 {
     sfg::Adjustment::Ptr toAdjust(chatWindow->GetVerticalAdjustment());
     toAdjust->SetValue(toAdjust->GetUpper());
+}
+
+void netWidgets::sendData()
+{
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) return;
+    std::string toWrite = chatEntry->GetText();
+    chatEntry->SetText("");
+    sendText(toWrite);
 }
