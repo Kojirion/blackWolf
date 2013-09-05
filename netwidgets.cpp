@@ -16,6 +16,7 @@ netWidgets::netWidgets():
     chatLayout->Pack(chatEntry);
 
     chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(&netWidgets::sendData, this);
+    chatEntry->GrabFocus();
 
     //chatWindow->GetSignal(sfg::Adjustment::OnChange).Connect(&netWidgets::autoscroll, this);
 

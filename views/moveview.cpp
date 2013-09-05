@@ -18,7 +18,7 @@ moveView::moveView():
 
 void moveView::addMove(const int row1, const int col1, const int row2, const int col2, const int plyCounter)
 {
-    sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(row1,col1,row1,col2)));
+    sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(row1,col1,row2,col2)));
     const int plyPairsCount = plyCounter/2;
     const int plyRemainder = (plyCounter)%2;
     moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
