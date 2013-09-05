@@ -125,3 +125,5 @@ make text pop after 50 lines
 
 autoscroll, what to connect?
 grabFocus, only print text if not used
+
+the sf::Rects can be done away with altogether and check for the position straight away

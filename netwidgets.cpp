@@ -5,7 +5,8 @@ netWidgets::netWidgets():
     chatLayout(sfg::Box::Create(sfg::Box::VERTICAL, 5.f)),
     chatAreaLayout(sfg::Box::Create(sfg::Box::VERTICAL)),
     chatEntry(sfg::Entry::Create()),
-    chatWindow(sfg::ScrolledWindow::Create())
+    chatWindow(sfg::ScrolledWindow::Create()),
+    lineCounter(0)
 {
     chatWindow->SetRequisition(sf::Vector2f(600.f,600.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
@@ -28,6 +29,12 @@ sfg::Widget::Ptr netWidgets::getWidget()
 
 void netWidgets::addLine(std::string line)
 {
+    if (lineCounter<51){
+        lineCounter++;
+    }else{
+        //if more than 50, pop front
+        chatAreaLayout->Remove(chatAreaLayout->GetChildren().front());
+    }
     sfg::Label::Ptr toAdd(sfg::Label::Create(line));
     toAdd->SetAlignment(sf::Vector2f(0.f,0.f));
     chatAreaLayout->PackEnd(toAdd);

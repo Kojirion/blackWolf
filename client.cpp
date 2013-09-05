@@ -22,10 +22,6 @@ void client::connect()
 
     toClient("Kojijay");
     toClient("");
-    toClient("set style 12");
-    //toClient("match Kojay");
-    toClient("getgame");
-
 
     boost::asio::async_read_until(socket, data, "\n\r",
             boost::bind(&client::handleData, this, _1));
@@ -46,8 +42,6 @@ void client::handleData(boost::system::error_code ec)
         std::getline(is, str);
 
         boost::erase_all(str,"\r");
-
-        textReady(str);
 
         std::vector<std::string> tokens;
 
@@ -111,6 +105,12 @@ void client::handleData(boost::system::error_code ec)
                 if (toCheck == "1-0") gameEnd(bw::White);
                 else if (toCheck == "0-1") gameEnd(bw::Black);
                 else if (toCheck == "1/2-1/2") gameEnd(bw::White | bw::Black);
+            }else if ((tokens[0]=="****")&&(tokens[1]=="FICS")&&(tokens[2]=="Session")){
+                //succesfully logged in
+                toClient("set style 12");
+            }else if (tokens[0] != "fics%"){
+                //not processed, so let's print it
+                textReady(str);
             }
         }
 

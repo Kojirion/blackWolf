@@ -25,6 +25,8 @@ private:
     void autoscroll();
 
     void sendData();
+
+    int lineCounter; //how many lines we 've printed
 };
 
 #endif // NETWIDGETS_H
