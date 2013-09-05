@@ -294,9 +294,9 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow->Show(false);
 
     buttonBox buttons;
-    buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
-    buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
-    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
+    //buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
+    //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
+    //buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardCanvas::flipBoard, &board);
     buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::settingsClicked, this);
 
