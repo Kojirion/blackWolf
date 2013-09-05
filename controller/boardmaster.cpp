@@ -90,6 +90,7 @@ void boardMaster::moveMake(const completeMove &move)
 void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime)
 {
     game.setTime(whiteTime, blackTime);
+    game.startClock(); //this just means an unnecessary stop
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent

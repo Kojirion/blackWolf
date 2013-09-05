@@ -83,14 +83,7 @@ void gameData::update()
 
 void gameData::switchTurn()
 {
-    if (turnColor() == bw::White){
-        blackClock.stop();
-        whiteClock.start();
-    }else{
-        BOOST_ASSERT_MSG(turnColor()==bw::Black, "Turn color invalid");
-        whiteClock.stop();
-        blackClock.start();
-    }
+    startClock();
     plyCounter++;
 }
 
@@ -117,4 +110,16 @@ thor::CallbackTimer& gameData::getWhiteTimer()
 thor::CallbackTimer& gameData::getBlackTimer()
 {
     return blackClock;
+}
+
+void gameData::startClock()
+{
+    if (turnColor() == bw::White){
+        blackClock.stop();
+        whiteClock.start();
+    }else{
+        BOOST_ASSERT_MSG(turnColor()==bw::Black, "Turn color invalid");
+        whiteClock.stop();
+        blackClock.start();
+    }
 }

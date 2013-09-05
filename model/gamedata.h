@@ -44,6 +44,8 @@ public:
 
     thor::CallbackTimer &getWhiteTimer();
     thor::CallbackTimer &getBlackTimer();
+
+    void startClock(); //starts the appropriate clock
 };
 
 #endif // GAMEDATA_H
