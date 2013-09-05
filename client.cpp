@@ -20,6 +20,13 @@ void client::connect()
         socket.connect(*endpoint_iterator++, error);
     }
 
+    if (error)
+    {
+        textReady("Failed to connect.");
+        std::cerr << "Failed to conect." << std::endl;
+        return;
+    }
+
     boost::asio::async_read_until(socket, data, "\n\r",
             boost::bind(&client::handleData, this, _1));
 }
