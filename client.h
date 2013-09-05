@@ -18,7 +18,7 @@ public:
     position getPosition();
 
     boost::signals2::signal<void (int, int, int, int, int, int)> positionReady;
-    boost::signals2::signal<void (bw, int)> startGame;
+    boost::signals2::signal<void (bw, int, std::string, std::string)> startGame;
     boost::signals2::signal<void (bw)> gameEnd;
     boost::signals2::signal<void (std::string)> textReady;
 

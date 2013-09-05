@@ -98,14 +98,14 @@ void client::handleData(boost::system::error_code ec)
                 positionReady(row1,col1,row2,col2, whiteTime, blackTime);
             }else if (tokens[0] == "Creating:"){
                 int time = 60*std::stoi(tokens[7]);
-                if (tokens[1] == "Kojijay") startGame(bw::White, time);
-                else startGame(bw::Black, time);
+                if (tokens[1] == "Kojijay") startGame(bw::White, time, tokens[1], tokens[3]);
+                else startGame(bw::Black, time, tokens[1], tokens[3]);
             }else if (tokens[0] == "{Game"){
                 std::string toCheck = tokens.back();
                 if (toCheck == "1-0") gameEnd(bw::White);
                 else if (toCheck == "0-1") gameEnd(bw::Black);
                 else if (toCheck == "1/2-1/2") gameEnd(bw::White | bw::Black);
-            }else if ((tokens[0]=="****")&&(tokens[1]=="FICS")&&(tokens[2]=="Session")){
+            }else if ((tokens[0]=="****")&&(tokens[1]=="Starting")&&(tokens[2]=="FICS")){
                 //succesfully logged in
                 toClient("set style 12");
             }else if (tokens[0] != "fics%"){

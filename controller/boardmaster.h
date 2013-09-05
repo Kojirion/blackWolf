@@ -86,16 +86,11 @@ private:
 
     netWidgets netWindow;
 
-
-
-
-
-
-
+    sfg::Label::Ptr player1;
+    sfg::Label::Ptr player2;
 
     chessEngine chessAi;
     client fics;
-
 
     //move was promotion
     //so pop the window for selection or have ai choose
@@ -117,7 +112,7 @@ private:
 
 
 
-    void newGame(const bw whoUser, int time);
+    void newGame(const bw whoUser, int time, std::string p1, std::string p2);
 
     void aiTurn();
 
