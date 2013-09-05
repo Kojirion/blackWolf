@@ -17,12 +17,12 @@ public:
     //bool positionReady() const;
     position getPosition();
 
-    boost::signals2::signal<void (int, int, int, int, int, int)> positionReady;
+    boost::signals2::signal<void (int, int, int, int, int, int, bw)> positionReady;
     boost::signals2::signal<void (bw, int, std::string, std::string)> startGame;
     boost::signals2::signal<void (bw)> gameEnd;
     boost::signals2::signal<void (std::string)> textReady;
 
-    void makeMove(int row1, int col1, int row2, int col2);
+    void makeMove(int row1, int col1, int row2, int col2, bw promotionChoice = bw::None);
 
     void toClient(std::string toWrite);
 
@@ -36,8 +36,10 @@ private:
     void handleData(boost::system::error_code ec);    
 
     int stringToCol(const std::string stringedCol) const;
-    std::string moveString(const int row1, const int col1, const int row2, const int col2) const;
+    std::string moveString(const int row1, const int col1, const int row2, const int col2, bw promotionChoice) const;
     std::string colToString(const int col) const;
+    std::string pieceToSymbol(bw piece) const;
+    bw symbolToPiece(std::string symbol) const;
 
 
 };

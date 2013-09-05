@@ -27,10 +27,12 @@ void boardMaster::flagDown(const bw loser)
     setGameEnded(-loser);
 }
 
-void boardMaster::handlePromotion(const int row, const int col)
+void boardMaster::handlePromotion(int row1, int col1, int row2, int col2)
 {
-    toPromoteRow = row;
-    toPromoteCol = col;
+    toPromoteRow1 = row1;
+    toPromoteCol1 = col1;
+    toPromoteRow2 = row2;
+    toPromoteCol2 = col2;
 
     if (!game.userTurn()){ //techinically, it still is
         //enable promotion window
@@ -72,7 +74,7 @@ void boardMaster::moveMake(const completeMove &move)
 
     //handle promotion AND update the engine, depending on whether it was or not
     if (game.getPosition().wasPromotion){
-        handlePromotion(destRow, destCol);
+        handlePromotion(originRow, originCol, destRow, destCol);
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
@@ -87,7 +89,7 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime)
+void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, bw promotionChoice)
 {
     game.setTime(whiteTime, blackTime);
     game.startClock(); //this just means an unnecessary stop
@@ -100,6 +102,14 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
+
+    if (check(promotionChoice)){
+        toPromoteRow1 = row1;
+        toPromoteCol1 = col1;
+        toPromoteRow2 = row2;
+        toPromoteCol2 = col2;
+        promotionChoiceMade(bwToInt(promotionChoice));
+    }
 
     //handle promotion AND update the engine, depending on whether it was or not
 //    if (game.getPosition().wasPromotion){
@@ -161,16 +171,19 @@ void boardMaster::promotionChoiceMade(const int whichPiece)
     promotionChoice = whichPiece;
 
     //update view
-    board.setPromotion(toPromoteRow, toPromoteCol, whichPiece);
+    board.setPromotion(toPromoteRow2, toPromoteCol2, whichPiece);
 
     //update model
     int whichSide;
     if (game.turnColor()==bw::White) whichSide = -1;
     else whichSide = 1;
-    game.setPromotion(toPromoteRow,toPromoteCol,whichPiece*whichSide);
+    game.setPromotion(toPromoteRow2,toPromoteCol2,whichPiece*whichSide);
 
     promotionWindow->Show(false);
     enableWindow(true);
+
+    if (!game.userTurn()) //means user made promotion, so send to client
+        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, intToBw(whichPiece));
 }
 
 void boardMaster::promoteQueen()
@@ -226,7 +239,8 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
         moveMake(toCheck);
-        fics.makeMove(row1, col1, row2, col2);
+        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
+            fics.makeMove(row1, col1, row2, col2);
         return true;
     }
     return false;
@@ -235,7 +249,7 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
-    toPromoteRow(0), toPromoteCol(0), promotionChoice(0),
+    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(0),
     desktop(theDesktop),
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow,resources),
@@ -247,7 +261,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
-    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6));
+    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6, _7));
     fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2, _3, _4));
     fics.gameEnd.connect(boost::bind(&boardMaster::setGameEnded, this, _1));
     fics.textReady.connect(boost::bind(&netWidgets::addLine, &netWindow, _1));

@@ -22,4 +22,8 @@ bw operator|(const bw lhs, const bw rhs);
 
 bool check(const bw toCheck);
 
+//for compatibility until getting rid of all the ints
+int bwToInt(bw piece);
+bw intToBw(int piece);
+
 #endif // BLACKWOLF_H

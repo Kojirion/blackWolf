@@ -3,15 +3,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include "controller/boardmaster.h"
-//#include "msmmanager.h"
 
 class guiManager
 {
 private:
     sfg::SFGUI sfgui_;
     sf::RenderWindow window;
-    sfg::Desktop desktop;
-    //stateMachine stateManager;
+    sfg::Desktop desktop;    
     //sf::Image icon;
 
     void settingsClicked();

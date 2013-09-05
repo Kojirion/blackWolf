@@ -22,6 +22,7 @@ void moveView::addMove(const int row1, const int col1, const int row2, const int
     const int plyPairsCount = plyCounter/2;
     const int plyRemainder = (plyCounter)%2;
     moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
+    autoscroll();
 }
 
 sfg::Widget::Ptr moveView::getView()
@@ -64,4 +65,10 @@ std::string moveView::moveToString(const int row1, const int col1, const int row
 std::string moveView::cellToString(const int row, const int col) const
 {
     return (colToString(col) + std::to_string(row+1));
+}
+
+void moveView::autoscroll()
+{
+    sfg::Adjustment::Ptr toAdjust(moveListWindow->GetVerticalAdjustment());
+    toAdjust->SetValue(toAdjust->GetUpper());
 }

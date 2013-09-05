@@ -20,9 +20,6 @@ void client::connect()
         socket.connect(*endpoint_iterator++, error);
     }
 
-    toClient("Kojijay");
-    toClient("");
-
     boost::asio::async_read_until(socket, data, "\n\r",
             boost::bind(&client::handleData, this, _1));
 }
@@ -95,7 +92,14 @@ void client::handleData(boost::system::error_code ec)
                 int whiteTime = std::stoi(tokens[24]);
                 int blackTime = std::stoi(tokens[25]);
 
-                positionReady(row1,col1,row2,col2, whiteTime, blackTime);
+                bw promotionPiece;
+
+                if (tokens[27].size()==9){ //means promotion
+                    promotionPiece = symbolToPiece(tokens[27].substr(8,1));
+                }else promotionPiece = bw::None;
+
+
+                positionReady(row1,col1,row2,col2, whiteTime, blackTime, promotionPiece);
             }else if (tokens[0] == "Creating:"){
                 int time = 60*std::stoi(tokens[7]);
                 if (tokens[1] == "Kojijay") startGame(bw::White, time, tokens[1], tokens[3]);
@@ -138,9 +142,11 @@ int client::stringToCol(const std::string stringedCol) const
     else if (stringedCol=="h") return 7;
 }
 
-std::string client::moveString(const int row1, const int col1, const int row2, const int col2) const
+std::string client::moveString(const int row1, const int col1, const int row2, const int col2, bw promotionChoice) const
 {
-    return (colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
+    std::string toReturn(colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
+    if (check(promotionChoice)) toReturn += "=" + pieceToSymbol(promotionChoice);
+    return toReturn;
 }
 
 std::string client::colToString(const int col) const
@@ -165,8 +171,24 @@ std::string client::colToString(const int col) const
     }
 }
 
-
-void client::makeMove(int row1, int col1, int row2, int col2)
+std::string client::pieceToSymbol(bw piece) const
 {
-    toClient(moveString(row1,col1,row2,col2));
+    if (piece == bw::Queen) return "Q";
+    if (piece == bw::Bishop) return "B";
+    if (piece == bw::Knight) return "N";
+    if (piece == bw::Rook) return "R";
+}
+
+bw client::symbolToPiece(std::string symbol) const
+{
+    if (symbol == "Q") return bw::Queen;
+    if (symbol == "B") return bw::Bishop;
+    if (symbol == "N") return bw::Bishop;
+    if (symbol == "R") return bw::Rook;
+}
+
+
+void client::makeMove(int row1, int col1, int row2, int col2, bw promotionChoice)
+{
+    toClient(moveString(row1,col1,row2,col2,promotionChoice));
 }

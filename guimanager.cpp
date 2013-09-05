@@ -1,21 +1,9 @@
 #include "guimanager.h"
 
-void guiManager::settingsClicked()
-{
-    //stateManager.process_event(settingsOpen());
-}
-
-void guiManager::settingsClosed()
-{
-    //stateManager.process_event(settingsClose());
-}
-
 guiManager::guiManager():
-    window(sf::VideoMode(800, 800), "Black Wolf")
-    //stateManager(boost::ref(desktop), boost::ref(window))
+    window(sf::VideoMode(800, 800), "Black Wolf")    
 {
     window.setFramerateLimit(60);
-    //stateManager.start();
 
     //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());

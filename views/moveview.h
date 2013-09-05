@@ -12,6 +12,8 @@ private:
     std::string colToString(const int col) const;
     std::string moveToString(const int row1, const int col1, const int row2, const int col2) const;
     std::string cellToString(const int row, const int col) const;
+
+    void autoscroll();
 public:
     moveView();
 

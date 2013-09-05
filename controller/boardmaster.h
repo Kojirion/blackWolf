@@ -94,10 +94,12 @@ private:
 
     //move was promotion
     //so pop the window for selection or have ai choose
-    void handlePromotion(const int row, const int col);
+    void handlePromotion(int row1, int col1, int row2, int col2);
 
-    int toPromoteRow;
-    int toPromoteCol;
+    int toPromoteRow1;
+    int toPromoteCol1;
+    int toPromoteRow2;
+    int toPromoteCol2;
     int promotionChoice; //which piece was chosen by either ai or player
 
 
@@ -108,7 +110,7 @@ private:
     void flagDown(const bw loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime);
+    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, bw promotionChoice);
 
 
 

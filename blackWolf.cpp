@@ -30,3 +30,25 @@ bw operator |(const bw lhs, const bw rhs)
 {
     return static_cast<bw>(static_cast<int>(lhs) | static_cast<int>(rhs));
 }
+
+
+int bwToInt(bw piece)
+{
+    switch (piece) {
+    case bw::Queen: return 4;
+    case bw::Bishop: return 2;
+    case bw::Knight: return 3;
+    case bw::Rook: return 1;
+    }
+}
+
+
+bw intToBw(int piece)
+{
+    switch (piece) {
+    case 4: return bw::Queen;
+    case 2: return bw::Bishop;
+    case 3: return bw::Knight;
+    case 1: return bw::Rook;
+    }
+}
