@@ -29,12 +29,14 @@ sfg::Widget::Ptr netWidgets::getWidget()
 
 void netWidgets::addLine(std::string line)
 {
-    if (lineCounter<51){
+    if (lineCounter<120){
         lineCounter++;
     }else{
-        //if more than 50, pop front
-        chatAreaLayout->Remove(chatAreaLayout->GetChildren().front());
+        //if more, pop front
+        sfg::Container::WidgetsList lines(chatAreaLayout->GetChildren());
+        chatAreaLayout->Remove(lines.front());
     }
+
     sfg::Label::Ptr toAdd(sfg::Label::Create(line));
     toAdd->SetAlignment(sf::Vector2f(0.f,0.f));
     chatAreaLayout->PackEnd(toAdd);
