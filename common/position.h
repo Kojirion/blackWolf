@@ -5,7 +5,7 @@
 #define POSITION_H
 #include <vector>
 #include <array>
-//#include "blackWolf.h"
+#include "blackWolf.h"
 
 class position{
 public:
@@ -37,7 +37,6 @@ public:
         return positionRow(*this, rowId);
     }
 
-    int turnColor;
     bool whiteCastleQueen;
     bool whiteCastleKing;
     bool blackCastleQueen;
@@ -50,7 +49,9 @@ public:
     void setPromotion(const int row, const int col, const int chosenPiece);
 
 private:
-    std::array<std::array<int, 8>, 8> cells;
+    bw turnColor;
+
+    std::array<std::array<bw, 8>, 8> cells;
 
     const int&   pget(int row,int col) const{
         return cells[row][col];

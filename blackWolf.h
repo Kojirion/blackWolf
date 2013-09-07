@@ -10,8 +10,9 @@ enum class bw
     Bishop = 1 << 3,
     Queen  = 1 << 4,
     King   = 1 << 5,
-    White  = 1 << 6,
-    Black  = 1 << 7
+    Shadow = 1 << 6,
+    White  = 1 << 7,
+    Black  = 1 << 8
 };
 
 bw operator-(const bw rhs);

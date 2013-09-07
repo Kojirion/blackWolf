@@ -1,8 +1,9 @@
 #include "blackWolf.h"
-//#include <boost/assert.hpp>
+#include <boost/assert.hpp>
 
 bw operator-(const bw rhs)
 {
+    //could edit to make this usable by pieces as well
     if (rhs==bw::White) return bw::Black;
     if (rhs==bw::Black) return bw::White;
     return rhs;
@@ -53,4 +54,12 @@ bw intToBw(int piece)
     case 1: return bw::Rook;
     default: return bw::None; //appease compiler
     }
+}
+
+
+int sign(bw color)
+{
+    if (check(color & bw::White)) return 1;
+    BOOST_ASSERT_MSG(check(color & bw::Black), "Given bw has no color");
+    return -1;
 }
