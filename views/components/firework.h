@@ -35,9 +35,8 @@ private:
 class FireworkAffector
 {
 public:
-    void operator() (thor::Particle& particle, sf::Time dt)
+    void operator() (thor::Particle& particle, sf::Time /* dt */)
     {
-        // Let particles continuously fade out (particles with smaller scale have already lower alpha value at beginning)
         particle.color.a = static_cast<sf::Uint8>(256 * thor::getRemainingRatio(particle) * particle.scale.x);
     }
 };

@@ -19,8 +19,8 @@ moveView::moveView():
 void moveView::addMove(const int row1, const int col1, const int row2, const int col2, const int plyCounter)
 {
     sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(row1,col1,row2,col2)));
-    const int plyPairsCount = plyCounter/2;
-    const int plyRemainder = (plyCounter)%2;
+    const unsigned int plyPairsCount = plyCounter/2;
+    const unsigned int plyRemainder = (plyCounter)%2;
     moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
     autoscroll();
 }
@@ -54,6 +54,8 @@ std::string moveView::colToString(const int col) const
         return "g";
     case 7:
         return "h";
+    default:
+        return "-"; //appease compiler
     }
 }
 

@@ -1,8 +1,6 @@
 #include "clocksview.h"
 
-clocksView::clocksView():
-    whiteClockCanvas(sfg::Canvas::Create()),
-    blackClockCanvas(sfg::Canvas::Create()),
+clocksView::clocksView():    
     whiteClockLabel(sfg::Label::Create()),
     blackClockLabel(sfg::Label::Create())
 {
@@ -27,7 +25,7 @@ sfg::Widget::Ptr clocksView::getBlackClock()
 
 void clocksView::setFlagDown(const bw loser)
 {
-
+    if (loser == bw::White) return;
 }
 
 std::string clocksView::timeToString(const sf::Time& value) const

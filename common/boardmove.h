@@ -12,13 +12,14 @@ class boardMove
 private:
     friend class completeMove;
 
-    position board;
-    position newBoard;
+    position board;    
 
     int row1;
     int col1;
     int row2;
     int col2;
+
+    position newBoard;
 
     int pieceCode;
 

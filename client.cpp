@@ -147,6 +147,7 @@ int client::stringToCol(const std::string stringedCol) const
     else if (stringedCol=="f") return 5;
     else if (stringedCol=="g") return 6;
     else if (stringedCol=="h") return 7;
+    return -1; //appease compiler
 }
 
 std::string client::moveString(const int row1, const int col1, const int row2, const int col2, bw promotionChoice) const
@@ -175,6 +176,8 @@ std::string client::colToString(const int col) const
         return "g";
     case 7:
         return "h";
+    default:
+        return "-"; //appease compiler
     }
 }
 
@@ -184,6 +187,7 @@ std::string client::pieceToSymbol(bw piece) const
     if (piece == bw::Bishop) return "B";
     if (piece == bw::Knight) return "N";
     if (piece == bw::Rook) return "R";
+    return "-"; //appease compiler
 }
 
 bw client::symbolToPiece(std::string symbol) const
@@ -192,6 +196,7 @@ bw client::symbolToPiece(std::string symbol) const
     if (symbol == "B") return bw::Bishop;
     if (symbol == "N") return bw::Bishop;
     if (symbol == "R") return bw::Rook;
+    return bw::None; //appease compiler
 }
 
 

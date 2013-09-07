@@ -6,9 +6,9 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     flipOffset(0),
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
+    resources(theResources),
     currentPiece(&pieces),
-    idCount(1),
-    resources(theResources)
+    idCount(1)
 {
     boardSprite_.setTexture(resources.typeToTexture(10));
 

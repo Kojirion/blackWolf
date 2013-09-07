@@ -1,9 +1,9 @@
 #include "sidechoicewindow.h"
 #include <SFGUI/Box.hpp>
 
-sideChoiceWindow::sideChoiceWindow(sfg::Desktop &theDesktop):
-    desktop(theDesktop),
+sideChoiceWindow::sideChoiceWindow(sfg::Desktop &theDesktop):    
     window(sfg::Window::Create()),
+    desktop(theDesktop),
     whiteSide(sfg::Button::Create("White")),
     blackSide(sfg::Button::Create("Black")),
     bothSide(sfg::Button::Create("Both"))

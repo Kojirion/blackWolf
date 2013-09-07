@@ -35,6 +35,8 @@ std::string chessEngine::colToString(const int col) const
         return "g";
     case 7:
         return "h";
+    default:
+        return "-"; //appease compiler
     }
 }
 
@@ -48,6 +50,7 @@ int chessEngine::stringToCol(const std::string stringedCol) const
     else if (stringedCol=="f") return 5;
     else if (stringedCol=="g") return 6;
     else if (stringedCol=="h") return 7;
+    return -1; //appease compiler
 }
 
 chessEngine::move chessEngine::stringToTuple(const std::string theString)
@@ -80,6 +83,7 @@ int chessEngine::symbolToInt(std::string symbol) const
     if (symbol=="b") return 2;
     if (symbol=="n") return 3;
     if (symbol=="r") return 1;
+    return -1; //appease compiler
 }
 
 std::string chessEngine::intToSymbol(const int which) const
@@ -88,6 +92,7 @@ std::string chessEngine::intToSymbol(const int which) const
     if (which == 2) return "b";
     if (which == 3) return "n";
     if (which == 1) return "r";
+    return "-"; //appease compiler
 }
 
 

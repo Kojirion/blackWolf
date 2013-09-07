@@ -39,6 +39,7 @@ int bwToInt(bw piece)
     case bw::Bishop: return 2;
     case bw::Knight: return 3;
     case bw::Rook: return 1;
+    default: return -1; //appease compiler
     }
 }
 
@@ -50,5 +51,6 @@ bw intToBw(int piece)
     case 2: return bw::Bishop;
     case 3: return bw::Knight;
     case 1: return bw::Rook;
+    default: return bw::None; //appease compiler
     }
 }

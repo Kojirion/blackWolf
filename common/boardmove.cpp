@@ -40,6 +40,8 @@ bool boardMove::isLegal() const
         return isKingLegal();
     case 7:
         return false; //shadow pawn
+    default:
+        return false; //appease compiler
     }
 }
 

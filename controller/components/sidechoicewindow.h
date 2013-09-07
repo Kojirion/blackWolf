@@ -8,12 +8,12 @@ class sideChoiceWindow
 {
 private:
     sfg::Window::Ptr window;
+    sfg::Desktop& desktop;
 
     sfg::Button::Ptr whiteSide;
     sfg::Button::Ptr blackSide;
     sfg::Button::Ptr bothSide;
 
-    sfg::Desktop& desktop;
 public:
     sideChoiceWindow(sfg::Desktop& theDesktop);
 

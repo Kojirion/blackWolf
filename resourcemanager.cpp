@@ -13,6 +13,7 @@ resourceManager::resourceManager():
 const sf::Texture &resourceManager::typeToTexture(const int pieceType) const
 {
     switch (pieceType) {
+    default: //appease compiler
     case 1:
         return *whiteRook;
     case 2:

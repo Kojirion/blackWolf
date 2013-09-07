@@ -16,13 +16,13 @@
 class boardCanvas
 {
 private:
+    //offset used in positioning the pieces to achieve flip
+    int flipOffset;
+
     static const sf::Vector2f offToCenter;
 
     //Canvas onto which board is drawn
     sfg::Canvas::Ptr window;
-
-    //offset used in positioning the pieces to achieve flip
-    int flipOffset;
 
     sf::Sprite boardSprite_;
     sf::Window& bigWindow; //only to know its position

@@ -5,7 +5,8 @@
 
 void settingsState::requestClose()
 {
-    for (int i=0; i<colors.size(); ++i)
+    int iMax(colors.size());
+    for (int i=0; i<iMax; ++i)
     {
         if (whiteButtons[i]->IsActive())
         {
@@ -18,7 +19,8 @@ void settingsState::requestClose()
         }
     }
 
-    for (int i=0; i<boardColors.size(); ++i)
+    iMax = boardColors.size();
+    for (int i=0; i<iMax; ++i)
     {
         if (boardButtons[i]->IsActive())
         {
@@ -33,8 +35,8 @@ void settingsState::requestClose()
 }
 
 settingsState::settingsState(sfg::Desktop &theDesktop):
-    desktop(theDesktop),
     window(sfg::Window::Create()),
+    desktop(theDesktop),
     closeButton(sfg::Button::Create("Close")),
     colors{{"Black","Blue","Blue2","Brown","Green","Green2","Red","Red2",
                                                           "Violet","Violet2","White","Yellow"}},
@@ -50,7 +52,8 @@ settingsState::settingsState(sfg::Desktop &theDesktop):
     sfg::Box::Ptr buttonLayout2 = sfg::Box::Create(sfg::Box::VERTICAL);
     sfg::RadioButtonGroup::Ptr buttonGroup2(sfg::RadioButtonGroup::Create());
 
-    for (int i=0; i<colors.size(); ++i)
+    int iMax(colors.size());
+    for (int i=0; i<iMax; ++i)
     {
         whiteButtons[i] = sfg::RadioButton::Create(colors[i],buttonGroup1);
         blackButtons[i] = sfg::RadioButton::Create(colors[i],buttonGroup2);
@@ -68,7 +71,8 @@ settingsState::settingsState(sfg::Desktop &theDesktop):
     sfg::Box::Ptr buttonLayout3 = sfg::Box::Create(sfg::Box::VERTICAL);
     sfg::RadioButtonGroup::Ptr buttonGroup3(sfg::RadioButtonGroup::Create());
 
-    for (int i=0; i<boardColors.size(); ++i)
+    iMax = boardColors.size();
+    for (int i=0; i<iMax; ++i)
     {
         boardButtons[i] = sfg::RadioButton::Create(boardColors[i],buttonGroup3);
 
@@ -109,13 +113,15 @@ void settingsState::setTree(const boost::property_tree::ptree pt)
     toSetBlack = pt.get<std::string>("blackPrefix");
     toSetBoard = pt.get<std::string>("boardSuffix");
 
-    for (int i=0; i<colors.size(); ++i)
+    int iMax = colors.size();
+    for (int i=0; i<iMax; ++i)
     {
         if (colors[i] == toSetWhite) whiteButtons[i]->SetActive(true);
         if (colors[i] == toSetBlack) blackButtons[i]->SetActive(true);
     }
 
-    for (int i=0; i<boardColors.size(); ++i)
+    iMax = boardColors.size();
+    for (int i=0; i<iMax; ++i)
     {
        if (boardColors[i] == toSetBoard) boardButtons[i]->SetActive(true);
     }

@@ -76,8 +76,7 @@ bool completeMove::handleCastle() const
             return true;
         }
     }
-
-
+    return false; //appease compiler
 }
 
 bool completeMove::inCheck(const position &givenPos, const int side) const

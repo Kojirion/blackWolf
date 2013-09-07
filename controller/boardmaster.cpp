@@ -246,18 +246,18 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
     return false;
 }
 
-boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
+boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):    
+    desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create()),
-    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(0),
-    desktop(theDesktop),
-    settingsButton(sfg::Button::Create("Settings")),
-    board(theWindow,resources),
-    sideChoice(desktop),
+    settingsButton(sfg::Button::Create("Settings")),    
+    board(theWindow,resources),    
+    sideChoice(desktop),    
     settingsWindow(desktop),
     premove(std::make_tuple(false,0,0,0,0)),
     player1(sfg::Label::Create()),
-    player2(sfg::Label::Create())
+    player2(sfg::Label::Create()),
+    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(0)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
