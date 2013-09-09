@@ -27,6 +27,8 @@ public:
     void toClient(std::string toWrite);
 
 private:
+    std::string nickname;
+
     boost::asio::streambuf data;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::socket socket;

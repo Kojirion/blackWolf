@@ -109,7 +109,7 @@ void client::handleData(boost::system::error_code ec)
                 positionReady(row1,col1,row2,col2, whiteTime, blackTime, promotionPiece);
             }else if (tokens[0] == "Creating:"){
                 int time = 60*std::stoi(tokens[7]);
-                if (tokens[1] == "Kojijay") startGame(bw::White, time, tokens[1], tokens[3]);
+                if (tokens[1] == nickname) startGame(bw::White, time, tokens[1], tokens[3]);
                 else startGame(bw::Black, time, tokens[1], tokens[3]);
             }else if (tokens[0] == "{Game"){
                 std::string toCheck = tokens.back();
@@ -118,6 +118,9 @@ void client::handleData(boost::system::error_code ec)
                 else if (toCheck == "1/2-1/2") gameEnd(bw::White | bw::Black);
             }else if ((tokens[0]=="****")&&(tokens[1]=="Starting")&&(tokens[2]=="FICS")){
                 //succesfully logged in
+                boost::erase_all(tokens[5],"(U)");
+                boost::erase_all(tokens[5],"(R)");
+                nickname = tokens[5];
                 toClient("set style 12");
             }else if (tokens[0] != "fics%"){
                 //not processed, so let's print it
