@@ -142,7 +142,7 @@ void boardCanvas::setResult(bw result)
             if (piece.getSide() == -1)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
-                pieces.erase(piece);
+                //pieces.erase(piece);
             }
 
 
@@ -153,7 +153,7 @@ void boardCanvas::setResult(bw result)
             if (piece.getSide() == 1)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
-                pieces.erase(piece);
+                //pieces.erase(piece);
             }
         }
     }

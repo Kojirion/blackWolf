@@ -1,10 +1,9 @@
 #include "piecesbimap.h"
+#include <boost/foreach.hpp>
 
 void piecesBimap::clear()
 {
-    for (auto &piece : pieces){
-        pieces.left.erase(piece.left);
-    }
+    pieces.erase(pieces.begin(),pieces.end());
 }
 
 piecesBimap::piecesBimap()
