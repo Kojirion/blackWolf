@@ -1,5 +1,6 @@
 #include "resourcemanager.h"
 #include <iostream>
+#include <valgrind/memcheck.h>
 
 resourceManager::resourceManager():
     whitePrefix("Blue2"),
@@ -8,6 +9,7 @@ resourceManager::resourceManager():
     pathToPieces("Graphics/Pieces/")
 {
     load();
+    VALGRIND_CHECK_VALUE_IS_DEFINED(*this);
 }
 
 const sf::Texture &resourceManager::typeToTexture(const int pieceType) const

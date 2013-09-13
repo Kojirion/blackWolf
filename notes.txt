@@ -127,3 +127,5 @@ autoscroll, what to connect?
 grabFocus, only print text if not used
 
 the sf::Rects can be done away with altogether and check for the position straight away
+
+the second half of fixing invalid read will happen after conversion of side color from int to enum - then bimap wrapper will get a function to remove pieces of a specific side

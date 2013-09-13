@@ -8,13 +8,14 @@ position::position()
 
 position::position(int boardArray[8][8])
 {
+    init();
     for (int i=0; i<8; ++i)
     {
         for (int j=0; j<8; ++j)
         {
             cells[i][j] = boardArray[i][j];
         }
-    }
+    }    
 }
 
 position::position(const position &givenPos, const int row1, const int col1, const int row2, const int col2):

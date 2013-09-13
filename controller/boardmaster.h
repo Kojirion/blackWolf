@@ -16,6 +16,7 @@
 #include "controller/components/settingsstate.h"
 #include "client.h"
 #include "netwidgets.h"
+#include <valgrind/memcheck.h>
 
 
 

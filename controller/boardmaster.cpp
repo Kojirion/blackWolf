@@ -337,6 +337,9 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 //    if (!chessAi.load()) newGame(bw::White | bw::Black);
 //    else newGame(bw::White);
 
+    //VALGRIND_CHECK_MEM_IS_DEFINED;
+    //VALGRIND_CHECK_VALUE_IS_DEFINED(game);
+
 
 
 }

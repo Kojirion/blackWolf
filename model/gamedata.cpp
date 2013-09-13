@@ -1,10 +1,13 @@
 #include "gamedata.h"
 #include <boost/assert.hpp>
 
-gameData::gameData()
+gameData::gameData():
+    userColor(bw::None),
+    result(bw::White | bw::Black), //init a game 'finished' as draw
+    plyCounter(0)
 {
     //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
-    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
+    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));   
 }
 
 void gameData::setTime(int whiteTime, int blackTime)

@@ -52,7 +52,6 @@ public:
 private:
     std::array<std::array<int, 8>, 8> cells;
 
-    friend class positionRow;
     const int&   pget(int row,int col) const{
         return cells[row][col];
     }
