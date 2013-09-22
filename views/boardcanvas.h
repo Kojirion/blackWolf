@@ -5,12 +5,12 @@
 #define BOARDCANVAS_H
 #include <SFGUI/Canvas.hpp>
 #include <boost/signals2.hpp>
-#include "views/components/piecesbimap.h"
-#include "resourcemanager.h"
-#include "common/completemove.h"
-#include "common/position.h"
-#include "blackWolf.h"
-#include "views/components/firework.h"
+#include "../views/components/piecesbimap.h"
+#include "../resourcemanager.h"
+#include "../common/completemove.h"
+#include "../common/position.h"
+#include "../blackWolf.h"
+#include "../views/components/firework.h"
 #include <Thor/Shapes/Arrow.hpp>
 
 class boardCanvas

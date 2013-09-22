@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 #project name
 project(blackWolf)
 
+include_directories( ${CMAKE_SOURCE_DIR}/include )
+set(CMAKE_CXX_FLAGS "-std=c++11")
+
 # setup version numbers
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 2)

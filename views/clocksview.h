@@ -1,7 +1,7 @@
 #ifndef CLOCKSVIEW_H
 #define CLOCKSVIEW_H
 #include <SFGUI/Label.hpp>
-#include "blackWolf.h"
+#include "../blackWolf.h"
 
 class clocksView
 {

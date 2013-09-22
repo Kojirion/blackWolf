@@ -1,8 +1,8 @@
 #ifndef GAMEDATA_H
 #define GAMEDATA_H
 #include <Thor/Time/CallbackTimer.hpp>
-#include "blackWolf.h"
-#include "common/position.h"
+#include "../blackWolf.h"
+#include "../common/position.h"
 
 class gameData
 {

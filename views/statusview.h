@@ -1,7 +1,7 @@
 #ifndef STATUSVIEW_H
 #define STATUSVIEW_H
 #include <SFGUI/Label.hpp>
-#include "blackWolf.h"
+#include "../blackWolf.h"
 
 class statusView
 {
