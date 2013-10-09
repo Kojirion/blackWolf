@@ -9,7 +9,7 @@ FireworkEmitter::FireworkEmitter(sf::Vector2f position): mAccumulatedTime(sf::Ti
 {
 }
 
-void FireworkEmitter::operator ()(thor::EmissionAdder &system, sf::Time dt)
+void FireworkEmitter::operator ()(thor::EmissionInterface& system, sf::Time dt)
 {
     const sf::Time tailInterval = explosionDuration / tailsPerExplosion;
 
@@ -21,7 +21,7 @@ void FireworkEmitter::operator ()(thor::EmissionAdder &system, sf::Time dt)
     }
 }
 
-void FireworkEmitter::emitTail(thor::EmissionAdder &system)
+void FireworkEmitter::emitTail(thor::EmissionInterface& system)
 {
     thor::PolarVector2f velocity(thor::random(30.f, 70.f), thor::random(0.f, 360.f));
 
@@ -37,6 +37,6 @@ void FireworkEmitter::emitTail(thor::EmissionAdder &system)
         velocity.r *= 0.96f;
         particle.velocity = velocity;        
 
-        system.addParticle(particle);
+        system.emitParticle(particle);
     }
 }

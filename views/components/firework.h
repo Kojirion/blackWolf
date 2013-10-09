@@ -22,10 +22,10 @@ public:
     explicit FireworkEmitter(sf::Vector2f position);
 
 
-    void operator() (thor::EmissionAdder& system, sf::Time dt);
+    void operator() (thor::EmissionInterface& system, sf::Time dt);
 
 private:
-    void emitTail(thor::EmissionAdder& system);
+    void emitTail(thor::EmissionInterface &system);
 
     sf::Time	mAccumulatedTime;
     sf::Vector2f	mPosition;

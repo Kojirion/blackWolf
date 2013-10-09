@@ -13,7 +13,8 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     boardSprite_.setTexture(resources.typeToTexture(10));
 
     particle.loadFromFile("Graphics/particle.png");
-    system.reset(new thor::ParticleSystem(particle));
+    system.reset(new thor::ParticleSystem());
+    system->setTexture(particle);
     system->addAffector(FireworkAffector());
 
     rectGrid.resize(8);

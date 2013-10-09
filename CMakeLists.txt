@@ -74,10 +74,10 @@ set(bw_SRCS
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
 
 #Executable
-add_executable(blackWolf ${bw_ALL})
-target_link_libraries(blackWolf /usr/local/lib/libboost_system.so)
-target_link_libraries(blackWolf /usr/local/lib/libsfgui.so)
-target_link_libraries(blackWolf /usr/local/lib/libthor.so)
-target_link_libraries(blackWolf /usr/local/lib/libsfml-graphics.so.2)
-target_link_libraries(blackWolf /usr/local/lib/libsfml-window.so.2)
-target_link_libraries(blackWolf /usr/local/lib/libsfml-system.so.2)
+add_executable(${PROJECT_NAME} ${bw_ALL})
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libboost_system.so)
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfgui.so)
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libthor.so)
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-graphics.so.2)
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-window.so.2)
+target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-system.so.2)
