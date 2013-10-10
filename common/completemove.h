@@ -13,7 +13,7 @@ private:
     bool isCheckSafe() const;
     bool handleCastle() const;
 
-    bool inCheck(const position &givenPos, const int side) const; //is given side in check?
+    bool inCheck(const position &givenPos, const bw side) const; //is given side in check?
 
     bool hasLegalMoves() const; //checks if the new side will have legal moves in new position
 

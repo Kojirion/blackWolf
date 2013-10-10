@@ -259,8 +259,8 @@ void boardCanvas::setPosition(const position& givenPosition)
 {
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const int pieceId = givenPosition[i][j];
-            if ((pieceId==0)||(pieceId==7)||(pieceId==-7)) continue;
+            const bw pieceId = givenPosition(i, j);
+            if (check(pieceId & bw::None)||check(pieceId & bw::Shadow)) continue;
             pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces[i][j].insert(toAdd);
             idCount++;

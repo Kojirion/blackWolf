@@ -79,7 +79,7 @@ bool completeMove::handleCastle() const
     return false; //appease compiler
 }
 
-bool completeMove::inCheck(const position &givenPos, const int side) const
+bool completeMove::inCheck(const position &givenPos, const bw side) const
 {
     int kingRow, kingCol;
 
@@ -98,7 +98,7 @@ bool completeMove::inCheck(const position &givenPos, const int side) const
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const int pieceId = givenPos[i][j];
+            const bw pieceId = givenPos(i, j);
             if (!check(pieceId & board.getTurnColor())){ //enemy piece
                 boardMove toCheck(givenPos,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return true;
@@ -133,7 +133,7 @@ completeMove::completeMove(const position &thePosition, const int theRow1, const
 
 bool completeMove::isLegal() const
 {
-    if (pieceCode*board.turnColor<0) return false;
+    if (check(pieceCode & board.getTurnColor())) return false;
     //assumes that color has been switched if necessary
 
     if (newBoard.wasCastle) return handleCastle();
@@ -145,12 +145,12 @@ bool completeMove::isLegal() const
 
 bool completeMove::isCheckmate() const
 {
-    return ((!hasLegalMoves())&&(inCheck(newBoard,newBoard.turnColor)));
+    return ((!hasLegalMoves())&&(inCheck(newBoard,newBoard.getTurnColor())));
 }
 
 bool completeMove::isStalemate() const
 {
-    return ((!hasLegalMoves())&&(!inCheck(newBoard,newBoard.turnColor)));
+    return ((!hasLegalMoves())&&(!inCheck(newBoard,newBoard.getTurnColor())));
 }
 
 int completeMove::getRow1() const

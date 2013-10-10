@@ -1,6 +1,5 @@
 #include "resourcemanager.h"
 #include <iostream>
-#include <valgrind/memcheck.h>
 
 resourceManager::resourceManager():
     whitePrefix("Blue2"),
@@ -8,31 +7,30 @@ resourceManager::resourceManager():
     boardSuffix("Black"),
     pathToPieces("Graphics/Pieces/")
 {
-    load();
-    VALGRIND_CHECK_VALUE_IS_DEFINED(*this);
+    load();    
 }
 
-const sf::Texture &resourceManager::typeToTexture(const int pieceType) const
+const sf::Texture &resourceManager::typeToTexture(const bw pieceType) const
 {
     switch (pieceType) {
     default: //appease compiler
-    case 1:
+    case bw::Rook | bw::White:
         return *whiteRook;
-    case 2:
+    case bw::Bishop | bw::white:
         return *whiteBishop;
-    case 3:
+    case bw::Bishop | bw::white:
         return *whiteKnight;
-    case 4:
+    case bw::Bishop | bw::white:
         return *whiteQueen;
-    case 5:
+    case bw::Bishop | bw::white:
         return *whitePawn;
-    case 6:
+    case bw::Bishop | bw::white:
         return *whiteKing;
-    case -1:
+    case bw::Bishop | bw::white:
         return *blackRook;
-    case -2:
+    case bw::Bishop | bw::white:
         return *blackBishop;
-    case -3:
+    case bw::Bishop | bw::white:
         return *blackKnight;
     case -4:
         return *blackQueen;

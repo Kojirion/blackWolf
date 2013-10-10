@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <Thor/Resources.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include "blackWolf.h"
 
 class resourceManager
 {
@@ -15,7 +16,7 @@ public:
 
     resourceManager();
 
-    const sf::Texture& typeToTexture(const int pieceType) const;
+    const sf::Texture& typeToTexture(const bw pieceType) const;
 
 
     void load();
