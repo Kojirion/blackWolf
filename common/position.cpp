@@ -13,12 +13,12 @@ position::position(int boardArray[8][8])
     {
         for (int j=0; j<8; ++j)
         {
-            cells[i][j] = boardArray[i][j];
+            //cells[i][j] = boardArray[i][j];
         }
     }    
 }
 
-position::position(const position &givenPos, const int row1, const int col1, const int row2, const int col2):
+position::position(const position &givenPos, int row1, int col1, int row2, int col2):
     turnColor(-givenPos.turnColor),
     whiteCastleQueen(givenPos.whiteCastleQueen),
     whiteCastleKing(givenPos.whiteCastleKing),
@@ -32,14 +32,14 @@ position::position(const position &givenPos, const int row1, const int col1, con
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const bw givenPiece = givenPos[i][j];
+            const bw givenPiece = givenPos(i,j);
             if (check(givenPiece & bw::Shadow)) cells[i][j] = bw::None; //clear shadow pawn
             else cells[i][j] = givenPiece;
         }
     }
 
     const bw pieceCode = cells[row1][col1];
-    const bw destPiece = givenPos[row2][col2];
+    const bw destPiece = givenPos(row2, col2);
 
     //check if en passant capture
     if (check(destPiece & bw::Shadow)){ //about to nick a shadow pawn
@@ -167,4 +167,19 @@ void position::init()
 void position::setPromotion(const int row, const int col, bw chosenPiece)
 {
     cells[row][col] = chosenPiece;
+}
+
+bw position::getTurnColor() const
+{
+    return turnColor;
+}
+
+void position::setTurnColor(bw color)
+{
+    turnColor = color;
+}
+
+bw position::operator ()(int row, int col) const
+{
+    return cells[row][col];
 }

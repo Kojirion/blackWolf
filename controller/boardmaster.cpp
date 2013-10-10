@@ -96,7 +96,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent
-    if (game.getPosition()[row1][col1]==0) return;
+    if (game.getPosition()(row1,col1)==bw::None) return;
 
     completeMove move(game.getPosition(),row1, col1, row2, col2);
 

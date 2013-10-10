@@ -5,7 +5,7 @@
 #define POSITION_H
 #include <vector>
 #include <array>
-#include "blackWolf.h"
+#include "../blackWolf.h"
 
 class position{
 public:
@@ -14,28 +14,10 @@ public:
 
     position (int boardArray[8][8]);
 
-    position(const position &givenPos, const int row1, const int col1, const int row2, const int col2);
+    position(const position &givenPos, int row1, int col1, int row2, int col2);
 
-    class positionRow{
-    private:
-        const position &parent;
-        int rowId;
+    bw operator()(int row, int col) const;
 
-    public:
-        positionRow(const position &p, int theRowId):
-            parent(p), rowId(theRowId)
-        {
-
-        }
-
-        const int& operator[](int colId)  const {
-            return parent.pget(rowId,colId);
-        }
-    };
-
-    positionRow operator[](int rowId) const{
-        return positionRow(*this, rowId);
-    }
 
     bool whiteCastleQueen;
     bool whiteCastleKing;
@@ -46,16 +28,18 @@ public:
     bool wasEnPassant;
     bool wasPromotion;
 
-    void setPromotion(const int row, const int col, const int chosenPiece);
+    void setPromotion(int row, int col, bw chosenPiece);
+
+    bw getTurnColor() const;
+    void setTurnColor(bw color);
 
 private:
     bw turnColor;
 
     std::array<std::array<bw, 8>, 8> cells;
 
-    const int&   pget(int row,int col) const{
-        return cells[row][col];
-    }
+
+
 
     void init();
 

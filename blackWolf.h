@@ -17,14 +17,17 @@ enum class bw
 
 bw operator-(const bw rhs);
 
-bw operator&(const bw lhs, const bw rhs);
+constexpr bw operator&(const bw lhs, const bw rhs);
 
-bw operator|(const bw lhs, const bw rhs);
+constexpr bw operator|(const bw lhs, const bw rhs);
 
-bool check(const bw toCheck);
+constexpr bool check(const bw toCheck);
 
 //for compatibility until getting rid of all the ints
 int bwToInt(bw piece);
 bw intToBw(int piece);
+int sign(bw color);
+
+#include "blackWolf.inl"
 
 #endif // BLACKWOLF_H

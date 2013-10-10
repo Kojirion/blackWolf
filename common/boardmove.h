@@ -21,7 +21,7 @@ private:
 
     position newBoard;
 
-    int pieceCode;
+    bw pieceCode;
 
 
     bool startEndSame() const;
@@ -33,7 +33,7 @@ private:
     bool isKingLegal() const;
     bool isPawnLegal() const;
 
-    bool isObstructed(const int pieceCode) const; //returns true if square occupied
+    bool isObstructed(bw pieceCode) const; //returns true if square occupied
 
 
 

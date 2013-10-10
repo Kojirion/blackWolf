@@ -8,8 +8,8 @@ bool completeMove::isCheckSafe() const
     for (int i=0; i<8; ++i){
         bool found = false;
         for (int j=0; j<8; ++j){
-            const int pieceId = newBoard[i][j];
-            if (pieceId==6*board.turnColor){ //found our king
+            const bw pieceId = newBoard(i, j);
+            if (check(pieceId & (bw::King | board.getTurnColor()))){ //found our king
                 kingRow = i;
                 kingCol = j;
                 break;
@@ -20,8 +20,8 @@ bool completeMove::isCheckSafe() const
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const int pieceId = newBoard[i][j];
-            if (pieceId*board.turnColor<0){ //enemy piece
+            const bw pieceId = newBoard(i, j);
+            if (!check(pieceId & board.getTurnColor())){ //enemy piece
                 boardMove toCheck(newBoard,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return false;
             }
@@ -33,45 +33,45 @@ bool completeMove::isCheckSafe() const
 
 bool completeMove::handleCastle() const
 {
-    if (inCheck(board,board.turnColor)) return false;
+    if (inCheck(board,board.getTurnColor())) return false;
 
-    if (pieceCode==6){
+    if (check(pieceCode & (bw::King | bw::White))){
         if (col2==6){ //kingside
             if (!board.whiteCastleKing) return false;
             completeMove toCheck1(board,0,4,0,5);
             if (!toCheck1.isLegal()) return false;
             completeMove toCheck2(toCheck1.getNewBoard(),0,5,0,6);
-            toCheck2.board.turnColor = board.turnColor;
+            toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }else if (col2==2){
             if (!board.whiteCastleQueen) return false;
-            if (isObstructed(board[0][1])) return false;
+            if (isObstructed(board(0, 1))) return false;
             completeMove toCheck1(board,0,4,0,3);
             if (!toCheck1.isLegal()) return false;
             completeMove toCheck2(toCheck1.getNewBoard(),0,3,0,2);
-            toCheck2.board.turnColor = board.turnColor;
+            toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }
     }else{
-        BOOST_ASSERT_MSG(pieceCode==-6, "Castle without king move");
+        BOOST_ASSERT_MSG(check(pieceCode & (bw::King | bw::Black)), "Castle without king move");
 
         if (col2==6){ //kingside
             if (!board.blackCastleKing) return false;
             completeMove toCheck1(board,7,4,7,5);
             if (!toCheck1.isLegal()) return false;
             completeMove toCheck2(toCheck1.getNewBoard(),7,5,7,6);
-            toCheck2.board.turnColor = board.turnColor;
+            toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }else if (col2==2){
             if (!board.blackCastleQueen) return false;
-            if (isObstructed(board[7][1])) return false;
+            if (isObstructed(board(7, 1))) return false;
             completeMove toCheck1(board,7,4,7,3);
             if (!toCheck1.isLegal()) return false;
             completeMove toCheck2(toCheck1.getNewBoard(),7,3,7,2);
-            toCheck2.board.turnColor = board.turnColor;
+            toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }
@@ -86,8 +86,8 @@ bool completeMove::inCheck(const position &givenPos, const int side) const
     for (int i=0; i<8; ++i){
         bool found = false;
         for (int j=0; j<8; ++j){
-            const int pieceId = givenPos[i][j];
-            if (pieceId==6*side){ //found our king
+            const bw pieceId = givenPos(i, j);
+            if (check(pieceId & (bw::King | board.getTurnColor()))){ //found our king
                 kingRow = i;
                 kingCol = j;
                 break;
@@ -99,7 +99,7 @@ bool completeMove::inCheck(const position &givenPos, const int side) const
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const int pieceId = givenPos[i][j];
-            if (pieceId*side<0){ //enemy piece
+            if (!check(pieceId & board.getTurnColor())){ //enemy piece
                 boardMove toCheck(givenPos,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return true;
             }
@@ -115,7 +115,7 @@ bool completeMove::hasLegalMoves() const
         for (int j=0; j<8; ++j){
             for (int k=0; k<8; ++k){
                 for (int l=0; l<8; ++l){
-                    if (newBoard[i][j]*newBoard.turnColor>0){
+                    if (check(newBoard(i, j) & newBoard.getTurnColor())){
                         completeMove toCheck(newBoard,i,j,k,l);
                         if (toCheck.isLegal()) return true;
                     }
