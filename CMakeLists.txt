@@ -46,7 +46,6 @@ set(bw_HDRS
 )
 
 set(bw_SRCS
-    main.cpp
     controller/boardmaster.cpp
     views/components/piecesprite.cpp
     common/position.cpp
@@ -74,10 +73,26 @@ set(bw_SRCS
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
 
 #Executable
-add_executable(${PROJECT_NAME} ${bw_ALL})
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libboost_system.so)
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfgui.so)
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libthor.so)
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-graphics.so.2)
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-window.so.2)
-target_link_libraries(${PROJECT_NAME} /usr/local/lib/libsfml-system.so.2)
+add_library(asLibrary ${bw_ALL})
+target_link_libraries(asLibrary /usr/local/lib/libboost_system.so)
+target_link_libraries(asLibrary /usr/local/lib/libsfgui.so)
+target_link_libraries(asLibrary /usr/local/lib/libthor.so)
+target_link_libraries(asLibrary /usr/local/lib/libsfml-graphics.so.2)
+target_link_libraries(asLibrary /usr/local/lib/libsfml-window.so.2)
+target_link_libraries(asLibrary /usr/local/lib/libsfml-system.so.2)
+
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} asLibrary)
+
+#tests
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+include_directories(${BOOST_INCLUDE_DIRS})
+
+set(test_SRCS
+    tests/tests.cpp
+)
+add_executable(tests ${test_SRCS})
+target_link_libraries(tests asLibrary)
+target_link_libraries(tests /usr/local/lib/libboost_unit_test_framework.so)
+target_link_libraries(tests /usr/local/lib/libboost_system.so)
+target_link_libraries(tests /usr/local/lib/libboost_timer.so)
