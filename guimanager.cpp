@@ -1,9 +1,11 @@
 #include "guimanager.h"
 
 guiManager::guiManager():
-    window(sf::VideoMode(800, 800), "Black Wolf")    
+    window(sf::VideoMode(634, 694), "Black Wolf")
 {
     window.setFramerateLimit(60);
+
+    desktop.LoadThemeFromFile("gui.theme");
 
     //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());

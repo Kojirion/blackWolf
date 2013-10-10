@@ -249,7 +249,7 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):    
     desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
-    boardWindow(sfg::Window::Create()),
+    boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),    
     board(theWindow,resources),    
     sideChoice(desktop),    
