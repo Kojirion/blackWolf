@@ -182,8 +182,8 @@ void boardMaster::promotionChoiceMade(Piece whichPiece)
     promotionWindow->Show(false);
     enableWindow(true);
 
-    if (!game.userTurn()) //means user made promotion, so send to client
-        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, whichPiece);
+//    if (!game.userTurn()) //means user made promotion, so send to client
+//        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, whichPiece);
 }
 
 void boardMaster::promoteQueen()
@@ -239,8 +239,8 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
     completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
     if (toCheck.isLegal()){
         moveMake(toCheck);
-        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
-            fics.makeMove(row1, col1, row2, col2);
+//        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
+//            fics.makeMove(row1, col1, row2, col2);
         return true;
     }
     return false;
@@ -352,7 +352,7 @@ boardMaster::~boardMaster()
 
 void boardMaster::display() //should rename to update
 {
-    fics.update();
+    //fics.update();
     board.display();    
     if (!game.ended()) updateClocks();
 }

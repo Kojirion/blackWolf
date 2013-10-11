@@ -21,7 +21,7 @@ bool completeMove::isCheckSafe() const
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const Unit pieceId = newBoard(i, j);
-            if (pieceId.color == !board.getTurnColor()){ //enemy piece
+            if (pieceId.color == !board.getTurnColor() && (pieceId.type != Piece::Shadow)){ //enemy piece
                 boardMove toCheck(newBoard,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return false;
             }
