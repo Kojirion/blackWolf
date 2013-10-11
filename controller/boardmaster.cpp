@@ -89,21 +89,21 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Type promotionChoice)
+void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Piece promotionChoice)
 {
     game.setTime(whiteTime, blackTime);
     game.startClock(); //this just means an unnecessary stop
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent
-    if (game.getPosition()(row1,col1).type==Type::None) return;
+    if (game.getPosition()(row1,col1).type==Piece::None) return;
 
     completeMove move(game.getPosition(),row1, col1, row2, col2);
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
 
-    if (promotionChoice != Type::None){
+    if (promotionChoice != Piece::None){
         toPromoteRow1 = row1;
         toPromoteCol1 = col1;
         toPromoteRow2 = row2;
@@ -166,7 +166,7 @@ void boardMaster::aiTurn()
     moveMake(toCheck);
 }
 
-void boardMaster::promotionChoiceMade(Type whichPiece)
+void boardMaster::promotionChoiceMade(Piece whichPiece)
 {
     promotionChoice = whichPiece;
 
@@ -188,22 +188,22 @@ void boardMaster::promotionChoiceMade(Type whichPiece)
 
 void boardMaster::promoteQueen()
 {
-    promotionChoiceMade(Type::Queen);
+    promotionChoiceMade(Piece::Queen);
 }
 
 void boardMaster::promoteBishop()
 {
-    promotionChoiceMade(Type::Bishop);
+    promotionChoiceMade(Piece::Bishop);
 }
 
 void boardMaster::promoteKnight()
 {
-    promotionChoiceMade(Type::Knight);
+    promotionChoiceMade(Piece::Knight);
 }
 
 void boardMaster::promoteRook()
 {
-    promotionChoiceMade(Type::Rook);
+    promotionChoiceMade(Piece::Rook);
 }
 
 void boardMaster::whiteNewGame()
@@ -257,7 +257,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     premove(std::make_tuple(false,0,0,0,0)),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create()),
-    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(Type::None)
+    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(Piece::None)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));

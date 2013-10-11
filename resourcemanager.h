@@ -16,7 +16,7 @@ public:
 
     resourceManager();
 
-    const sf::Texture& typeToTexture(Piece piece) const;
+    const sf::Texture& typeToTexture(Unit piece) const;
 
 
     void load();

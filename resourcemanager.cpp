@@ -10,7 +10,7 @@ resourceManager::resourceManager():
     load();    
 }
 
-const sf::Texture &resourceManager::typeToTexture(Piece piece) const
+const sf::Texture &resourceManager::typeToTexture(Unit piece) const
 {
 //    switch (piece) {
 //    default: //appease compiler

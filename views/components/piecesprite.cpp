@@ -7,7 +7,7 @@
 
 }*/
 
-pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, Piece type, int id):
+pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, Unit type, int id):
     sf::Sprite(texture), m_type(type), m_id(id)
 {
     sf::Sprite::setPosition(position);

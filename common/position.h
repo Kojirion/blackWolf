@@ -16,7 +16,7 @@ public:
 
     position(const position &givenPos, int row1, int col1, int row2, int col2);
 
-    const Piece& operator()(int row, int col) const;
+    const Unit& operator()(int row, int col) const;
 
 
     bool whiteCastleQueen;
@@ -28,7 +28,7 @@ public:
     bool wasEnPassant;
     bool wasPromotion;
 
-    void setPromotion(int row, int col, Piece chosenPiece);
+    void setPromotion(int row, int col, Unit chosenPiece);
 
     Color getTurnColor() const;
     void setTurnColor(Color color);
@@ -36,7 +36,7 @@ public:
 private:
     Color turnColor;
 
-    std::array<std::array<Piece, 8>, 8> cells;
+    std::array<std::array<Unit, 8>, 8> cells;
 
 
 

@@ -73,7 +73,7 @@ Color operator !(Color rhs)
 }
 
 
-bool operator ==(const Piece &lhs, const Piece &rhs)
+bool operator ==(const Unit &lhs, const Unit &rhs)
 {
     return (lhs.color == rhs.color) && (lhs.type == rhs.type);
 }

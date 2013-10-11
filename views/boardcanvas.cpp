@@ -10,7 +10,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     currentPiece(&pieces),
     idCount(1)
 {
-    boardSprite_.setTexture(resources.typeToTexture({Color::None, Type::None}));
+    boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
 
     particle.loadFromFile("Graphics/particle.png");
     system.reset(new thor::ParticleSystem());
@@ -133,7 +133,7 @@ void boardCanvas::reload(const position &givenPosition)
 {
     pieces.clear();
     setPosition(givenPosition);
-    boardSprite_.setTexture(resources.typeToTexture({Color::None, Type::None}));
+    boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
 }
 
 void boardCanvas::setResult(Color result)
@@ -259,8 +259,8 @@ void boardCanvas::setPosition(const position& givenPosition)
 {
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Piece pieceId = givenPosition(i, j);
-            if ((pieceId.type == Type::None)||(pieceId.type == Type::Shadow)) continue;
+            const Unit pieceId = givenPosition(i, j);
+            if ((pieceId.type == Piece::None)||(pieceId.type == Piece::Shadow)) continue;
             pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces[i][j].insert(toAdd);
             idCount++;
@@ -288,7 +288,7 @@ boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
     return requestMove;
 }
 
-void boardCanvas::setPromotion(int row, int col, Type piece)
+void boardCanvas::setPromotion(int row, int col, Piece piece)
 {
     const Color whichSide = pieces[row][col].getColor();
     destroy(row,col);

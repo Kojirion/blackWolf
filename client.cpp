@@ -99,11 +99,11 @@ void client::handleData(boost::system::error_code ec)
                 int whiteTime = std::stoi(tokens[24]);
                 int blackTime = std::stoi(tokens[25]);
 
-                Type promotionPiece;
+                Piece promotionPiece;
 
                 if (tokens[27].size()==9){ //means promotion
                     promotionPiece = symbolToPiece(tokens[27].substr(8,1));
-                }else promotionPiece = Type::None;
+                }else promotionPiece = Piece::None;
 
 
                 positionReady(row1,col1,row2,col2, whiteTime, blackTime, promotionPiece);
@@ -153,10 +153,10 @@ int client::stringToCol(const std::string stringedCol) const
     return -1; //appease compiler
 }
 
-std::string client::moveString(const int row1, const int col1, const int row2, const int col2, Type promotionChoice) const
+std::string client::moveString(const int row1, const int col1, const int row2, const int col2, Piece promotionChoice) const
 {
     std::string toReturn(colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
-    if (promotionChoice != Type::None) toReturn += "=" + pieceToSymbol(promotionChoice);
+    if (promotionChoice != Piece::None) toReturn += "=" + pieceToSymbol(promotionChoice);
     return toReturn;
 }
 
@@ -184,26 +184,26 @@ std::string client::colToString(const int col) const
     }
 }
 
-std::string client::pieceToSymbol(Type piece) const
+std::string client::pieceToSymbol(Piece piece) const
 {
-    if (piece == Type::Queen) return "Q";
-    if (piece == Type::Bishop) return "B";
-    if (piece == Type::Knight) return "N";
-    if (piece == Type::Rook) return "R";
+    if (piece == Piece::Queen) return "Q";
+    if (piece == Piece::Bishop) return "B";
+    if (piece == Piece::Knight) return "N";
+    if (piece == Piece::Rook) return "R";
     return "-"; //appease compiler
 }
 
-Type client::symbolToPiece(std::string symbol) const
+Piece client::symbolToPiece(std::string symbol) const
 {
-    if (symbol == "Q") return Type::Queen;
-    if (symbol == "B") return Type::Bishop;
-    if (symbol == "N") return Type::Bishop;
-    if (symbol == "R") return Type::Rook;
-    return Type::None; //appease compiler
+    if (symbol == "Q") return Piece::Queen;
+    if (symbol == "B") return Piece::Bishop;
+    if (symbol == "N") return Piece::Bishop;
+    if (symbol == "R") return Piece::Rook;
+    return Piece::None; //appease compiler
 }
 
 
-void client::makeMove(int row1, int col1, int row2, int col2, Type promotionChoice)
+void client::makeMove(int row1, int col1, int row2, int col2, Piece promotionChoice)
 {
     toClient(moveString(row1,col1,row2,col2,promotionChoice));
 }

@@ -89,7 +89,7 @@ void gameData::switchTurn()
     plyCounter++;
 }
 
-void gameData::setPromotion(int row, int col, Piece piece)
+void gameData::setPromotion(int row, int col, Unit piece)
 {
     m_position.setPromotion(row, col, piece);
 }

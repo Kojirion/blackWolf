@@ -8,8 +8,8 @@ bool completeMove::isCheckSafe() const
     for (int i=0; i<8; ++i){
         bool found = false;
         for (int j=0; j<8; ++j){
-            const Piece pieceId = newBoard(i, j);
-            if (pieceId == Piece{board.getTurnColor(), Type::King}){ //found our king
+            const Unit pieceId = newBoard(i, j);
+            if (pieceId == Unit{board.getTurnColor(), Piece::King}){ //found our king
                 kingRow = i;
                 kingCol = j;
                 break;
@@ -20,7 +20,7 @@ bool completeMove::isCheckSafe() const
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Piece pieceId = newBoard(i, j);
+            const Unit pieceId = newBoard(i, j);
             if (pieceId.color != board.getTurnColor()){ //enemy piece
                 boardMove toCheck(newBoard,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return false;
@@ -35,7 +35,7 @@ bool completeMove::handleCastle() const
 {
     if (inCheck(board,board.getTurnColor())) return false;
 
-    if (m_piece == Piece{Color::White, Type::King}){
+    if (m_piece == Unit{Color::White, Piece::King}){
         if (col2==6){ //kingside
             if (!board.whiteCastleKing) return false;
             completeMove toCheck1(board,0,4,0,5);
@@ -55,7 +55,7 @@ bool completeMove::handleCastle() const
             return true;
         }
     }else{
-        BOOST_ASSERT_MSG((m_piece == Piece{Color::Black, Type::King}), "Castle without king move");
+        BOOST_ASSERT_MSG((m_piece == Unit{Color::Black, Piece::King}), "Castle without king move");
 
         if (col2==6){ //kingside
             if (!board.blackCastleKing) return false;
@@ -86,8 +86,8 @@ bool completeMove::inCheck(const position &givenPos, Color side) const
     for (int i=0; i<8; ++i){
         bool found = false;
         for (int j=0; j<8; ++j){
-            const Piece pieceId = givenPos(i, j);
-            if (pieceId == Piece{board.getTurnColor(), Type::King}){ //found our king
+            const Unit pieceId = givenPos(i, j);
+            if (pieceId == Unit{board.getTurnColor(), Piece::King}){ //found our king
                 kingRow = i;
                 kingCol = j;
                 break;
@@ -98,7 +98,7 @@ bool completeMove::inCheck(const position &givenPos, Color side) const
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Piece pieceId = givenPos(i, j);
+            const Unit pieceId = givenPos(i, j);
             if (pieceId.color != board.getTurnColor()){ //enemy piece
                 boardMove toCheck(givenPos,i,j,kingRow,kingCol);
                 if (toCheck.isLegal()) return true;

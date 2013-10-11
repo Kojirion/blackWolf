@@ -7,11 +7,11 @@
 class pieceSprite : public sf::Sprite
 {
 private:
-    Piece m_type;
+    Unit m_type;
     int m_id;
 public:
     //pieceSprite(const sf::Texture &texture, int theType);
-    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, Piece type, int id);
+    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, Unit type, int id);
 
     bool operator<(const pieceSprite &that) const;
 

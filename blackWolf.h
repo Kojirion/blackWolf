@@ -8,7 +8,7 @@ enum class Color{
     Both = White | Black
 };
 
-enum class Type{
+enum class Piece{
     None,
     Pawn,
     Rook,
@@ -19,14 +19,14 @@ enum class Type{
     Shadow
 };
 
-struct Piece{
+struct Unit{
     Color color;
-    Type type;
+    Piece type;
 };
 
-const Piece noPiece = {Color::None, Type::None};
+const Unit noPiece = {Color::None, Piece::None};
 
-bool operator==(const Piece& lhs, const Piece& rhs);
+bool operator==(const Unit& lhs, const Unit& rhs);
 bool operator &(const Color& lhs, const Color& rhs);
 
 Color operator!(Color rhs);

@@ -50,7 +50,7 @@ public:
     void resign();
     void offerDraw();
     void requestNewGame();
-    void promotionChoiceMade(Type whichPiece);
+    void promotionChoiceMade(Piece whichPiece);
     void promoteQueen();
     void promoteBishop();
     void promoteKnight();
@@ -101,7 +101,7 @@ private:
     int toPromoteCol1;
     int toPromoteRow2;
     int toPromoteCol2;
-    Type promotionChoice; //which piece was chosen by either ai or player
+    Piece promotionChoice; //which piece was chosen by either ai or player
 
 
     void settingsClicked();
@@ -111,7 +111,7 @@ private:
     void flagDown(Color loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Type promotionChoice);
+    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Piece promotionChoice);
 
 
 

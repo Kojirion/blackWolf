@@ -21,7 +21,7 @@ private:
 
     position newBoard;
 
-    Piece m_piece;
+    Unit m_piece;
 
 
     bool startEndSame() const;
@@ -33,7 +33,7 @@ private:
     bool isKingLegal() const;
     bool isPawnLegal() const;
 
-    bool isObstructed(Piece piece) const; //returns true if square occupied
+    bool isObstructed(Unit piece) const; //returns true if square occupied
 
 
 

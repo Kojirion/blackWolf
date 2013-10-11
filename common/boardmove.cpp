@@ -12,8 +12,8 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
     newBoard(thePosition,theRow1,theCol1,theRow2,theCol2)
 {    
     m_piece = board(row1, col1);
-    BOOST_ASSERT_MSG(m_piece.type != Type::None, "No piece in starting square");
-    BOOST_ASSERT_MSG(m_piece.type != Type::Shadow, "Shadow pawn in starting square");
+    BOOST_ASSERT_MSG(m_piece.type != Piece::None, "No piece in starting square");
+    BOOST_ASSERT_MSG(m_piece.type != Piece::Shadow, "Shadow pawn in starting square");
 }
 
 bool boardMove::isLegal() const
@@ -22,20 +22,20 @@ bool boardMove::isLegal() const
 
     if (isOccupied()) return false;
 
-    if (m_piece.type == Type::Rook)
+    if (m_piece.type == Piece::Rook)
         return isRookLegal();
-    if (m_piece.type == Type::Bishop)
+    if (m_piece.type == Piece::Bishop)
         return isBishopLegal();
-    if (m_piece.type == Type::Knight)
+    if (m_piece.type == Piece::Knight)
        return isKnightLegal();
-    if (m_piece.type == Type::Queen)
+    if (m_piece.type == Piece::Queen)
         return isQueenLegal();
-    if (m_piece.type == Type::Pawn)
+    if (m_piece.type == Piece::Pawn)
         return isPawnLegal();
-    if (m_piece.type == Type::King)
+    if (m_piece.type == Piece::King)
         return isKingLegal();
 
-    BOOST_ASSERT_MSG(m_piece.type == Type::Shadow, "Invalid piececode");
+    BOOST_ASSERT_MSG(m_piece.type == Piece::Shadow, "Invalid piececode");
 
     return false;
 
@@ -154,7 +154,7 @@ bool boardMove::isPawnLegal() const
     return false;
 }
 
-bool boardMove::isObstructed(Piece pieceCode) const
+bool boardMove::isObstructed(Unit pieceCode) const
 {
-    return (pieceCode.type != Type::None) && (pieceCode.type != Type::Shadow);
+    return (pieceCode.type != Piece::None) && (pieceCode.type != Piece::Shadow);
 }
