@@ -7,7 +7,7 @@
 
 }*/
 
-pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, int theType, int theId):
+pieceSprite::pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, bw theType, int theId):
     sf::Sprite(texture), pieceType(theType), id(theId)
 {
     sf::Sprite::setPosition(position);
@@ -18,9 +18,11 @@ bool pieceSprite::operator <(const pieceSprite &that) const
     return (id<that.id);
 }
 
-int pieceSprite::getSide() const
+bw pieceSprite::getSide() const
 {
-    return boost::math::sign(pieceType);
+    int which = sign(pieceType);
+    if (which == -1) return bw::Black;
+    return bw::White;
 }
 
 bool pieceSprite::contains(const sf::Vector2f &point) const

@@ -108,7 +108,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
         toPromoteCol1 = col1;
         toPromoteRow2 = row2;
         toPromoteCol2 = col2;
-        promotionChoiceMade(bwToInt(promotionChoice));
+        promotionChoiceMade(promotionChoice);
     }
 
     //handle promotion AND update the engine, depending on whether it was or not
@@ -166,7 +166,7 @@ void boardMaster::aiTurn()
     moveMake(toCheck);
 }
 
-void boardMaster::promotionChoiceMade(const int whichPiece)
+void boardMaster::promotionChoiceMade(const bw whichPiece)
 {
     promotionChoice = whichPiece;
 
@@ -174,36 +174,36 @@ void boardMaster::promotionChoiceMade(const int whichPiece)
     board.setPromotion(toPromoteRow2, toPromoteCol2, whichPiece);
 
     //update model
-    int whichSide;
-    if (game.turnColor()==bw::White) whichSide = -1;
-    else whichSide = 1;
-    game.setPromotion(toPromoteRow2,toPromoteCol2,whichPiece*whichSide);
+    bw whichSide;
+    if (game.turnColor()==bw::White) whichSide = bw::Black;
+    else whichSide = bw::White;
+    game.setPromotion(toPromoteRow2,toPromoteCol2,whichPiece | whichSide);
 
     promotionWindow->Show(false);
     enableWindow(true);
 
     if (!game.userTurn()) //means user made promotion, so send to client
-        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, intToBw(whichPiece));
+        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, whichPiece);
 }
 
 void boardMaster::promoteQueen()
 {
-    promotionChoiceMade(4);
+    promotionChoiceMade(bw::Queen);
 }
 
 void boardMaster::promoteBishop()
 {
-    promotionChoiceMade(2);
+    promotionChoiceMade(bw::Bishop);
 }
 
 void boardMaster::promoteKnight()
 {
-    promotionChoiceMade(3);
+    promotionChoiceMade(bw::Knight);
 }
 
 void boardMaster::promoteRook()
 {
-    promotionChoiceMade(1);
+    promotionChoiceMade(bw::Rook);
 }
 
 void boardMaster::whiteNewGame()
@@ -257,7 +257,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     premove(std::make_tuple(false,0,0,0,0)),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create()),
-    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(0)
+    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(bw::None)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));

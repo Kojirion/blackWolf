@@ -50,7 +50,7 @@ public:
     void resign();
     void offerDraw();
     void requestNewGame();
-    void promotionChoiceMade(const int whichPiece);
+    void promotionChoiceMade(const bw whichPiece);
     void promoteQueen();
     void promoteBishop();
     void promoteKnight();
@@ -101,7 +101,7 @@ private:
     int toPromoteCol1;
     int toPromoteRow2;
     int toPromoteCol2;
-    int promotionChoice; //which piece was chosen by either ai or player
+    bw promotionChoice; //which piece was chosen by either ai or player
 
 
     void settingsClicked();

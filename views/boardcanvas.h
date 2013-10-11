@@ -91,7 +91,7 @@ public:
 
     boost::signals2::signal<bool (int, int, int, int)> &getSignal();
 
-    void setPromotion(const int row, const int col, const int piece);
+    void setPromotion(const int row, const int col, const bw piece);
 
     void flipBoard();
 

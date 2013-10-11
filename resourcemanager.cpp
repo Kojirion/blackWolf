@@ -16,29 +16,29 @@ const sf::Texture &resourceManager::typeToTexture(const bw pieceType) const
     default: //appease compiler
     case bw::Rook | bw::White:
         return *whiteRook;
-    case bw::Bishop | bw::white:
+    case bw::Bishop | bw::White:
         return *whiteBishop;
-    case bw::Bishop | bw::white:
+    case bw::Knight | bw::White:
         return *whiteKnight;
-    case bw::Bishop | bw::white:
+    case bw::Queen | bw::White:
         return *whiteQueen;
-    case bw::Bishop | bw::white:
+    case bw::Pawn | bw::White:
         return *whitePawn;
-    case bw::Bishop | bw::white:
+    case bw::King | bw::White:
         return *whiteKing;
-    case bw::Bishop | bw::white:
+    case bw::Rook | bw::Black:
         return *blackRook;
-    case bw::Bishop | bw::white:
+    case bw::Bishop | bw::Black:
         return *blackBishop;
-    case bw::Bishop | bw::white:
+    case bw::Knight | bw::Black:
         return *blackKnight;
-    case -4:
+    case bw::Queen | bw::Black:
         return *blackQueen;
-    case -5:
+    case bw::Pawn | bw::Black:
         return *blackPawn;
-    case -6:
+    case bw::King | bw::Black:
         return *blackKing;
-    case 10: //let 10 denote the board for now
+    case bw::None: //let None denote the board for now
         return *board;
     }
 }

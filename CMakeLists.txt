@@ -60,8 +60,7 @@ set(bw_SRCS
     views/moveview.cpp
     views/boardcanvas.cpp
     views/clocksview.cpp
-    model/gamedata.cpp
-    blackWolf.cpp
+    model/gamedata.cpp    
     views/statusview.cpp
     controller/components/buttonbox.cpp
     controller/components/sidechoicewindow.cpp

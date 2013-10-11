@@ -10,7 +10,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     currentPiece(&pieces),
     idCount(1)
 {
-    boardSprite_.setTexture(resources.typeToTexture(10));
+    boardSprite_.setTexture(resources.typeToTexture(bw::None));
 
     particle.loadFromFile("Graphics/particle.png");
     system.reset(new thor::ParticleSystem());
@@ -133,14 +133,14 @@ void boardCanvas::reload(const position &givenPosition)
 {
     pieces.clear();
     setPosition(givenPosition);
-    boardSprite_.setTexture(resources.typeToTexture(10));
+    boardSprite_.setTexture(resources.typeToTexture(bw::None));
 }
 
 void boardCanvas::setResult(bw result)
 {
     if (result == bw::White){
         for (auto& piece : pieces){
-            if (piece.getSide() == -1)
+            if (piece.getSide() == bw::Black)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 //pieces.erase(piece);
@@ -151,7 +151,7 @@ void boardCanvas::setResult(bw result)
     }else if (result == bw::Black)
     {
         for (auto& piece : pieces){
-            if (piece.getSide() == 1)
+            if (piece.getSide() == bw::White)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 //pieces.erase(piece);
@@ -288,11 +288,11 @@ boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
     return requestMove;
 }
 
-void boardCanvas::setPromotion(const int row, const int col, const int piece)
+void boardCanvas::setPromotion(const int row, const int col, const bw piece)
 {
-    const int whichSide = pieces[row][col].getSide();
+    const bw whichSide = pieces[row][col].getSide();
     destroy(row,col);
-    pieceSprite toAdd(resources.typeToTexture(whichSide*piece),cellToPosition(row,col),whichSide,idCount);
+    pieceSprite toAdd(resources.typeToTexture(whichSide | piece),cellToPosition(row,col),whichSide,idCount);
     pieces[row][col].insert(toAdd);
     idCount++;
 }

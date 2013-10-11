@@ -33,8 +33,7 @@ bool gameData::userBoth() const
 
 bw gameData::turnColor() const
 {
-    if (currentPosition.turnColor==1) return bw::White;
-    return bw::Black;
+    return currentPosition.getTurnColor();
 }
 
 bw gameData::getUserColor() const
@@ -90,7 +89,7 @@ void gameData::switchTurn()
     plyCounter++;
 }
 
-void gameData::setPromotion(const int row, const int col, const int piece)
+void gameData::setPromotion(const int row, const int col, const bw piece)
 {
     currentPosition.setPromotion(row, col, piece);
 }
