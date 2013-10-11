@@ -7,12 +7,7 @@
 
 class resourceManager
 {
-public:
-    enum class pieceType
-    {
-        blackRook, blackKnight, blackBishop, blackQueen, blackKing, blackPawn,
-        whiteRook, whiteKnight, whiteBishop, whiteQueen, whiteKing, whitePawn
-    };
+public:    
 
     resourceManager();
 
@@ -27,7 +22,7 @@ public:
     boost::property_tree::ptree getTree() const;
 
 private:
-    thor::MultiResourceCache cache;
+    thor::MultiResourceCache cache;    
     std::string whitePrefix;
     std::string blackPrefix;
     std::string boardSuffix;

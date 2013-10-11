@@ -331,8 +331,8 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
-    fics.connect();
-    //newGame(bw::White);
+    //fics.connect();
+    newGame(Color::Both, 300, "lol", "what");
 
 //    if (!chessAi.load()) newGame(bw::White | bw::Black);
 //    else newGame(bw::White);

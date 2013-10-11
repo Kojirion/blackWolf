@@ -12,6 +12,14 @@ resourceManager::resourceManager():
 
 const sf::Texture &resourceManager::typeToTexture(Unit piece) const
 {
+    if (piece.color == Color::White){
+        return *whiteRook;
+    }else if (piece.color == Color::Black){
+        return *blackRook;
+    }
+
+
+
 //    switch (piece) {
 //    default: //appease compiler
 //    case bw::Rook | bw::White:
@@ -40,7 +48,7 @@ const sf::Texture &resourceManager::typeToTexture(Unit piece) const
 //        return *blackKing;
 //    case bw::None: //let None denote the board for now
         return *board;
-    //}
+
 }
 
 void resourceManager::load()
