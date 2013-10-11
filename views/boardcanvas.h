@@ -87,17 +87,17 @@ public:
 
     sfg::Widget::Ptr getBoardWidget() const;
     void setPosition(const position &givenPosition);
-    void resetFor(const bw whoFaceUp); //reset and flip if needed
+    void resetFor(Color whoFaceUp); //reset and flip if needed
 
     boost::signals2::signal<bool (int, int, int, int)> &getSignal();
 
-    void setPromotion(const int row, const int col, const bw piece);
+    void setPromotion(int row, int col, Type piece);
 
     void flipBoard();
 
     void reload(const position &givenPosition);
 
-    void setResult(bw result);
+    void setResult(Color result);
 
     void setArrow(int row1, int col1, int row2, int col2);
     void clearArrows();

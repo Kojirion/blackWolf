@@ -16,7 +16,7 @@ public:
     sfg::Widget::Ptr getWhiteClock();
     sfg::Widget::Ptr getBlackClock();
 
-    void setFlagDown(const bw loser);
+    void setFlagDown(Color loser);
 };
 
 #endif // CLOCKSVIEW_H

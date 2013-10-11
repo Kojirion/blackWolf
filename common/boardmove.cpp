@@ -11,9 +11,9 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
     col2(theCol2),
     newBoard(thePosition,theRow1,theCol1,theRow2,theCol2)
 {    
-    pieceCode = board(row1, col1);
-    BOOST_ASSERT_MSG(!check(pieceCode & bw::None), "No piece in starting square");
-    BOOST_ASSERT_MSG(!check(pieceCode & bw::Shadow), "Shadow pawn in starting square");
+    m_piece = board(row1, col1);
+    BOOST_ASSERT_MSG(m_piece.type != Type::None, "No piece in starting square");
+    BOOST_ASSERT_MSG(m_piece.type != Type::Shadow, "Shadow pawn in starting square");
 }
 
 bool boardMove::isLegal() const
@@ -22,20 +22,20 @@ bool boardMove::isLegal() const
 
     if (isOccupied()) return false;
 
-    if (check(pieceCode & bw::Rook))
+    if (m_piece.type == Type::Rook)
         return isRookLegal();
-    if (check(pieceCode & bw::Bishop))
+    if (m_piece.type == Type::Bishop)
         return isBishopLegal();
-    if (check(pieceCode & bw::Knight))
+    if (m_piece.type == Type::Knight)
        return isKnightLegal();
-    if (check(pieceCode & bw::Queen))
+    if (m_piece.type == Type::Queen)
         return isQueenLegal();
-    if (check(pieceCode & bw::Pawn))
+    if (m_piece.type == Type::Pawn)
         return isPawnLegal();
-    if (check(pieceCode & bw::King))
+    if (m_piece.type == Type::King)
         return isKingLegal();
 
-    BOOST_ASSERT_MSG(check(pieceCode & bw::Shadow), "Invalid piececode");
+    BOOST_ASSERT_MSG(m_piece.type == Type::Shadow, "Invalid piececode");
 
     return false;
 
@@ -48,9 +48,8 @@ bool boardMove::startEndSame() const
 }
 
 bool boardMove::isOccupied() const
-{
-    //checks if occupied by piece of same color
-    return (check(pieceCode & board(row2, col2)));
+{   
+    return (m_piece.color == board(row2, col2).color);
 }
 
 bool boardMove::isKnightLegal() const
@@ -127,35 +126,35 @@ bool boardMove::isPawnLegal() const
 {
     //can be rewritten much smaller
 
-    if (check(board(row1, col1) & bw::White)){ //white pawn
+    if (board(row1, col1).color == Color::White){ //white pawn
         if ((row1==1)&&(row2==3)&&(col1==col2)){ //double advance
-            if (check(board(row2, col2) & bw::None) && check(board(2, col2) & bw::None))
+            if ((board(row2, col2) == noPiece) && (board(2, col2) == noPiece))
                 return true;
         }else{
             if (row1+1==row2){
                 if (col1==col2)
-                    if (check(board(row2, col2) & bw::None)) return true;
+                    if (board(row2, col2) == noPiece) return true;
                 if ((col1+1==col2)||(col1-1==col2))
-                    if (check(pieceCode & board(row2, col2))) return true;
+                    if (m_piece.color != board(row2, col2).color) return true;
             }
         }
     }else{
         if ((row1==6)&&(row2==4)&&(col1==col2)){ //double advance
-            if (check(board(row2, col2) & bw::None) && check(board(5, col2) & bw::None))
+            if ((board(row2, col2) == noPiece) && (board(5, col2) == noPiece))
                 return true;
         }else{
             if (row1-1==row2){
                 if (col1==col2)
-                    if (check(board(row2, col2) & bw::None)) return true;
+                    if (board(row2, col2) == noPiece) return true;
                 if ((col1+1==col2)||(col1-1==col2))
-                    if (check(pieceCode & board(row2, col2))) return true;
+                    if (m_piece.color != board(row2, col2).color) return true;
             }
         }
     }
     return false;
 }
 
-bool boardMove::isObstructed(bw pieceCode) const
+bool boardMove::isObstructed(Piece pieceCode) const
 {
-    return (!check(pieceCode & bw::None) && check(pieceCode & bw::Shadow));
+    return (pieceCode.type != Type::None) && (pieceCode.type != Type::Shadow);
 }

@@ -67,6 +67,7 @@ set(bw_SRCS
     views/components/firework.cpp
     client.cpp
     netwidgets.cpp
+    blackWolf.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})

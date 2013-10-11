@@ -151,9 +151,9 @@ public:
             parent.pieces.insert(cellsNpieces::value_type(cellId,toAdd));
         }
 
-        bw getSide() const
+        Color getColor() const
         {
-            return pieceToUse->first.getSide();
+            return pieceToUse->first.getColor();
         }
 
         int getRow() const

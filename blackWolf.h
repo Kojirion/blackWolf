@@ -1,33 +1,38 @@
 #ifndef BLACKWOLF_H
 #define BLACKWOLF_H
 
-enum class bw
-{
-    None   = 0,
-    Pawn   = 1 << 0,
-    Rook   = 1 << 1,
-    Knight = 1 << 2,
-    Bishop = 1 << 3,
-    Queen  = 1 << 4,
-    King   = 1 << 5,
-    Shadow = 1 << 6,
-    White  = 1 << 7,
-    Black  = 1 << 8
+enum class Color{
+    None = 0,
+    White = 1 << 0,
+    Black = 1 << 1,
+    Both = White | Black
 };
 
-bw operator-(const bw rhs);
+enum class Type{
+    None,
+    Pawn,
+    Rook,
+    Knight,
+    Bishop,
+    Queen,
+    King,
+    Shadow
+};
 
-constexpr bw operator&(const bw lhs, const bw rhs);
+struct Piece{
+    Color color;
+    Type type;
+};
 
-constexpr bw operator|(const bw lhs, const bw rhs);
+const Piece noPiece = {Color::None, Type::None};
 
-constexpr bool check(const bw toCheck);
+bool operator==(const Piece& lhs, const Piece& rhs);
+bool operator &(const Color& lhs, const Color& rhs);
 
-//for compatibility until getting rid of all the ints
-int bwToInt(bw piece);
-bw intToBw(int piece);
-int sign(bw color);
+Color operator!(Color rhs);
 
-#include "blackWolf.inl"
+int sign(Color color);
+
+//#include "blackWolf.inl"
 
 #endif // BLACKWOLF_H

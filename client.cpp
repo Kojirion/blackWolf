@@ -99,23 +99,23 @@ void client::handleData(boost::system::error_code ec)
                 int whiteTime = std::stoi(tokens[24]);
                 int blackTime = std::stoi(tokens[25]);
 
-                bw promotionPiece;
+                Type promotionPiece;
 
                 if (tokens[27].size()==9){ //means promotion
                     promotionPiece = symbolToPiece(tokens[27].substr(8,1));
-                }else promotionPiece = bw::None;
+                }else promotionPiece = Type::None;
 
 
                 positionReady(row1,col1,row2,col2, whiteTime, blackTime, promotionPiece);
             }else if (tokens[0] == "Creating:"){
                 int time = 60*std::stoi(tokens[7]);
-                if (tokens[1] == nickname) startGame(bw::White, time, tokens[1], tokens[3]);
-                else startGame(bw::Black, time, tokens[1], tokens[3]);
+                if (tokens[1] == nickname) startGame(Color::White, time, tokens[1], tokens[3]);
+                else startGame(Color::Black, time, tokens[1], tokens[3]);
             }else if (tokens[0] == "{Game"){
                 std::string toCheck = tokens.back();
-                if (toCheck == "1-0") gameEnd(bw::White);
-                else if (toCheck == "0-1") gameEnd(bw::Black);
-                else if (toCheck == "1/2-1/2") gameEnd(bw::White | bw::Black);
+                if (toCheck == "1-0") gameEnd(Color::White);
+                else if (toCheck == "0-1") gameEnd(Color::Black);
+                else if (toCheck == "1/2-1/2") gameEnd(Color::Both);
             }else if ((tokens[0]=="****")&&(tokens[1]=="Starting")&&(tokens[2]=="FICS")){
                 //succesfully logged in
                 boost::erase_all(tokens[5],"(U)");
@@ -153,10 +153,10 @@ int client::stringToCol(const std::string stringedCol) const
     return -1; //appease compiler
 }
 
-std::string client::moveString(const int row1, const int col1, const int row2, const int col2, bw promotionChoice) const
+std::string client::moveString(const int row1, const int col1, const int row2, const int col2, Type promotionChoice) const
 {
     std::string toReturn(colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
-    if (check(promotionChoice)) toReturn += "=" + pieceToSymbol(promotionChoice);
+    if (promotionChoice != Type::None) toReturn += "=" + pieceToSymbol(promotionChoice);
     return toReturn;
 }
 
@@ -184,26 +184,26 @@ std::string client::colToString(const int col) const
     }
 }
 
-std::string client::pieceToSymbol(bw piece) const
+std::string client::pieceToSymbol(Type piece) const
 {
-    if (piece == bw::Queen) return "Q";
-    if (piece == bw::Bishop) return "B";
-    if (piece == bw::Knight) return "N";
-    if (piece == bw::Rook) return "R";
+    if (piece == Type::Queen) return "Q";
+    if (piece == Type::Bishop) return "B";
+    if (piece == Type::Knight) return "N";
+    if (piece == Type::Rook) return "R";
     return "-"; //appease compiler
 }
 
-bw client::symbolToPiece(std::string symbol) const
+Type client::symbolToPiece(std::string symbol) const
 {
-    if (symbol == "Q") return bw::Queen;
-    if (symbol == "B") return bw::Bishop;
-    if (symbol == "N") return bw::Bishop;
-    if (symbol == "R") return bw::Rook;
-    return bw::None; //appease compiler
+    if (symbol == "Q") return Type::Queen;
+    if (symbol == "B") return Type::Bishop;
+    if (symbol == "N") return Type::Bishop;
+    if (symbol == "R") return Type::Rook;
+    return Type::None; //appease compiler
 }
 
 
-void client::makeMove(int row1, int col1, int row2, int col2, bw promotionChoice)
+void client::makeMove(int row1, int col1, int row2, int col2, Type promotionChoice)
 {
     toClient(moveString(row1,col1,row2,col2,promotionChoice));
 }

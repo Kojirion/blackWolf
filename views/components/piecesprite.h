@@ -7,15 +7,15 @@
 class pieceSprite : public sf::Sprite
 {
 private:
-    bw pieceType;
-    int id;
+    Piece m_type;
+    int m_id;
 public:
     //pieceSprite(const sf::Texture &texture, int theType);
-    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, bw theType, int theId);
+    pieceSprite(const sf::Texture &texture, const sf::Vector2f &position, Piece type, int id);
 
     bool operator<(const pieceSprite &that) const;
 
-    bw getSide() const;
+    Color getColor() const;
     bool contains(const sf::Vector2f &point) const;
 };
 

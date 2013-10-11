@@ -7,9 +7,9 @@
 class gameData
 {
 private:
-    position currentPosition;
-    bw userColor; //color(s) of user
-    bw result; //who won
+    position m_position;
+    Color m_userColor; //color(s) of user
+    Color m_result; //who won
 
     thor::CallbackTimer whiteClock;
     thor::CallbackTimer blackClock;
@@ -23,20 +23,20 @@ public:
     bool userTurn() const;
     bool userBoth() const;
 
-    bw turnColor() const; //whose turn
-    bw getUserColor() const;
+    Color turnColor() const; //whose turn
+    Color getUserColor() const;
 
     int getPlyCount() const;
 
-    const position getPosition() const;
+    const position& getPosition() const;
     void setPosition(position toSet);
 
-    void setResult(const bw winner);
-    void newGame(const bw whoUser, int time);
+    void setResult(Color winner);
+    void newGame(Color whoUser, int time);
     void update();
     void switchTurn();
 
-    void setPromotion(const int row, const int col, const bw piece);
+    void setPromotion(int row, int col, Piece piece);
     void setTime(int whiteTime, int blackTime);
 
     sf::Time getWhiteTime() const;

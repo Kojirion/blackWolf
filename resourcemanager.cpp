@@ -10,37 +10,37 @@ resourceManager::resourceManager():
     load();    
 }
 
-const sf::Texture &resourceManager::typeToTexture(const bw pieceType) const
+const sf::Texture &resourceManager::typeToTexture(Piece piece) const
 {
-    switch (pieceType) {
-    default: //appease compiler
-    case bw::Rook | bw::White:
-        return *whiteRook;
-    case bw::Bishop | bw::White:
-        return *whiteBishop;
-    case bw::Knight | bw::White:
-        return *whiteKnight;
-    case bw::Queen | bw::White:
-        return *whiteQueen;
-    case bw::Pawn | bw::White:
-        return *whitePawn;
-    case bw::King | bw::White:
-        return *whiteKing;
-    case bw::Rook | bw::Black:
-        return *blackRook;
-    case bw::Bishop | bw::Black:
-        return *blackBishop;
-    case bw::Knight | bw::Black:
-        return *blackKnight;
-    case bw::Queen | bw::Black:
-        return *blackQueen;
-    case bw::Pawn | bw::Black:
-        return *blackPawn;
-    case bw::King | bw::Black:
-        return *blackKing;
-    case bw::None: //let None denote the board for now
+//    switch (piece) {
+//    default: //appease compiler
+//    case bw::Rook | bw::White:
+//        return *whiteRook;
+//    case bw::Bishop | bw::White:
+//        return *whiteBishop;
+//    case bw::Knight | bw::White:
+//        return *whiteKnight;
+//    case bw::Queen | bw::White:
+//        return *whiteQueen;
+//    case bw::Pawn | bw::White:
+//        return *whitePawn;
+//    case bw::King | bw::White:
+//        return *whiteKing;
+//    case bw::Rook | bw::Black:
+//        return *blackRook;
+//    case bw::Bishop | bw::Black:
+//        return *blackBishop;
+//    case bw::Knight | bw::Black:
+//        return *blackKnight;
+//    case bw::Queen | bw::Black:
+//        return *blackQueen;
+//    case bw::Pawn | bw::Black:
+//        return *blackPawn;
+//    case bw::King | bw::Black:
+//        return *blackKing;
+//    case bw::None: //let None denote the board for now
         return *board;
-    }
+    //}
 }
 
 void resourceManager::load()

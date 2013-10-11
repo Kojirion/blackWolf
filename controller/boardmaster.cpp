@@ -5,7 +5,7 @@
 #include "components/buttonbox.h"
 #include <SFGUI/Notebook.hpp>
 
-void boardMaster::setGameEnded(bw result)
+void boardMaster::setGameEnded(Color result)
 {
     //update model
     game.setResult(result);
@@ -21,10 +21,10 @@ void boardMaster::enableWindow(const bool enable)
     else boardWindow->SetState(sfg::Widget::INSENSITIVE);
 }
 
-void boardMaster::flagDown(const bw loser)
+void boardMaster::flagDown(Color loser)
 {
     clocks.setFlagDown(loser);
-    setGameEnded(-loser);
+    setGameEnded(!loser);
 }
 
 void boardMaster::handlePromotion(int row1, int col1, int row2, int col2)
@@ -89,21 +89,21 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, bw promotionChoice)
+void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Type promotionChoice)
 {
     game.setTime(whiteTime, blackTime);
     game.startClock(); //this just means an unnecessary stop
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent
-    if (game.getPosition()(row1,col1)==bw::None) return;
+    if (game.getPosition()(row1,col1).type==Type::None) return;
 
     completeMove move(game.getPosition(),row1, col1, row2, col2);
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
 
-    if (check(promotionChoice)){
+    if (promotionChoice != Type::None){
         toPromoteRow1 = row1;
         toPromoteCol1 = col1;
         toPromoteRow2 = row2;
@@ -129,7 +129,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 
 }
 
-void boardMaster::newGame(const bw whoUser, int time, std::string p1, std::string p2)
+void boardMaster::newGame(Color whoUser, int time, std::string p1, std::string p2)
 {
     player1->SetText(p1);
     player2->SetText(p2);
@@ -142,7 +142,7 @@ void boardMaster::newGame(const bw whoUser, int time, std::string p1, std::strin
 
     moveList.reset();
 
-    status.setToPlay(bw::White);
+    status.setToPlay(Color::White);
 
     updateClocks();
 
@@ -166,7 +166,7 @@ void boardMaster::aiTurn()
     moveMake(toCheck);
 }
 
-void boardMaster::promotionChoiceMade(const bw whichPiece)
+void boardMaster::promotionChoiceMade(Type whichPiece)
 {
     promotionChoice = whichPiece;
 
@@ -174,10 +174,10 @@ void boardMaster::promotionChoiceMade(const bw whichPiece)
     board.setPromotion(toPromoteRow2, toPromoteCol2, whichPiece);
 
     //update model
-    bw whichSide;
-    if (game.turnColor()==bw::White) whichSide = bw::Black;
-    else whichSide = bw::White;
-    game.setPromotion(toPromoteRow2,toPromoteCol2,whichPiece | whichSide);
+    Color whichSide;
+    if (game.turnColor()==Color::White) whichSide = Color::Black;
+    else whichSide = Color::White;
+    game.setPromotion(toPromoteRow2,toPromoteCol2, {whichSide, whichPiece});
 
     promotionWindow->Show(false);
     enableWindow(true);
@@ -188,43 +188,43 @@ void boardMaster::promotionChoiceMade(const bw whichPiece)
 
 void boardMaster::promoteQueen()
 {
-    promotionChoiceMade(bw::Queen);
+    promotionChoiceMade(Type::Queen);
 }
 
 void boardMaster::promoteBishop()
 {
-    promotionChoiceMade(bw::Bishop);
+    promotionChoiceMade(Type::Bishop);
 }
 
 void boardMaster::promoteKnight()
 {
-    promotionChoiceMade(bw::Knight);
+    promotionChoiceMade(Type::Knight);
 }
 
 void boardMaster::promoteRook()
 {
-    promotionChoiceMade(bw::Rook);
+    promotionChoiceMade(Type::Rook);
 }
 
 void boardMaster::whiteNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::White, 300, "White", "Black");
+    newGame(Color::White, 300, "White", "Black");
 }
 
 void boardMaster::blackNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::Black, 300, "White", "Black");
+    newGame(Color::Black, 300, "White", "Black");
 }
 
 void boardMaster::bothNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(bw::White | bw::Black, 300, "White", "Black");
+    newGame(Color::Both, 300, "White", "Black");
 }
 
 bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
@@ -257,7 +257,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     premove(std::make_tuple(false,0,0,0,0)),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create()),
-    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(bw::None)
+    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(Type::None)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
@@ -377,7 +377,7 @@ void boardMaster::switchTurn()
 
 void boardMaster::resign()
 {
-    setGameEnded(-game.getUserColor());
+    setGameEnded(!game.getUserColor()); //should be turncolor
 }
 
 void boardMaster::offerDraw()

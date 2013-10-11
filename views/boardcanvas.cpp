@@ -10,7 +10,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     currentPiece(&pieces),
     idCount(1)
 {
-    boardSprite_.setTexture(resources.typeToTexture(bw::None));
+    boardSprite_.setTexture(resources.typeToTexture({Color::None, Type::None}));
 
     particle.loadFromFile("Graphics/particle.png");
     system.reset(new thor::ParticleSystem());
@@ -133,14 +133,14 @@ void boardCanvas::reload(const position &givenPosition)
 {
     pieces.clear();
     setPosition(givenPosition);
-    boardSprite_.setTexture(resources.typeToTexture(bw::None));
+    boardSprite_.setTexture(resources.typeToTexture({Color::None, Type::None}));
 }
 
-void boardCanvas::setResult(bw result)
+void boardCanvas::setResult(Color result)
 {
-    if (result == bw::White){
+    if (result == Color::White){
         for (auto& piece : pieces){
-            if (piece.getSide() == bw::Black)
+            if (piece.getColor() == Color::Black)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 //pieces.erase(piece);
@@ -148,10 +148,10 @@ void boardCanvas::setResult(bw result)
 
 
         }
-    }else if (result == bw::Black)
+    }else if (result == Color::Black)
     {
         for (auto& piece : pieces){
-            if (piece.getSide() == bw::White)
+            if (piece.getColor() == Color::White)
             {
                 system->addEmitter(FireworkEmitter(piece.getPosition() + offToCenter), sf::seconds(1.f));
                 //pieces.erase(piece);
@@ -259,8 +259,8 @@ void boardCanvas::setPosition(const position& givenPosition)
 {
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const bw pieceId = givenPosition(i, j);
-            if (check(pieceId & bw::None)||check(pieceId & bw::Shadow)) continue;
+            const Piece pieceId = givenPosition(i, j);
+            if ((pieceId.type == Type::None)||(pieceId.type == Type::Shadow)) continue;
             pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
             pieces[i][j].insert(toAdd);
             idCount++;
@@ -269,12 +269,12 @@ void boardCanvas::setPosition(const position& givenPosition)
 
 }
 
-void boardCanvas::resetFor(const bw whoFaceUp)
+void boardCanvas::resetFor(Color whoFaceUp)
 {
     if (flipped()){
-        if (check(whoFaceUp & bw::White)) flipBoard();
+        if (whoFaceUp == Color::White) flipBoard();
     }else{
-        if (!check(whoFaceUp & bw::White)) flipBoard();
+        if (whoFaceUp != Color::White) flipBoard();
     }
 
     resetRects();
@@ -288,11 +288,11 @@ boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
     return requestMove;
 }
 
-void boardCanvas::setPromotion(const int row, const int col, const bw piece)
+void boardCanvas::setPromotion(int row, int col, Type piece)
 {
-    const bw whichSide = pieces[row][col].getSide();
+    const Color whichSide = pieces[row][col].getColor();
     destroy(row,col);
-    pieceSprite toAdd(resources.typeToTexture(whichSide | piece),cellToPosition(row,col),whichSide,idCount);
+    pieceSprite toAdd(resources.typeToTexture({whichSide, piece}),cellToPosition(row,col),{whichSide, piece},idCount);
     pieces[row][col].insert(toAdd);
     idCount++;
 }

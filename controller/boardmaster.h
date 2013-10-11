@@ -50,7 +50,7 @@ public:
     void resign();
     void offerDraw();
     void requestNewGame();
-    void promotionChoiceMade(const bw whichPiece);
+    void promotionChoiceMade(Type whichPiece);
     void promoteQueen();
     void promoteBishop();
     void promoteKnight();
@@ -101,25 +101,25 @@ private:
     int toPromoteCol1;
     int toPromoteRow2;
     int toPromoteCol2;
-    bw promotionChoice; //which piece was chosen by either ai or player
+    Type promotionChoice; //which piece was chosen by either ai or player
 
 
     void settingsClicked();
     void settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix);
 
 
-    void flagDown(const bw loser);
+    void flagDown(Color loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, bw promotionChoice);
+    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Type promotionChoice);
 
 
 
-    void newGame(const bw whoUser, int time, std::string p1, std::string p2);
+    void newGame(Color whoUser, int time, std::string p1, std::string p2);
 
     void aiTurn();
 
-    void setGameEnded(bw result);
+    void setGameEnded(Color result);
 
     void enableWindow(const bool enable = true);
 

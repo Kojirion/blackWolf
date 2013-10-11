@@ -23,9 +23,9 @@ sfg::Widget::Ptr clocksView::getBlackClock()
     return blackClockLabel;
 }
 
-void clocksView::setFlagDown(const bw loser)
+void clocksView::setFlagDown(Color loser)
 {
-    if (loser == bw::White) return;
+    if (loser == Color::White) return;
 }
 
 std::string clocksView::timeToString(const sf::Time& value) const

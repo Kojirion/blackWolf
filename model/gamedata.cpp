@@ -2,8 +2,8 @@
 #include <boost/assert.hpp>
 
 gameData::gameData():
-    userColor(bw::None),
-    result(bw::White | bw::Black), //init a game 'finished' as draw
+    m_userColor(Color::None),
+    m_result(Color::Both), //init a game 'finished' as draw
     plyCounter(0)
 {
     //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
@@ -18,27 +18,27 @@ void gameData::setTime(int whiteTime, int blackTime)
 
 bool gameData::ended() const
 {
-    return (result != bw::None);
+    return (m_result != Color::None);
 }
 
 bool gameData::userTurn() const
 {
-    return check(turnColor() & userColor);
+    return (turnColor() & m_userColor);
 }
 
 bool gameData::userBoth() const
 {
-    return (userColor == (bw::White | bw::Black));
+    return (m_userColor == Color::Both);
 }
 
-bw gameData::turnColor() const
+Color gameData::turnColor() const
 {
-    return currentPosition.getTurnColor();
+    return m_position.getTurnColor();
 }
 
-bw gameData::getUserColor() const
+Color gameData::getUserColor() const
 {
-    return userColor;
+    return m_userColor;
 }
 
 int gameData::getPlyCount() const
@@ -46,30 +46,30 @@ int gameData::getPlyCount() const
     return plyCounter;
 }
 
-const position gameData::getPosition() const
+const position &gameData::getPosition() const
 {
-    return currentPosition;
+    return m_position;
 }
 
 void gameData::setPosition(position toSet)
 {
-    currentPosition = toSet;
+    m_position = toSet;
 }
 
-void gameData::setResult(const bw winner)
+void gameData::setResult(Color winner)
 {
-    result = winner;
+    m_result = winner;
 }
 
-void gameData::newGame(const bw whoUser, int time)
+void gameData::newGame(Color whoUser, int time)
 {
     plyCounter = 0;
 
-    currentPosition = position();
+    m_position = position();
 
-    userColor = whoUser;
+    m_userColor = whoUser;
 
-    result = bw::None;
+    m_result = Color::None;
 
     setTime(time,time);
     whiteClock.start();
@@ -89,9 +89,9 @@ void gameData::switchTurn()
     plyCounter++;
 }
 
-void gameData::setPromotion(const int row, const int col, const bw piece)
+void gameData::setPromotion(int row, int col, Piece piece)
 {
-    currentPosition.setPromotion(row, col, piece);
+    m_position.setPromotion(row, col, piece);
 }
 
 sf::Time gameData::getWhiteTime() const
@@ -116,11 +116,11 @@ thor::CallbackTimer& gameData::getBlackTimer()
 
 void gameData::startClock()
 {
-    if (turnColor() == bw::White){
+    if (turnColor() == Color::White){
         blackClock.stop();
         whiteClock.start();
     }else{
-        BOOST_ASSERT_MSG(turnColor()==bw::Black, "Turn color invalid");
+        BOOST_ASSERT_MSG(turnColor()==Color::Black, "Turn color invalid");
         whiteClock.stop();
         blackClock.start();
     }
