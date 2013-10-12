@@ -30,7 +30,11 @@ Color pieceSprite::getColor() const
 
 bool pieceSprite::contains(const sf::Vector2f &point) const
 {
-    return false;
+    sf::Vector2f topLeft = m_quad[0].position;
+    sf::Vector2f lowRight = m_quad[2].position;
+
+    return (point.x >= topLeft.x) && (point.x <= lowRight.x)
+            && (point.y >= topLeft.y) && (point.y <= lowRight.y);
 }
 
 void pieceSprite::setPosition(const sf::Vector2f &position)
