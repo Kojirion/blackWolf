@@ -43,6 +43,12 @@ bool boardCanvas::flipped() const
     return (flipOffset!=0);
 }
 
+sf::Vector2i boardCanvas::toGridPos(const sf::Vector2f &position) const
+{
+    return sf::Vector2i((7*flipOffset-position.x+20)/(2*(flipOffset-25)),
+                        (7*flipOffset+position.y-370)/(2*(flipOffset-25)));
+}
+
 bool boardCanvas::pieceHeld()
 {
     return (currentPiece.isValid());
@@ -238,18 +244,19 @@ void boardCanvas::slotMouseRelease()
 {
     if (pieceHeld()){
         sf::Vector2f centrePos = pieces[currentPiece].getPosition() + offToCenter;
-        for (int i=0; i<8; ++i){
-            for (int j=0; j<8; ++j){
-                if (rectGrid[i][j].contains(centrePos)){
+//        for (int i=0; i<8; ++i){
+//            for (int j=0; j<8; ++j){
+//                if (rectGrid[i][j].contains(centrePos)){
                     const int originRow = currentPiece.getRow();
                     const int originCol = currentPiece.getCol();
+                    sf::Vector2i gridPos = toGridPos(centrePos);
                     //send request move signal to controller
-                    if (!(*requestMove(originRow, originCol, i, j)))
+                    if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
                         sendBack(); //if rejected send piece back
                     return;
-                }
-            }
-        }
+//                }
+//            }
+       // }
         sendBack();
     }
 }

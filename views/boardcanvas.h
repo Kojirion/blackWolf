@@ -47,6 +47,8 @@ private:
     //grid of rects to check where a piece sprite is dropped
     std::vector<std::vector<sf::FloatRect> > rectGrid;
 
+    sf::Vector2i toGridPos(const sf::Vector2f& position) const;
+
     //piece held by the mouse
     piecesBimap::iterator currentPiece;
 
