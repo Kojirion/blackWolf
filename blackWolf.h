@@ -8,20 +8,20 @@ enum class Color{
     Both = White | Black
 };
 
-enum class Piece{
-    None,
-    Pawn,
-    Rook,
-    Knight,
-    Bishop,
-    Queen,
-    King,
-    Shadow
+enum class Piece{    
+    Rook = 0,
+    Knight = 1,
+    Bishop = 2,
+    Queen = 3,
+    King = 4,
+    Pawn = 5,
+    Shadow = 6,
+    None = 7
 };
 
 struct Unit{
     Color color;
-    Piece type;
+    Piece piece;
 };
 
 const Unit noPiece = {Color::None, Piece::None};

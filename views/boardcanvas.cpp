@@ -12,6 +12,8 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
 {
     boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
 
+    piecesTexture.loadFromFile("Graphics/Pieces/ArrayBlack.png");
+
     particle.loadFromFile("Graphics/particle.png");
     system.reset(new thor::ParticleSystem());
     system->setTexture(particle);
@@ -66,9 +68,13 @@ void boardCanvas::display()
     window->Draw(boardSprite_);
     window->Draw(*system, sf::BlendAdd);
 
-    for (auto& piece : pieces){
-        window->Draw(piece);
-    }
+    vertexArray.clear();
+    for (auto& piece : pieces)
+        piece.appendQuadTo(vertexArray);
+
+    window->Draw(vertexArray.data(), vertexArray.size(), sf::Quads, &piecesTexture);
+
+
 
     for (auto& arrow : arrows)
     {
@@ -260,10 +266,9 @@ void boardCanvas::setPosition(const position& givenPosition)
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const Unit pieceId = givenPosition(i, j);
-            if ((pieceId.type == Piece::None)||(pieceId.type == Piece::Shadow)) continue;
-            pieceSprite toAdd(resources.typeToTexture(pieceId),cellToPosition(i,j),pieceId, idCount);
-            pieces[i][j].insert(toAdd);
-            idCount++;
+            if ((pieceId.piece == Piece::None)||(pieceId.piece == Piece::Shadow)) continue;
+            pieceSprite toAdd(cellToPosition(i,j),pieceId, idCount++);
+            pieces[i][j].insert(toAdd);            
         }
     }
 
@@ -292,9 +297,8 @@ void boardCanvas::setPromotion(int row, int col, Piece piece)
 {
     const Color whichSide = pieces[row][col].getColor();
     destroy(row,col);
-    pieceSprite toAdd(resources.typeToTexture({whichSide, piece}),cellToPosition(row,col),{whichSide, piece},idCount);
+    pieceSprite toAdd(cellToPosition(row,col),{whichSide, piece},idCount++);
     pieces[row][col].insert(toAdd);
-    idCount++;
 }
 
 void boardCanvas::resetRects()

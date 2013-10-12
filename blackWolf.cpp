@@ -75,7 +75,7 @@ Color operator !(Color rhs)
 
 bool operator ==(const Unit &lhs, const Unit &rhs)
 {
-    return (lhs.color == rhs.color) && (lhs.type == rhs.type);
+    return (lhs.color == rhs.color) && (lhs.piece == rhs.piece);
 }
 
 

@@ -97,7 +97,7 @@ public:
 
         pieceSprite changeTexture(pieceSprite piece, const sf::Texture& toSet) const
         {
-            piece.setTexture(toSet);
+            //piece.setTexture(toSet);
             return piece;
         }
 

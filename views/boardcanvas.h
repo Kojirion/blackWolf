@@ -32,6 +32,9 @@ private:
     //bimap between board squares and piece sprites
     piecesBimap pieces;
 
+    std::vector<sf::Vertex> vertexArray;
+    sf::Texture piecesTexture;
+
     bool flipped() const;
 
     //firework system

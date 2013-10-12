@@ -33,7 +33,7 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const Unit givenPiece = givenPos(i,j);
-            if (givenPiece.type == Piece::Shadow) cells[i][j] = {Color::None, Piece::None}; //clear shadow pawn
+            if (givenPiece.piece == Piece::Shadow) cells[i][j] = {Color::None, Piece::None}; //clear shadow pawn
             else cells[i][j] = givenPiece;
         }
     }
@@ -42,7 +42,7 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
     const Unit destPiece = givenPos(row2, col2);
 
     //check if en passant capture
-    if (destPiece.type == Piece::Shadow){ //about to nick a shadow pawn
+    if (destPiece.piece == Piece::Shadow){ //about to nick a shadow pawn
         wasEnPassant = true;
         cells[row2+sign(turnColor)][col2] = {Color::None, Piece::None}; //remove the true pawn
     }
@@ -85,18 +85,18 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
 
     //checking if castling rights should be lost
     if (pieceCode.color == Color::White){
-        if (pieceCode.type == Piece::King){
+        if (pieceCode.piece == Piece::King){
             whiteCastleQueen = false;
             whiteCastleKing = false;
-        }else if (pieceCode.type == Piece::Rook){
+        }else if (pieceCode.piece == Piece::Rook){
             if ((row1==0)&&(col1==0)) whiteCastleQueen = false;
             else if ((row1==0)&&(col1==7)) whiteCastleKing = false;
         }
     }else if(pieceCode.color == Color::Black){
-        if (pieceCode.type == Piece::King){
+        if (pieceCode.piece == Piece::King){
             blackCastleQueen = false;
             blackCastleKing = false;
-        }else if (pieceCode.type == Piece::Rook){
+        }else if (pieceCode.piece == Piece::Rook){
             if ((row1==7)&&(col1==0)) blackCastleQueen = false;
             else if ((row1==7)&&(col1==7)) blackCastleKing = false;
         }
