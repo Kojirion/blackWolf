@@ -45,8 +45,10 @@ bool boardCanvas::flipped() const
 
 sf::Vector2i boardCanvas::toGridPos(const sf::Vector2f &position) const
 {
-    return sf::Vector2i((7*flipOffset-position.x+20)/(2*(flipOffset-25)),
-                        (7*flipOffset+position.y-370)/(2*(flipOffset-25)));
+    return sf::Vector2i((position.x-20)/50, ((470 - position.y)/50) - 1);
+
+//    return sf::Vector2i((7*flipOffset-position.y+20)/(2*(flipOffset-25)),
+//                        (7*flipOffset+position.x-370)/(2*(flipOffset-25)));
 }
 
 bool boardCanvas::pieceHeld()
@@ -251,6 +253,7 @@ void boardCanvas::slotMouseRelease()
                     const int originCol = currentPiece.getCol();
                     sf::Vector2i gridPos = toGridPos(centrePos);
                     //send request move signal to controller
+                    std::cout << gridPos.x << "," << gridPos.y << std::endl;
                     if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
                         sendBack(); //if rejected send piece back
                     return;
