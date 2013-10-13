@@ -22,7 +22,7 @@ bool completeMove::isCheckSafe() const
         for (int j=0; j<8; ++j){
             const Unit pieceId = newBoard(i, j);
             if (pieceId.color == !board.getTurnColor() && (pieceId.piece != Piece::Shadow)){ //enemy piece
-                boardMove toCheck(newBoard,i,j,kingRow,kingCol);
+                boardMove toCheck(newBoard,{{i,j},{kingRow,kingCol}});
                 if (toCheck.isLegal()) return false;
             }
         }
@@ -36,7 +36,7 @@ bool completeMove::handleCastle() const
     if (inCheck(board,board.getTurnColor())) return false;
 
     if (m_piece == Unit{Color::White, Piece::King}){
-        if (col2==6){ //kingside
+        if (m_move.square_2.col==6){ //kingside
             if (!board.whiteCastleKing) return false;
             completeMove toCheck1(board,0,4,0,5);
             if (!toCheck1.isLegal()) return false;
@@ -44,7 +44,7 @@ bool completeMove::handleCastle() const
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
-        }else if (col2==2){
+        }else if (m_move.square_2.col==2){
             if (!board.whiteCastleQueen) return false;
             if (isObstructed(board(0, 1))) return false;
             completeMove toCheck1(board,0,4,0,3);
@@ -57,7 +57,7 @@ bool completeMove::handleCastle() const
     }else{
         BOOST_ASSERT_MSG((m_piece == Unit{Color::Black, Piece::King}), "Castle without king move");
 
-        if (col2==6){ //kingside
+        if (m_move.square_2.col==6){ //kingside
             if (!board.blackCastleKing) return false;
             completeMove toCheck1(board,7,4,7,5);
             if (!toCheck1.isLegal()) return false;
@@ -65,7 +65,7 @@ bool completeMove::handleCastle() const
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
-        }else if (col2==2){
+        }else if (m_move.square_2.col==2){
             if (!board.blackCastleQueen) return false;
             if (isObstructed(board(7, 1))) return false;
             completeMove toCheck1(board,7,4,7,3);
@@ -100,7 +100,7 @@ bool completeMove::inCheck(const position &givenPos, Color side) const
         for (int j=0; j<8; ++j){
             const Unit pieceId = givenPos(i, j);
             if (pieceId.color != board.getTurnColor()){ //enemy piece
-                boardMove toCheck(givenPos,i,j,kingRow,kingCol);
+                boardMove toCheck(givenPos,{{i,j},{kingRow,kingCol}});
                 if (toCheck.isLegal()) return true;
             }
         }
@@ -127,7 +127,7 @@ bool completeMove::hasLegalMoves() const
 }
 
 completeMove::completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):
-    boardMove(thePosition, theRow1, theCol1, theRow2, theCol2)
+    boardMove(thePosition, {{theRow1, theCol1}, {theRow2, theCol2}})
 {
 }
 
@@ -155,22 +155,22 @@ bool completeMove::isStalemate() const
 
 int completeMove::getRow1() const
 {
-    return row1;
+    return m_move.square_1.row;
 }
 
 int completeMove::getCol1() const
 {
-    return col1;
+    return m_move.square_1.col;
 }
 
 int completeMove::getRow2() const
 {
-    return row2;
+    return m_move.square_2.row;
 }
 
 int completeMove::getCol2() const
 {
-    return col2;
+    return m_move.square_2.col;
 }
 
 position completeMove::getNewBoard() const

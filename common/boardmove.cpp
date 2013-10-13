@@ -3,15 +3,12 @@
 #include <boost/assert.hpp>
 #include <cmath>
 
-boardMove::boardMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):
+boardMove::boardMove(const position &thePosition, const Move& move):
     board(thePosition),
-    row1(theRow1),
-    col1(theCol1),
-    row2(theRow2),
-    col2(theCol2),
-    newBoard(thePosition,{{theRow1,theCol1},{theRow2,theCol2}})
+    m_move(move),
+    newBoard(thePosition, move)
 {    
-    m_piece = board(row1, col1);
+    m_piece = board(m_move.square_1.row, m_move.square_1.col);
     BOOST_ASSERT_MSG(m_piece.piece != Piece::None, "No piece in starting square");
     BOOST_ASSERT_MSG(m_piece.piece != Piece::Shadow, "Shadow pawn in starting square");
 }
@@ -44,12 +41,12 @@ bool boardMove::isLegal() const
 
 bool boardMove::startEndSame() const
 {
-    return ((row1==row2)&&(col1==col2));
+    return ((m_move.square_1.row==m_move.square_2.row)&&(m_move.square_1.col==m_move.square_2.col));
 }
 
 bool boardMove::isOccupied() const
 {   
-    return (m_piece.color == board(row2, col2).color);
+    return (m_piece.color == board(m_move.square_2.row, m_move.square_2.col).color);
 }
 
 bool boardMove::isKnightLegal() const
@@ -57,7 +54,7 @@ bool boardMove::isKnightLegal() const
     for (int i=-2; i<3; i++){
         for (int j=-2; j<3; j++){
             if ((i!=0)&&(j!=0)&&(std::abs(i) != std::abs(j))){
-                if ((row1+i == row2)&&(col1+j == col2)) {
+                if ((m_move.square_1.row+i == m_move.square_2.row)&&(m_move.square_1.col+j == m_move.square_2.col)) {
                     return true;
                 }
             }
@@ -69,8 +66,8 @@ bool boardMove::isKnightLegal() const
 bool boardMove::isBishopLegal() const
 {
 
-    const int deltaRow = row2 - row1;
-    const int deltaCol = col2 - col1;
+    const int deltaRow = m_move.square_2.row - m_move.square_1.row;
+    const int deltaCol = m_move.square_2.col - m_move.square_1.col;
 
     //if not in same diagonal, do not proceed
     if (std::abs(deltaRow) != std::abs(deltaCol)) return false;
@@ -78,8 +75,8 @@ bool boardMove::isBishopLegal() const
     const int signRowDiff = boost::math::sign(deltaRow);
     const int signColDiff = boost::math::sign(deltaCol);
 
-    for (int i=row1+signRowDiff; i!=row2; i+=signRowDiff){
-        int j = col1 + (i-row1)*signColDiff*signRowDiff;
+    for (int i=m_move.square_1.row+signRowDiff; i!=m_move.square_2.row; i+=signRowDiff){
+        int j = m_move.square_1.col + (i-m_move.square_1.row)*signColDiff*signRowDiff;
         if (isObstructed(board(i, j))) return false;
     }
     return true;
@@ -87,20 +84,20 @@ bool boardMove::isBishopLegal() const
 
 bool boardMove::isRookLegal() const
 {
-    if (row1==row2){
-        const int signDiff = boost::math::sign(col2 - col1);
-        const int maxIt = col2 - col1;
+    if (m_move.square_1.row==m_move.square_2.row){
+        const int signDiff = boost::math::sign(m_move.square_2.col - m_move.square_1.col);
+        const int maxIt = m_move.square_2.col - m_move.square_1.col;
 
         for (int i=signDiff; i!=maxIt; i+=signDiff){
-            if (isObstructed(board(row1, col1+i))) return false;
+            if (isObstructed(board(m_move.square_1.row, m_move.square_1.col+i))) return false;
         }
         return true; //no obstruction
-    }else if (col1==col2){
-        const int signDiff = boost::math::sign(row2 - row1);
-        const int maxIt = row2 - row1;
+    }else if (m_move.square_1.col==m_move.square_2.col){
+        const int signDiff = boost::math::sign(m_move.square_2.row - m_move.square_1.row);
+        const int maxIt = m_move.square_2.row - m_move.square_1.row;
 
         for (int i=signDiff; i!=maxIt; i+=signDiff){
-            if (isObstructed(board(row1+i, col1))) return false;
+            if (isObstructed(board(m_move.square_1.row+i, m_move.square_1.col))) return false;
         }
         return true; //no obstruction
     }
@@ -117,7 +114,7 @@ bool boardMove::isKingLegal() const
     if (newBoard.wasCastle) return true; //tentative true
     //completeMove will ultimately decide if the castle is legal
 
-    if ((std::abs(row2-row1)>1) || (std::abs(col2-col1)>1)) return false;
+    if ((std::abs(m_move.square_2.row-m_move.square_1.row)>1) || (std::abs(m_move.square_2.col-m_move.square_1.col)>1)) return false;
 
     return isQueenLegal();
 }
@@ -126,28 +123,28 @@ bool boardMove::isPawnLegal() const
 {
     //can be rewritten much smaller
 
-    if (board(row1, col1).color == Color::White){ //white pawn
-        if ((row1==1)&&(row2==3)&&(col1==col2)){ //double advance
-            if ((board(row2, col2) == noPiece) && (board(2, col2) == noPiece))
+    if (board(m_move.square_1.row, m_move.square_1.col).color == Color::White){ //white pawn
+        if ((m_move.square_1.row==1)&&(m_move.square_2.row==3)&&(m_move.square_1.col==m_move.square_2.col)){ //double advance
+            if ((board(m_move.square_2.row, m_move.square_2.col) == noPiece) && (board(2, m_move.square_2.col) == noPiece))
                 return true;
         }else{
-            if (row1+1==row2){
-                if (col1==col2)
-                    if (board(row2, col2) == noPiece) return true;
-                if ((col1+1==col2)||(col1-1==col2))
-                    if (m_piece.color != board(row2, col2).color) return true;
+            if (m_move.square_1.row+1==m_move.square_2.row){
+                if (m_move.square_1.col==m_move.square_2.col)
+                    if (board(m_move.square_2.row, m_move.square_2.col) == noPiece) return true;
+                if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
+                    if (m_piece.color != board(m_move.square_2.row, m_move.square_2.col).color) return true;
             }
         }
     }else{
-        if ((row1==6)&&(row2==4)&&(col1==col2)){ //double advance
-            if ((board(row2, col2) == noPiece) && (board(5, col2) == noPiece))
+        if ((m_move.square_1.row==6)&&(m_move.square_2.row==4)&&(m_move.square_1.col==m_move.square_2.col)){ //double advance
+            if ((board(m_move.square_2.row, m_move.square_2.col) == noPiece) && (board(5, m_move.square_2.col) == noPiece))
                 return true;
         }else{
-            if (row1-1==row2){
-                if (col1==col2)
-                    if (board(row2, col2) == noPiece) return true;
-                if ((col1+1==col2)||(col1-1==col2))
-                    if (m_piece.color != board(row2, col2).color) return true;
+            if (m_move.square_1.row-1==m_move.square_2.row){
+                if (m_move.square_1.col==m_move.square_2.col)
+                    if (board(m_move.square_2.row, m_move.square_2.col) == noPiece) return true;
+                if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
+                    if (m_piece.color != board(m_move.square_2.row, m_move.square_2.col).color) return true;
             }
         }
     }

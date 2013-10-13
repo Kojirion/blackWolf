@@ -14,10 +14,7 @@ private:
 
     position board;    
 
-    int row1;
-    int col1;
-    int row2;
-    int col2;
+    Move m_move;
 
     position newBoard;
 
@@ -38,7 +35,7 @@ private:
 
 
 public:
-    boardMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
+    boardMove(const position &thePosition, const Move &move);
 
 
     bool isLegal() const;
