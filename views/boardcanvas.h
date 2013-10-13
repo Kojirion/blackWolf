@@ -5,7 +5,8 @@
 #define BOARDCANVAS_H
 #include <SFGUI/Canvas.hpp>
 #include <boost/signals2.hpp>
-#include "../views/components/piecesbimap.h"
+#include <boost/bimap.hpp>
+#include "../views/components/piecesprite.h"
 #include "../resourcemanager.h"
 #include "../common/completemove.h"
 #include "../common/position.h"
@@ -16,50 +17,47 @@
 class boardCanvas
 {
 private:
-    //offset used in positioning the pieces to achieve flip
+
+    struct squareId  {};
+    struct pieceId {};
+
+    typedef boost::bimap<boost::bimaps::tagged<Square, squareId>, boost::bimaps::tagged<pieceSprite, pieceId> > SquaresToPieces;
+
     int flipOffset;
 
     static const sf::Vector2f offToCenter;
 
-    //Canvas onto which board is drawn
     sfg::Canvas::Ptr window;
 
     sf::Sprite boardSprite_;
-    sf::Window& bigWindow; //only to know its position
+    sf::Window& bigWindow;
 
     resourceManager& resources;
 
-    //bimap between board squares and piece sprites
-    piecesBimap pieces;
+    SquaresToPieces pieces;
 
     std::vector<sf::Vertex> vertexArray;
     sf::Texture piecesTexture;
 
     bool flipped() const;
 
-    //firework system
     sf::Texture particle;
-    std::unique_ptr<thor::ParticleSystem> system;
-
-    //a clock to update firework system - but possible to use the one from guimanager?
-    sf::Clock frameClock;    
+    std::unique_ptr<thor::ParticleSystem> system;    
+    sf::Clock frameClock; //redundant?
 
     sf::Vector2i toGridPos(const sf::Vector2f& position) const;
 
-    //piece held by the mouse
-    piecesBimap::iterator currentPiece;
+    const pieceSprite* currentPiece;
 
-    bool pieceHeld();    
+    int idCount;
 
-    int idCount; //pieces ids for bimap's use
-
-    void destroy(const Square &square); //will destroy the sprite in given location
+    void destroy(const Square &square);
 
     sf::Vector2f cellToPosition(const Square& square) const;
 
-    sf::Vector2f getMousePosition() const; //mouse position in the canvas' coords
+    sf::Vector2f getMousePosition() const;
 
-    void sendBack(); //sends the current piece back
+    void sendBack();
 
     //move was castle with destination the given square
     //so move rook to appropriate square
@@ -87,9 +85,11 @@ public:
     void display();
     void moveMake(const completeMove &move);
 
+    void bimapMove(const Move &move);
+
     sfg::Widget::Ptr getBoardWidget() const;
     void setPosition(const position &givenPosition);
-    void resetFor(Color whoFaceUp); //reset and flip if needed
+    void resetFor(Color whoFaceUp);
 
     boost::signals2::signal<bool (const Move &)> &getSignal();
 

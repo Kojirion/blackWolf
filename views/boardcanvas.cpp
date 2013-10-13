@@ -1,4 +1,6 @@
 #include "boardcanvas.h"
+#include <boost/bimap/support/lambda.hpp>
+#include <boost/assert.hpp>
 
 const sf::Vector2f boardCanvas::offToCenter(25.f,25.f);
 
@@ -7,7 +9,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
     resources(theResources),
-    currentPiece(pieces.end()),
+    currentPiece(nullptr),
     idCount(1)
 {
     boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
@@ -43,19 +45,14 @@ sf::Vector2f boardCanvas::cellToPosition(const Square &square) const
                         -flipOffset * (7 - 2*square.row) + 420 - 50 * (square.row+1));
 }
 
-bool boardCanvas::pieceHeld()
-{
-    return currentPiece != pieces.end();
-}
-
 void boardCanvas::releasePiece()
 {
-    currentPiece = pieces.end();
+    currentPiece = nullptr;
 }
 
 void boardCanvas::destroy(const Square& square)
 {
-    if (pieces.erase(square)) //if true then firework
+    if (pieces.by<squareId>().erase(square)) //if true then firework
         system->addEmitter(FireworkEmitter(cellToPosition(square) + offToCenter), sf::seconds(1.f));
 }
 
@@ -70,7 +67,7 @@ void boardCanvas::display()
 
     vertexArray.clear();
     for (const auto& piece : pieces)
-        piece.first.appendQuadTo(vertexArray);
+        piece.get<pieceId>().appendQuadTo(vertexArray);
 
     window->Draw(vertexArray.data(), vertexArray.size(), sf::Quads, &piecesTexture);
 
@@ -90,13 +87,18 @@ void boardCanvas::moveMake(const completeMove& move)
     const int destCol = move.getCol2();
 
     destroy({destRow,destCol});
-    pieces.makeMove({{originRow, originCol}, {destRow, destCol}});
-    pieces[Square{destRow,destCol}].setPosition(cellToPosition({destRow,destCol}));
+    bimapMove({{originRow, originCol}, {destRow, destCol}});
+    pieces.by<squareId>().find(Square{destRow,destCol})->get<pieceId>().setPosition(cellToPosition({destRow,destCol}));
     //pieces[].moveTo(destRow, destCol, cellToPosition());
 
     position currentPosition = move.getNewBoard();
     if (currentPosition.wasCastle) handleCastle({destRow,destCol});
     if (currentPosition.wasEnPassant) handleEnPassant({destRow,destCol});
+}
+
+void boardCanvas::bimapMove(const Move &move)
+{
+    BOOST_VERIFY(pieces.by<squareId>().modify_key(pieces.by<squareId>().find(move.square_1), boost::bimaps::_key = move.square_2));
 }
 
 sfg::Widget::Ptr boardCanvas::getBoardWidget() const
@@ -111,9 +113,9 @@ sf::Vector2f boardCanvas::getMousePosition() const
 
 void boardCanvas::sendBack()
 {
-    BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
+    BOOST_ASSERT_MSG(currentPiece, "No current piece to send back");
 
-    currentPiece->get<piecesBimap::pieceId>().setPosition(cellToPosition(currentPiece->get<piecesBimap::squareId>()));
+    currentPiece->setPosition(cellToPosition(pieces.by<pieceId>().find(*currentPiece)->get<squareId>()));
 
     releasePiece();
 }
@@ -124,7 +126,7 @@ void boardCanvas::flipBoard()
     else flipOffset = 50;
 
     for (const auto &piece : pieces)
-        pieces[piece.get<piecesBimap::pieceId>()].setPosition(cellToPosition(piece.get<piecesBimap::squareId>()));
+        piece.get<pieceId>().setPosition(cellToPosition(piece.get<squareId>()));
 }
 
 void boardCanvas::reload(const position &givenPosition)
@@ -137,8 +139,8 @@ void boardCanvas::reload(const position &givenPosition)
 void boardCanvas::setResult(Color result)
 {
     for (const auto& piece : pieces){
-        if (!(piece.get<piecesBimap::pieceId>().getColor() & result)){
-            system->addEmitter(FireworkEmitter(piece.get<piecesBimap::pieceId>().getPosition() + offToCenter), sf::seconds(1.f));
+        if (!(piece.get<pieceId>().getColor() & result)){
+            system->addEmitter(FireworkEmitter(piece.get<pieceId>().getPosition() + offToCenter), sf::seconds(1.f));
             //pieces.erase(piece);
         }
     }
@@ -161,22 +163,22 @@ void boardCanvas::handleCastle(const Square &square)
 {
     if (square.row==0){
         if (square.col==2){
-            pieces.makeMove({{0,0},{0,3}});
-            pieces[Square{0,3}].setPosition(cellToPosition({0,3}));
+            bimapMove({{0,0},{0,3}});
+            pieces.by<squareId>().find(Square{0,3})->get<pieceId>().setPosition(cellToPosition({0,3}));
         }else{
             BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
-            pieces.makeMove({{0,7},{0,5}});
-            pieces[Square{0,5}].setPosition(cellToPosition({0,5}));
+            bimapMove({{0,7},{0,5}});
+            pieces.by<squareId>().find(Square{0,5})->get<pieceId>().setPosition(cellToPosition({0,5}));
         }
     }else{
         BOOST_ASSERT_MSG(square.row==7, "Invalid Castle");
         if (square.col==2){
-            pieces.makeMove({{7,0},{7,3}});
-            pieces[Square{7,3}].setPosition(cellToPosition({7,3}));
+            bimapMove({{7,0},{7,3}});
+            pieces.by<squareId>().find(Square{7,3})->get<pieceId>().setPosition(cellToPosition({7,3}));
         }else{
             BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
-            pieces.makeMove({{7,7},{7,5}});
-            pieces[Square{7,5}].setPosition(cellToPosition({7,5}));
+            bimapMove({{7,7},{7,5}});
+            pieces.by<squareId>().find(Square{7,5})->get<pieceId>().setPosition(cellToPosition({7,5}));
         }
     }
 }
@@ -202,8 +204,8 @@ void boardCanvas::slotLeftClick()
 
     for (const auto &piece : pieces){
         //if (piece.getSide()!=whoseTurn) continue;
-        if (piece.get<piecesBimap::pieceId>().contains(clickedPoint)){
-            currentPiece = pieces.spriteToIt(piece.get<piecesBimap::pieceId>());
+        if (piece.get<pieceId>().contains(clickedPoint)){
+            currentPiece = &piece.get<pieceId>();
             break;
         }
     }
@@ -211,26 +213,27 @@ void boardCanvas::slotLeftClick()
 
 void boardCanvas::slotMouseMove()
 {
-    if (pieceHeld()){
-        currentPiece->get<piecesBimap::pieceId>().setPosition(getMousePosition()-offToCenter);
+    if (currentPiece){
+        currentPiece->setPosition(getMousePosition()-offToCenter);
     }
 }
 
 void boardCanvas::slotMouseRelease()
 {
-    if (pieceHeld()){
-        sf::Vector2f centrePos = currentPiece->get<piecesBimap::pieceId>().getPosition() + offToCenter;
+    if (currentPiece){
+        const auto& piece = pieces.by<pieceId>().find(*currentPiece);
+        sf::Vector2f centrePos = piece->get<pieceId>().getPosition() + offToCenter;
 
         sf::Vector2i gridPos = toGridPos(centrePos);
 
-        if (!(*requestMove({currentPiece->get<piecesBimap::squareId>(), {gridPos.y, gridPos.x}})))
+        if (!(*requestMove({piece->get<squareId>(), {gridPos.y, gridPos.x}})))
             sendBack();
     }
 }
 
 void boardCanvas::slotEnterCanvas()
 {
-    if (pieceHeld()){
+    if (currentPiece){
         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) sendBack();
     }
 }
@@ -242,7 +245,7 @@ void boardCanvas::setPosition(const position& givenPosition)
             const Unit pieceId = givenPosition(i, j);
             if ((pieceId.piece == Piece::None)||(pieceId.piece == Piece::Shadow)) continue;
             pieceSprite toAdd(cellToPosition({i,j}),pieceId, idCount++);
-            //pieces[i][j].insert(toAdd);
+            pieces.insert(SquaresToPieces::value_type({i,j}, toAdd));
         }
     }
 
@@ -267,8 +270,9 @@ boost::signals2::signal<bool (const Move&)>& boardCanvas::getSignal()
 
 void boardCanvas::setPromotion(const Square &square, Piece piece)
 {
-    const Color whichSide = pieces[square].getColor();
+    const Color whichSide = pieces.by<squareId>().find(square)->get<pieceId>().getColor();
     destroy(square);
     pieceSprite toAdd(cellToPosition(square),{whichSide, piece},idCount++);
+    pieces.insert(SquaresToPieces::value_type(square, toAdd));
     //pieces[square].insert(toAdd);
 }
