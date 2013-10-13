@@ -60,7 +60,7 @@ public:
     void bothNewGame();
 
     //boost slots
-    bool requestMove(int row1, int col1, int row2, int col2);
+    bool requestMove(const Move& move);
 
 private:
 

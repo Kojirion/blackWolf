@@ -220,16 +220,16 @@ void boardMaster::bothNewGame()
     newGame(Color::Both, 300, "White", "Black");
 }
 
-bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
+bool boardMaster::requestMove(const Move& move)
 {
     if (!game.userTurn()) //set premove
     {
-        premove = {{row1,col1},{row2,col2}};
-        board.setArrow(row1,col1,row2,col2);
+        premove = move;
+        board.setArrow(move);
         return false;
     }
 
-    completeMove toCheck(game.getPosition(),{{row1,col1},{row2,col2}});
+    completeMove toCheck(game.getPosition(), move);
     if (toCheck.isLegal()){
         moveMake(toCheck);
 //        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
@@ -252,7 +252,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     player2(sfg::Label::Create()),
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
-    board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
+    board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
     fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6, _7));
     fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2, _3, _4));
@@ -359,7 +359,7 @@ void boardMaster::switchTurn()
     {
         premoveOn = false;
         board.clearArrows();
-        requestMove(premove.square_1.row, premove.square_1.col, premove.square_2.row, premove.square_2.col);
+        requestMove(premove);
     }
 
 //    if (!game.userTurn()){

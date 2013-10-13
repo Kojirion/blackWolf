@@ -37,11 +37,11 @@ sf::Vector2i boardCanvas::toGridPos(const sf::Vector2f &position) const
                         (position.y+7*flipOffset-370)/(2*flipOffset-50)+1);
 }
 
-sf::Vector2f boardCanvas::cellToPosition(const int row, const int col) const
+sf::Vector2f boardCanvas::cellToPosition(const Square &square) const
 {
-    return sf::Vector2f(flipOffset * (7 - 2*col) + 20 + 50 * col, -flipOffset * (7 - 2*row) + 420 - 50 * (row+1));
+    return sf::Vector2f(flipOffset * (7 - 2*square.col) + 20 + 50 * square.col,
+                        -flipOffset * (7 - 2*square.row) + 420 - 50 * (square.row+1));
 }
-
 
 bool boardCanvas::pieceHeld()
 {
@@ -53,10 +53,10 @@ void boardCanvas::releasePiece()
     currentPiece.invalidate();
 }
 
-void boardCanvas::destroy(const int row, const int col)
+void boardCanvas::destroy(const Square& square)
 {
-    if (pieces[row][col].erase()) //if true then firework
-        system->addEmitter(FireworkEmitter(cellToPosition(row,col) + offToCenter), sf::seconds(1.f));
+    if (pieces[square.row][square.col].erase()) //if true then firework
+        system->addEmitter(FireworkEmitter(cellToPosition(square) + offToCenter), sf::seconds(1.f));
 }
 
 void boardCanvas::display()
@@ -90,8 +90,8 @@ void boardCanvas::moveMake(const completeMove move)
     const int destRow = move.getRow2();
     const int destCol = move.getCol2();
 
-    destroy(destRow,destCol); //destroy any sprites at destination
-    pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition(destRow, destCol));
+    destroy({destRow,destCol}); //destroy any sprites at destination
+    pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition({destRow, destCol}));
 
     position currentPosition = move.getNewBoard();
     if (currentPosition.wasCastle) handleCastle(destRow,destCol);
@@ -112,7 +112,7 @@ void boardCanvas::sendBack()
 {
     BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    pieces[currentPiece].sendTo(cellToPosition(currentPiece.getRow(),currentPiece.getCol()));
+    pieces[currentPiece].sendTo(cellToPosition({currentPiece.getRow(),currentPiece.getCol()}));
 
     releasePiece();
 }
@@ -124,7 +124,7 @@ void boardCanvas::flipBoard()
 
     for (auto &piece : pieces){
         auto toFlip = pieces[piece];
-        toFlip.sendTo(cellToPosition(toFlip.getRow(), toFlip.getCol()));
+        toFlip.sendTo(cellToPosition({toFlip.getRow(), toFlip.getCol()}));
     }    
 }
 
@@ -159,10 +159,10 @@ void boardCanvas::setResult(Color result)
     }
 }
 
-void boardCanvas::setArrow(int row1, int col1, int row2, int col2)
+void boardCanvas::setArrow(const Move &move)
 {
-    sf::Vector2f point1 = cellToPosition(row1,col1) + offToCenter;
-    sf::Vector2f point2 = cellToPosition(row2,col2) + offToCenter;
+    sf::Vector2f point1 = cellToPosition(move.square_1) + offToCenter;
+    sf::Vector2f point2 = cellToPosition(move.square_2) + offToCenter;
 
     arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0,125), 5.f);
 }
@@ -176,18 +176,18 @@ void boardCanvas::handleCastle(const int row, const int col)
 {
     if (row==0){
         if (col==2){
-            pieces[0][0].moveTo(0,3,cellToPosition(0,3));
+            pieces[0][0].moveTo(0,3,cellToPosition({0,3}));
         }else{
             BOOST_ASSERT_MSG(col==6, "Invalid Castle");
-            pieces[0][7].moveTo(0,5,cellToPosition(0,5));
+            pieces[0][7].moveTo(0,5,cellToPosition({0,5}));
         }
     }else{
         if (col==2){
             BOOST_ASSERT_MSG(row==7, "Invalid Castle");
-            pieces[7][0].moveTo(7,3,cellToPosition(7,3));
+            pieces[7][0].moveTo(7,3,cellToPosition({7,3}));
         }else{
             BOOST_ASSERT_MSG(col==6, "Invalid Castle");
-            pieces[7][7].moveTo(7,5,cellToPosition(7,5));
+            pieces[7][7].moveTo(7,5,cellToPosition({7,5}));
         }
     }
 }
@@ -195,10 +195,10 @@ void boardCanvas::handleCastle(const int row, const int col)
 void boardCanvas::handleEnPassant(const int row, const int col)
 {
     if (row==5){
-        destroy(4,col);
+        destroy({4,col});
     }else{
         BOOST_ASSERT_MSG(row==2, "Invalid en passant");
-        destroy(3,col);
+        destroy({3,col});
     }
 }
 
@@ -236,8 +236,7 @@ void boardCanvas::slotMouseRelease()
         const int originCol = currentPiece.getCol();
         sf::Vector2i gridPos = toGridPos(centrePos);
 
-        std::cout << originCol << "," << originRow << " -> " << gridPos.x << "," << gridPos.y << std::endl;
-        if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
+        if (!(*requestMove({{originRow, originCol}, {gridPos.y, gridPos.x}})))
             sendBack();
         return;
 
@@ -258,7 +257,7 @@ void boardCanvas::setPosition(const position& givenPosition)
         for (int j=0; j<8; ++j){
             const Unit pieceId = givenPosition(i, j);
             if ((pieceId.piece == Piece::None)||(pieceId.piece == Piece::Shadow)) continue;
-            pieceSprite toAdd(cellToPosition(i,j),pieceId, idCount++);
+            pieceSprite toAdd(cellToPosition({i,j}),pieceId, idCount++);
             pieces[i][j].insert(toAdd);            
         }
     }
@@ -277,7 +276,7 @@ void boardCanvas::resetFor(Color whoFaceUp)
     pieces.clear();
 }
 
-boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
+boost::signals2::signal<bool (const Move&)>& boardCanvas::getSignal()
 {
     return requestMove;
 }
@@ -285,7 +284,7 @@ boost::signals2::signal<bool (int, int, int, int)>& boardCanvas::getSignal()
 void boardCanvas::setPromotion(int row, int col, Piece piece)
 {
     const Color whichSide = pieces[row][col].getColor();
-    destroy(row,col);
-    pieceSprite toAdd(cellToPosition(row,col),{whichSide, piece},idCount++);
+    destroy({row,col});
+    pieceSprite toAdd(cellToPosition({row,col}),{whichSide, piece},idCount++);
     pieces[row][col].insert(toAdd);
 }

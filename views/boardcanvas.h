@@ -53,9 +53,9 @@ private:
 
     int idCount; //pieces ids for bimap's use
 
-    void destroy(const int row, const int col); //will destroy the sprite in given location
+    void destroy(const Square &square); //will destroy the sprite in given location
 
-    sf::Vector2f cellToPosition(const int row, const int col) const;
+    sf::Vector2f cellToPosition(const Square& square) const;
 
     sf::Vector2f getMousePosition() const; //mouse position in the canvas' coords
 
@@ -70,7 +70,7 @@ private:
     void handleEnPassant(const int row, const int col);
 
     //signals
-    boost::signals2::signal<bool (int, int, int, int)> requestMove;
+    boost::signals2::signal<bool (const Move&)> requestMove;
 
     //slots
     void slotMouseMove();
@@ -91,7 +91,7 @@ public:
     void setPosition(const position &givenPosition);
     void resetFor(Color whoFaceUp); //reset and flip if needed
 
-    boost::signals2::signal<bool (int, int, int, int)> &getSignal();
+    boost::signals2::signal<bool (const Move &)> &getSignal();
 
     void setPromotion(int row, int col, Piece piece);
 
@@ -101,7 +101,7 @@ public:
 
     void setResult(Color result);
 
-    void setArrow(int row1, int col1, int row2, int col2);
+    void setArrow(const Move& move);
     void clearArrows();
 
     void releasePiece();
