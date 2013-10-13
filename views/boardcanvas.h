@@ -47,7 +47,9 @@ private:
 
     sf::Vector2i toGridPos(const sf::Vector2f& position) const;
 
-    const pieceSprite* currentPiece;
+    SquaresToPieces::const_iterator currentPiece;
+
+    bool pieceHeld();
 
     int idCount;
 

@@ -9,7 +9,7 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
     resources(theResources),
-    currentPiece(nullptr),
+    currentPiece(pieces.end()),
     idCount(1)
 {
     boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
@@ -39,6 +39,11 @@ sf::Vector2i boardCanvas::toGridPos(const sf::Vector2f &position) const
                         (position.y+7*flipOffset-370)/(2*flipOffset-50)+1);
 }
 
+bool boardCanvas::pieceHeld()
+{
+    return currentPiece != pieces.end();
+}
+
 sf::Vector2f boardCanvas::cellToPosition(const Square &square) const
 {
     return sf::Vector2f(flipOffset * (7 - 2*square.col) + 20 + 50 * square.col,
@@ -47,7 +52,7 @@ sf::Vector2f boardCanvas::cellToPosition(const Square &square) const
 
 void boardCanvas::releasePiece()
 {
-    currentPiece = nullptr;
+    currentPiece = pieces.end();
 }
 
 void boardCanvas::destroy(const Square& square)
@@ -113,9 +118,9 @@ sf::Vector2f boardCanvas::getMousePosition() const
 
 void boardCanvas::sendBack()
 {
-    BOOST_ASSERT_MSG(currentPiece, "No current piece to send back");
+    BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    currentPiece->setPosition(cellToPosition(pieces.by<pieceId>().find(*currentPiece)->get<squareId>()));
+    currentPiece->get<pieceId>().setPosition(cellToPosition(currentPiece->get<squareId>()));
 
     releasePiece();
 }
@@ -205,7 +210,7 @@ void boardCanvas::slotLeftClick()
     for (const auto &piece : pieces){
         //if (piece.getSide()!=whoseTurn) continue;
         if (piece.get<pieceId>().contains(clickedPoint)){
-            currentPiece = &piece.get<pieceId>();
+            currentPiece = pieces.project_up(pieces.by<pieceId>().find(piece.get<pieceId>()));
             break;
         }
     }
@@ -213,27 +218,26 @@ void boardCanvas::slotLeftClick()
 
 void boardCanvas::slotMouseMove()
 {
-    if (currentPiece){
-        currentPiece->setPosition(getMousePosition()-offToCenter);
+    if (pieceHeld()){
+        currentPiece->get<pieceId>().setPosition(getMousePosition()-offToCenter);
     }
 }
 
 void boardCanvas::slotMouseRelease()
 {
-    if (currentPiece){
-        const auto& piece = pieces.by<pieceId>().find(*currentPiece);
-        sf::Vector2f centrePos = piece->get<pieceId>().getPosition() + offToCenter;
+    if (pieceHeld()){
+        sf::Vector2f centrePos = currentPiece->get<pieceId>().getPosition() + offToCenter;
 
         sf::Vector2i gridPos = toGridPos(centrePos);
 
-        if (!(*requestMove({piece->get<squareId>(), {gridPos.y, gridPos.x}})))
+        if (!(*requestMove({currentPiece->get<squareId>(), {gridPos.y, gridPos.x}})))
             sendBack();
     }
 }
 
 void boardCanvas::slotEnterCanvas()
 {
-    if (currentPiece){
+    if (pieceHeld()){
         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) sendBack();
     }
 }
