@@ -9,7 +9,7 @@ boardMove::boardMove(const position &thePosition, const int theRow1, const int t
     col1(theCol1),
     row2(theRow2),
     col2(theCol2),
-    newBoard(thePosition,theRow1,theCol1,theRow2,theCol2)
+    newBoard(thePosition,{{theRow1,theCol1},{theRow2,theCol2}})
 {    
     m_piece = board(row1, col1);
     BOOST_ASSERT_MSG(m_piece.piece != Piece::None, "No piece in starting square");

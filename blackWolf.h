@@ -8,6 +8,10 @@ enum class Color{
     Both = White | Black
 };
 
+bool operator &(const Color& lhs, const Color& rhs);
+Color operator!(Color rhs);
+int sign(Color color);
+
 enum class Piece{    
     Rook = 0,
     Knight = 1,
@@ -25,13 +29,18 @@ struct Unit{
 };
 
 const Unit noPiece = {Color::None, Piece::None};
-
 bool operator==(const Unit& lhs, const Unit& rhs);
-bool operator &(const Color& lhs, const Color& rhs);
 
-Color operator!(Color rhs);
+struct Square{
+    int row;
+    int col;
+};
 
-int sign(Color color);
+struct Move{
+    Square square_1;
+    Square square_2;
+};
+
 
 //#include "blackWolf.inl"
 

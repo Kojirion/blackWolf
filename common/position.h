@@ -14,7 +14,7 @@ public:
 
     position (int boardArray[8][8]);
 
-    position(const position &givenPos, int row1, int col1, int row2, int col2);
+    position(const position &givenPos, const Move &move);
 
     const Unit& operator()(int row, int col) const;
 

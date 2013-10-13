@@ -18,7 +18,7 @@ position::position(int boardArray[8][8])
     }    
 }
 
-position::position(const position &givenPos, int row1, int col1, int row2, int col2):    
+position::position(const position &givenPos, const Move& move):
     whiteCastleQueen(givenPos.whiteCastleQueen),
     whiteCastleKing(givenPos.whiteCastleKing),
     blackCastleQueen(givenPos.blackCastleQueen),
@@ -38,29 +38,29 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
         }
     }
 
-    const Unit pieceCode = cells[row1][col1];
-    const Unit destPiece = givenPos(row2, col2);
+    const Unit pieceCode = cells[move.square_1.row][move.square_1.col];
+    const Unit destPiece = givenPos(move.square_2.row, move.square_2.col);
 
     //check if en passant capture
     if (destPiece.piece == Piece::Shadow){ //about to nick a shadow pawn
         wasEnPassant = true;
-        cells[row2+sign(turnColor)][col2] = {Color::None, Piece::None}; //remove the true pawn
+        cells[move.square_2.row+sign(turnColor)][move.square_2.col] = {Color::None, Piece::None}; //remove the true pawn
     }
 
     //make the move
-    cells[row2][col2] = pieceCode;
-    cells[row1][col1] = {Color::None, Piece::None};
+    cells[move.square_2.row][move.square_2.col] = pieceCode;
+    cells[move.square_1.row][move.square_1.col] = {Color::None, Piece::None};
 
     //this will perform the castle regardless of whether the side has castling rights
     //will produce gibberish if castling rights have been lost or way is obstructed
     if (pieceCode == Unit{Color::White, Piece::Rook}){
-        if ((row1==0)&&(row2==0)){
-            if (col1==4){
-                if (col2==6){
+        if ((move.square_1.row==0)&&(move.square_2.row==0)){
+            if (move.square_1.col==4){
+                if (move.square_2.col==6){
                     cells[0][5] = cells[0][7];
                     cells[0][7] = {Color::None, Piece::None};
                     wasCastle = true;
-                }else if (col2==2){
+                }else if (move.square_2.col==2){
                     cells[0][3] = cells[0][0];
                     cells[0][0] = {Color::None, Piece::None};
                     wasCastle = true;
@@ -68,13 +68,13 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
             }
         }
     }else if (pieceCode == Unit{Color::Black, Piece::Rook}){
-        if ((row1==7)&&(row2==7)){
-            if (col1==4){
-                if (col2==6){
+        if ((move.square_1.row==7)&&(move.square_2.row==7)){
+            if (move.square_1.col==4){
+                if (move.square_2.col==6){
                     cells[7][5] = cells[7][7];
                     cells[7][7] = {Color::None, Piece::None};
                     wasCastle = true;
-                }else if (col2==2){
+                }else if (move.square_2.col==2){
                     cells[7][3] = cells[7][0];
                     cells[7][0] = {Color::None, Piece::None};
                     wasCastle = true;
@@ -89,34 +89,36 @@ position::position(const position &givenPos, int row1, int col1, int row2, int c
             whiteCastleQueen = false;
             whiteCastleKing = false;
         }else if (pieceCode.piece == Piece::Rook){
-            if ((row1==0)&&(col1==0)) whiteCastleQueen = false;
-            else if ((row1==0)&&(col1==7)) whiteCastleKing = false;
+            if ((move.square_1.row==0)&&(move.square_1.col==0)) whiteCastleQueen = false;
+            else if ((move.square_1.row==0)&&(move.square_1.col==7)) whiteCastleKing = false;
         }
     }else if(pieceCode.color == Color::Black){
         if (pieceCode.piece == Piece::King){
             blackCastleQueen = false;
             blackCastleKing = false;
         }else if (pieceCode.piece == Piece::Rook){
-            if ((row1==7)&&(col1==0)) blackCastleQueen = false;
-            else if ((row1==7)&&(col1==7)) blackCastleKing = false;
+            if ((move.square_1.row==7)&&(move.square_1.col==0)) blackCastleQueen = false;
+            else if ((move.square_1.row==7)&&(move.square_1.col==7)) blackCastleKing = false;
         }
     }
 
 
     //create shadow pawn for en passant
     if (pieceCode == Unit{Color::White, Piece::Pawn}){
-        if ((row1==1)&&(row2==3)) cells[2][col2] = {Color::White, Piece::Shadow};
+        if ((move.square_1.row==1)&&(move.square_2.row==3))
+            cells[2][move.square_2.col] = {Color::White, Piece::Shadow};
     }else if (pieceCode == Unit{Color::Black, Piece::Pawn}){
-        if ((row1==6)&&(row2==4)) cells[5][col2] = {Color::Black, Piece::Shadow};
+        if ((move.square_1.row==6)&&(move.square_2.row==4))
+            cells[5][move.square_2.col] = {Color::Black, Piece::Shadow};
     }
 
     //check if promotion
     if (pieceCode == Unit{Color::White, Piece::Pawn}){
-        if (row2==7){
+        if (move.square_2.row==7){
             wasPromotion = true;            
         }
     }else if (pieceCode == Unit{Color::Black, Piece::Pawn}){
-        if (row2==0){
+        if (move.square_2.row==0){
             wasPromotion = true;            
         }
     }
