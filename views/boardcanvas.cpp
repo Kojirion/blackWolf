@@ -19,18 +19,6 @@ boardCanvas::boardCanvas(sf::Window& theWindow, resourceManager& theResources):
     system->setTexture(particle);
     system->addAffector(FireworkAffector());
 
-    rectGrid.resize(8);
-    for (int i=0; i<8; ++i){
-        rectGrid[i].resize(8);
-        for (int j=0; j<8; ++j){
-            sf::Vector2f toSet = cellToPosition(i,j);
-            rectGrid[i][j].left = toSet.x;
-            rectGrid[i][j].top = toSet.y;
-            rectGrid[i][j].width = 50.f;
-            rectGrid[i][j].height = 50.f;
-        }
-    }
-
     window->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&boardCanvas::slotLeftClick, this);
     window->GetSignal(sfg::Widget::OnMouseMove).Connect(&boardCanvas::slotMouseMove, this);
@@ -45,11 +33,15 @@ bool boardCanvas::flipped() const
 
 sf::Vector2i boardCanvas::toGridPos(const sf::Vector2f &position) const
 {
-    return sf::Vector2i((position.x-20)/50, ((470 - position.y)/50) - 1);
-
-//    return sf::Vector2i((7*flipOffset-position.y+20)/(2*(flipOffset-25)),
-//                        (7*flipOffset+position.x-370)/(2*(flipOffset-25)));
+    return sf::Vector2i((position.x-7*flipOffset-20)/(50-2*flipOffset),
+                        (position.y+7*flipOffset-370)/(2*flipOffset-50)+1);
 }
+
+sf::Vector2f boardCanvas::cellToPosition(const int row, const int col) const
+{
+    return sf::Vector2f(flipOffset * (7 - 2*col) + 20 + 50 * col, -flipOffset * (7 - 2*row) + 420 - 50 * (row+1));
+}
+
 
 bool boardCanvas::pieceHeld()
 {
@@ -111,11 +103,6 @@ sfg::Widget::Ptr boardCanvas::getBoardWidget() const
     return window;
 }
 
-sf::Vector2f boardCanvas::cellToPosition(const int row, const int col) const
-{
-    return sf::Vector2f(flipOffset * (7 - 2*col) + 20 + 50 * col, -flipOffset * (7 - 2*row) + 420 - 50 * (row+1));
-}
-
 sf::Vector2f boardCanvas::getMousePosition() const
 {
     return (static_cast<sf::Vector2f>(sf::Mouse::getPosition(bigWindow)) - window->GetAbsolutePosition());
@@ -138,9 +125,7 @@ void boardCanvas::flipBoard()
     for (auto &piece : pieces){
         auto toFlip = pieces[piece];
         toFlip.sendTo(cellToPosition(toFlip.getRow(), toFlip.getCol()));
-    }
-
-    resetRects();
+    }    
 }
 
 void boardCanvas::reload(const position &givenPosition)
@@ -246,20 +231,16 @@ void boardCanvas::slotMouseRelease()
 {
     if (pieceHeld()){
         sf::Vector2f centrePos = pieces[currentPiece].getPosition() + offToCenter;
-//        for (int i=0; i<8; ++i){
-//            for (int j=0; j<8; ++j){
-//                if (rectGrid[i][j].contains(centrePos)){
-                    const int originRow = currentPiece.getRow();
-                    const int originCol = currentPiece.getCol();
-                    sf::Vector2i gridPos = toGridPos(centrePos);
-                    //send request move signal to controller
-                    std::cout << originCol << "," << originRow << " -> " << gridPos.x << "," << gridPos.y << std::endl;
-                    if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
-                        sendBack(); //if rejected send piece back
-                    return;
-//                }
-//            }
-       // }
+
+        const int originRow = currentPiece.getRow();
+        const int originCol = currentPiece.getCol();
+        sf::Vector2i gridPos = toGridPos(centrePos);
+
+        std::cout << originCol << "," << originRow << " -> " << gridPos.x << "," << gridPos.y << std::endl;
+        if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
+            sendBack();
+        return;
+
         sendBack();
     }
 }
@@ -287,12 +268,10 @@ void boardCanvas::setPosition(const position& givenPosition)
 void boardCanvas::resetFor(Color whoFaceUp)
 {
     if (flipped()){
-        if (whoFaceUp == Color::White) flipBoard();
+        if (whoFaceUp & Color::White) flipBoard();
     }else{
-        if (whoFaceUp != Color::White) flipBoard();
-    }
-
-    resetRects();
+        if (!(whoFaceUp & Color::White)) flipBoard();
+    }    
 
     idCount = 1;
     pieces.clear();
@@ -309,15 +288,4 @@ void boardCanvas::setPromotion(int row, int col, Piece piece)
     destroy(row,col);
     pieceSprite toAdd(cellToPosition(row,col),{whichSide, piece},idCount++);
     pieces[row][col].insert(toAdd);
-}
-
-void boardCanvas::resetRects()
-{
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            sf::Vector2f toSet = cellToPosition(i,j);
-            rectGrid[i][j].left = toSet.x;
-            rectGrid[i][j].top = toSet.y;
-        }
-    }
 }

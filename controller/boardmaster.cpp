@@ -136,7 +136,7 @@ void boardMaster::newGame(Color whoUser, int time, std::string p1, std::string p
 
     game.newGame(whoUser, time);
 
-    //board.resetFor(whoUser);
+    board.resetFor(whoUser);
 
     board.setPosition(game.getPosition());
 

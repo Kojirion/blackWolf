@@ -42,10 +42,7 @@ private:
     std::unique_ptr<thor::ParticleSystem> system;
 
     //a clock to update firework system - but possible to use the one from guimanager?
-    sf::Clock frameClock;
-
-    //grid of rects to check where a piece sprite is dropped
-    std::vector<std::vector<sf::FloatRect> > rectGrid;
+    sf::Clock frameClock;    
 
     sf::Vector2i toGridPos(const sf::Vector2f& position) const;
 
