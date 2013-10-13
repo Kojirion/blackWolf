@@ -38,18 +38,18 @@ bool completeMove::handleCastle() const
     if (m_piece == Unit{Color::White, Piece::King}){
         if (m_move.square_2.col==6){ //kingside
             if (!board.whiteCastleKing) return false;
-            completeMove toCheck1(board,0,4,0,5);
+            completeMove toCheck1(board,{{0,4},{0,5}});
             if (!toCheck1.isLegal()) return false;
-            completeMove toCheck2(toCheck1.getNewBoard(),0,5,0,6);
+            completeMove toCheck2(toCheck1.getNewBoard(),{{0,5},{0,6}});
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }else if (m_move.square_2.col==2){
             if (!board.whiteCastleQueen) return false;
             if (isObstructed(board(0, 1))) return false;
-            completeMove toCheck1(board,0,4,0,3);
+            completeMove toCheck1(board,{{0,4},{0,3}});
             if (!toCheck1.isLegal()) return false;
-            completeMove toCheck2(toCheck1.getNewBoard(),0,3,0,2);
+            completeMove toCheck2(toCheck1.getNewBoard(),{{0,3},{0,2}});
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
@@ -59,18 +59,18 @@ bool completeMove::handleCastle() const
 
         if (m_move.square_2.col==6){ //kingside
             if (!board.blackCastleKing) return false;
-            completeMove toCheck1(board,7,4,7,5);
+            completeMove toCheck1(board,{{7,4},{7,5}});
             if (!toCheck1.isLegal()) return false;
-            completeMove toCheck2(toCheck1.getNewBoard(),7,5,7,6);
+            completeMove toCheck2(toCheck1.getNewBoard(),{{7,5},{7,6}});
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
         }else if (m_move.square_2.col==2){
             if (!board.blackCastleQueen) return false;
             if (isObstructed(board(7, 1))) return false;
-            completeMove toCheck1(board,7,4,7,3);
+            completeMove toCheck1(board,{{7,4},{7,3}});
             if (!toCheck1.isLegal()) return false;
-            completeMove toCheck2(toCheck1.getNewBoard(),7,3,7,2);
+            completeMove toCheck2(toCheck1.getNewBoard(),{{7,3},{7,2}});
             toCheck2.board.setTurnColor(board.getTurnColor());
             if (!toCheck2.isLegal()) return false;
             return true;
@@ -116,7 +116,7 @@ bool completeMove::hasLegalMoves() const
             for (int k=0; k<8; ++k){
                 for (int l=0; l<8; ++l){
                     if (newBoard(i, j).color == newBoard.getTurnColor()){
-                        completeMove toCheck(newBoard,i,j,k,l);
+                        completeMove toCheck(newBoard,{{i,j},{k,l}});
                         if (toCheck.isLegal()) return true;
                     }
                 }
@@ -126,8 +126,8 @@ bool completeMove::hasLegalMoves() const
     return false;
 }
 
-completeMove::completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2):
-    boardMove(thePosition, {{theRow1, theCol1}, {theRow2, theCol2}})
+completeMove::completeMove(const position &thePosition, const Move &move):
+    boardMove(thePosition, move)
 {
 }
 

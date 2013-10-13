@@ -19,7 +19,7 @@ private:
 
 
 public:
-    completeMove(const position &thePosition, const int theRow1, const int theCol1, const int theRow2, const int theCol2);
+    completeMove(const position &thePosition, const Move& move);
 
     bool isLegal() const;
 

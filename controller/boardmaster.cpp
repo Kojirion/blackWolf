@@ -98,7 +98,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
     //we don't care what the client sent
     if (game.getPosition()(row1,col1).piece==Piece::None) return;
 
-    completeMove move(game.getPosition(),row1, col1, row2, col2);
+    completeMove move(game.getPosition(),{{row1, col1}, {row2, col2}});
 
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
@@ -156,7 +156,7 @@ void boardMaster::aiTurn()
     const int destRow = std::get<2>(moveToMake);
     const int destCol = std::get<3>(moveToMake);
 
-    completeMove toCheck(game.getPosition(),originRow,originCol,destRow,destCol);
+    completeMove toCheck(game.getPosition(),{{originRow,originCol},{destRow,destCol}});
     BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
     moveMake(toCheck);
@@ -232,7 +232,7 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
         return false;
     }
 
-    completeMove toCheck(game.getPosition(),row1,col1,row2,col2);
+    completeMove toCheck(game.getPosition(),{{row1,col1},{row2,col2}});
     if (toCheck.isLegal()){
         moveMake(toCheck);
 //        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
