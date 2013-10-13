@@ -147,13 +147,9 @@ void boardMaster::newGame(Color whoUser, int time, std::string p1, std::string p
 
 void boardMaster::aiTurn()
 {
-    chessEngine::move moveToMake = chessAi.getMove();
-    const int originRow = std::get<0>(moveToMake);
-    const int originCol = std::get<1>(moveToMake);
-    const int destRow = std::get<2>(moveToMake);
-    const int destCol = std::get<3>(moveToMake);
+    Move moveToMake = chessAi.getMove();
 
-    completeMove toCheck(game.getPosition(),{{originRow,originCol},{destRow,destCol}});
+    completeMove toCheck(game.getPosition(), moveToMake);
     BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
     moveMake(toCheck);

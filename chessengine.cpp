@@ -11,9 +11,10 @@ void chessEngine::waitForOk()
     }
 }
 
-std::string chessEngine::moveString(const int row1, const int col1, const int row2, const int col2) const
+std::string chessEngine::moveString(const Move &move) const
 {
-   return (colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
+   return (colToString(move.square_1.col) + std::to_string(move.square_1.row+1)
+           + colToString(move.square_2.col) + std::to_string(move.square_2.row+1));
 }
 
 std::string chessEngine::colToString(const int col) const
@@ -53,7 +54,7 @@ int chessEngine::stringToCol(const std::string stringedCol) const
     return -1; //appease compiler
 }
 
-chessEngine::move chessEngine::stringToTuple(const std::string theString)
+Move chessEngine::stringToTuple(const std::string theString)
 {
     const int row1 = std::stoi(theString.substr(1,1)) - 1;
     const int col1 = stringToCol(theString.substr(0,1));
@@ -62,7 +63,7 @@ chessEngine::move chessEngine::stringToTuple(const std::string theString)
 
     if (theString.size()==5) promotedChoice = symbolToInt(theString.substr(4,1));
 
-    return std::make_tuple(row1,col1,row2,col2);
+    return {{row1,col1},{row2,col2}};
 }
 
 void chessEngine::toEngine(const std::string toPut)
@@ -110,9 +111,9 @@ chessEngine::chessEngine():
 
 }
 
-void chessEngine::makeMove(const int row1, const int col1, const int row2, const int col2, const int pieceChoice)
+void chessEngine::makeMove(const Move &move, const int pieceChoice)
 {
-    std::string toAdd = moveString(row1,col1,row2,col2);
+    std::string toAdd = moveString(move);
     if (pieceChoice!=0) toAdd += intToSymbol(pieceChoice);
     moveList += toAdd + " ";
 }
@@ -124,7 +125,7 @@ void chessEngine::newGame()
     waitForOk();
 }
 
-chessEngine::move chessEngine::getMove()
+Move chessEngine::getMove()
 {
     toEngine("position startpos moves " + moveList);
     toEngine("go depth 8");

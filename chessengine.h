@@ -2,7 +2,7 @@
 #define CHESSENGINE_H
 #include <boost/process.hpp>
 #include <iostream>
-#include <tuple>
+#include "blackWolf.h"
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 
@@ -10,15 +10,14 @@ class chessEngine
 {
 
 public:
-    typedef std::tuple<int,int,int,int> move;
 
     chessEngine();
 
-    void makeMove(const int row1, const int col1, const int row2, const int col2, const int pieceChoice = 0);
+    void makeMove(const Move& move, const int pieceChoice = 0);
 
     void newGame();
 
-    move getMove();
+    Move getMove();
 
     bool load();
 
@@ -42,12 +41,12 @@ private:
 
     void waitForOk();
 
-    std::string moveString(const int row1, const int col1, const int row2, const int col2) const;
+    std::string moveString(const Move& move) const;
 
     std::string colToString(const int col) const;
     int stringToCol(const std::string stringedCol) const;
 
-    move stringToTuple(const std::string theString);
+    Move stringToTuple(const std::string theString);
 
     std::string moveList;
 
