@@ -246,7 +246,7 @@ void boardCanvas::setPosition(const position& givenPosition)
 {
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Unit pieceId = givenPosition(i, j);
+            const Unit pieceId = givenPosition({i, j});
             if ((pieceId.piece == Piece::None)||(pieceId.piece == Piece::Shadow)) continue;
             pieceSprite toAdd(cellToPosition({i,j}),pieceId, idCount++);
             pieces.insert(SquaresToPieces::value_type({i,j}, toAdd));

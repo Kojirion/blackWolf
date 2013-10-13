@@ -89,9 +89,9 @@ void gameData::switchTurn()
     plyCounter++;
 }
 
-void gameData::setPromotion(int row, int col, Unit piece)
+void gameData::setPromotion(const Square& square, Unit piece)
 {
-    m_position.setPromotion(row, col, piece);
+    m_position.setPromotion(square, piece);
 }
 
 sf::Time gameData::getWhiteTime() const

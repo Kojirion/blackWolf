@@ -1,5 +1,5 @@
 #include "position.h"
-//#include <boost/assert.hpp>
+#include <boost/assert.hpp>
 
 position::position()
 {
@@ -32,14 +32,14 @@ position::position(const position &givenPos, const Move& move):
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Unit givenPiece = givenPos(i,j);
+            const Unit givenPiece = givenPos({i,j});
             if (givenPiece.piece == Piece::Shadow) cells[i][j] = {Color::None, Piece::None}; //clear shadow pawn
             else cells[i][j] = givenPiece;
         }
     }
 
     const Unit pieceCode = cells[move.square_1.row][move.square_1.col];
-    const Unit destPiece = givenPos(move.square_2.row, move.square_2.col);
+    const Unit destPiece = givenPos(move.square_2);
 
     //check if en passant capture
     if (destPiece.piece == Piece::Shadow){ //about to nick a shadow pawn
@@ -166,9 +166,12 @@ void position::init()
 
 }
 
-void position::setPromotion(const int row, const int col, Unit chosenPiece)
+void position::setPromotion(const Square& square, const Unit& chosenPiece)
 {
-    cells[row][col] = chosenPiece;
+    BOOST_ASSERT_MSG((square.row>=0)&&(square.row<8)&&
+                     (square.col>=0)&&(square.col<8), "Invalid square");
+
+    cells[square.row][square.col] = chosenPiece;
 }
 
 Color position::getTurnColor() const
@@ -181,8 +184,10 @@ void position::setTurnColor(Color color)
     turnColor = color;
 }
 
-const Unit& position::operator ()(int row, int col) const
+const Unit& position::operator ()(const Square& square) const
 {
-    //asserts here
-    return cells[row][col];
+    BOOST_ASSERT_MSG((square.row>=0)&&(square.row<8)&&
+                     (square.col>=0)&&(square.col<8), "Invalid square");
+
+    return cells[square.row][square.col];
 }

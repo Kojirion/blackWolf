@@ -36,7 +36,7 @@ public:
     void update();
     void switchTurn();
 
-    void setPromotion(int row, int col, Unit piece);
+    void setPromotion(const Square &square, Unit piece);
     void setTime(int whiteTime, int blackTime);
 
     sf::Time getWhiteTime() const;

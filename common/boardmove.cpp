@@ -8,7 +8,7 @@ boardMove::boardMove(const position &thePosition, const Move& move):
     m_move(move),
     newBoard(thePosition, move)
 {    
-    m_piece = board(m_move.square_1.row, m_move.square_1.col);
+    m_piece = board(m_move.square_1);
     BOOST_ASSERT_MSG(m_piece.piece != Piece::None, "No piece in starting square");
     BOOST_ASSERT_MSG(m_piece.piece != Piece::Shadow, "Shadow pawn in starting square");
 }
@@ -46,7 +46,7 @@ bool boardMove::startEndSame() const
 
 bool boardMove::isOccupied() const
 {   
-    return (m_piece.color == board(m_move.square_2.row, m_move.square_2.col).color);
+    return (m_piece.color == board(m_move.square_2).color);
 }
 
 bool boardMove::isKnightLegal() const
@@ -77,7 +77,7 @@ bool boardMove::isBishopLegal() const
 
     for (int i=m_move.square_1.row+signRowDiff; i!=m_move.square_2.row; i+=signRowDiff){
         int j = m_move.square_1.col + (i-m_move.square_1.row)*signColDiff*signRowDiff;
-        if (isObstructed(board(i, j))) return false;
+        if (isObstructed(board({i, j}))) return false;
     }
     return true;
 }
@@ -89,7 +89,7 @@ bool boardMove::isRookLegal() const
         const int maxIt = m_move.square_2.col - m_move.square_1.col;
 
         for (int i=signDiff; i!=maxIt; i+=signDiff){
-            if (isObstructed(board(m_move.square_1.row, m_move.square_1.col+i))) return false;
+            if (isObstructed(board({m_move.square_1.row, m_move.square_1.col+i}))) return false;
         }
         return true; //no obstruction
     }else if (m_move.square_1.col==m_move.square_2.col){
@@ -97,7 +97,7 @@ bool boardMove::isRookLegal() const
         const int maxIt = m_move.square_2.row - m_move.square_1.row;
 
         for (int i=signDiff; i!=maxIt; i+=signDiff){
-            if (isObstructed(board(m_move.square_1.row+i, m_move.square_1.col))) return false;
+            if (isObstructed(board({m_move.square_1.row+i, m_move.square_1.col}))) return false;
         }
         return true; //no obstruction
     }
@@ -123,28 +123,28 @@ bool boardMove::isPawnLegal() const
 {
     //can be rewritten much smaller
 
-    if (board(m_move.square_1.row, m_move.square_1.col).color == Color::White){ //white pawn
+    if (board(m_move.square_1).color == Color::White){ //white pawn
         if ((m_move.square_1.row==1)&&(m_move.square_2.row==3)&&(m_move.square_1.col==m_move.square_2.col)){ //double advance
-            if ((board(m_move.square_2.row, m_move.square_2.col) == noPiece) && (board(2, m_move.square_2.col) == noPiece))
+            if ((board(m_move.square_2) == noPiece) && (board({2, m_move.square_2.col}) == noPiece))
                 return true;
         }else{
             if (m_move.square_1.row+1==m_move.square_2.row){
                 if (m_move.square_1.col==m_move.square_2.col)
-                    if (board(m_move.square_2.row, m_move.square_2.col) == noPiece) return true;
+                    if (board(m_move.square_2) == noPiece) return true;
                 if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
-                    if (m_piece.color != board(m_move.square_2.row, m_move.square_2.col).color) return true;
+                    if (m_piece.color != board(m_move.square_2).color) return true;
             }
         }
     }else{
         if ((m_move.square_1.row==6)&&(m_move.square_2.row==4)&&(m_move.square_1.col==m_move.square_2.col)){ //double advance
-            if ((board(m_move.square_2.row, m_move.square_2.col) == noPiece) && (board(5, m_move.square_2.col) == noPiece))
+            if ((board(m_move.square_2) == noPiece) && (board({5, m_move.square_2.col}) == noPiece))
                 return true;
         }else{
             if (m_move.square_1.row-1==m_move.square_2.row){
                 if (m_move.square_1.col==m_move.square_2.col)
-                    if (board(m_move.square_2.row, m_move.square_2.col) == noPiece) return true;
+                    if (board(m_move.square_2) == noPiece) return true;
                 if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
-                    if (m_piece.color != board(m_move.square_2.row, m_move.square_2.col).color) return true;
+                    if (m_piece.color != board(m_move.square_2).color) return true;
             }
         }
     }

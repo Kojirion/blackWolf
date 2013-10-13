@@ -16,7 +16,7 @@ public:
 
     position(const position &givenPos, const Move &move);
 
-    const Unit& operator()(int row, int col) const;
+    const Unit& operator()(const Square& square) const;
 
 
     bool whiteCastleQueen;
@@ -28,7 +28,7 @@ public:
     bool wasEnPassant;
     bool wasPromotion;
 
-    void setPromotion(int row, int col, Unit chosenPiece);
+    void setPromotion(const Square& square, const Unit& chosenPiece);
 
     Color getTurnColor() const;
     void setTurnColor(Color color);

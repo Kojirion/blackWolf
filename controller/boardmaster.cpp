@@ -93,7 +93,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent
-    if (game.getPosition()(row1,col1).piece==Piece::None) return;
+    if (game.getPosition()({row1,col1}).piece==Piece::None) return;
 
     completeMove move(game.getPosition(),{{row1, col1}, {row2, col2}});
 
@@ -166,7 +166,7 @@ void boardMaster::promotionChoiceMade(Piece whichPiece)
     Color whichSide;
     if (game.turnColor()==Color::White) whichSide = Color::Black;
     else whichSide = Color::White;
-    game.setPromotion(toPromote.square_2.row,toPromote.square_2.col, {whichSide, whichPiece});
+    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
 
     promotionWindow->Show(false);
     enableWindow(true);
