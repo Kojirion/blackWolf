@@ -224,7 +224,7 @@ bool boardMaster::requestMove(int row1, int col1, int row2, int col2)
 {
     if (!game.userTurn()) //set premove
     {
-        premove = std::make_tuple(true,row1,col1,row2,col2);
+        premove = {{row1,col1},{row2,col2}};
         board.setArrow(row1,col1,row2,col2);
         return false;
     }
@@ -247,7 +247,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     board(theWindow,resources),    
     sideChoice(desktop),    
     settingsWindow(desktop),
-    premove(std::make_tuple(false,0,0,0,0)),
+    premove({{0,0},{0,0}}), premoveOn(false),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create()),
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
@@ -355,11 +355,11 @@ void boardMaster::switchTurn()
     status.setToPlay(game.turnColor());
     game.switchTurn();
 
-    if (std::get<0>(premove))
+    if (premoveOn)
     {
-        std::get<0>(premove) = false;
+        premoveOn = false;
         board.clearArrows();
-        requestMove(std::get<1>(premove),std::get<2>(premove),std::get<3>(premove),std::get<4>(premove));
+        requestMove(premove.square_1.row, premove.square_1.col, premove.square_2.row, premove.square_2.col);
     }
 
 //    if (!game.userTurn()){

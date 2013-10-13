@@ -80,9 +80,8 @@ private:
 
     settingsState settingsWindow;
 
-    typedef std::tuple<bool,int,int,int,int> premoveTuple;
-
-    premoveTuple premove;
+    Move premove;
+    bool premoveOn;
 
     netWidgets netWindow;
 
