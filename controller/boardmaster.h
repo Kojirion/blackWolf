@@ -92,15 +92,10 @@ private:
     chessEngine chessAi;
     client fics;
 
-    //move was promotion
-    //so pop the window for selection or have ai choose
-    void handlePromotion(int row1, int col1, int row2, int col2);
+    void handlePromotion(const Move &move);
 
-    int toPromoteRow1;
-    int toPromoteCol1;
-    int toPromoteRow2;
-    int toPromoteCol2;
-    Piece promotionChoice; //which piece was chosen by either ai or player
+    Move toPromote;
+    Piece promotionChoice;
 
 
     void settingsClicked();

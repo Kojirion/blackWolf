@@ -27,12 +27,9 @@ void boardMaster::flagDown(Color loser)
     setGameEnded(!loser);
 }
 
-void boardMaster::handlePromotion(int row1, int col1, int row2, int col2)
+void boardMaster::handlePromotion(const Move& move)
 {
-    toPromoteRow1 = row1;
-    toPromoteCol1 = col1;
-    toPromoteRow2 = row2;
-    toPromoteCol2 = col2;
+    toPromote = move;
 
     if (!game.userTurn()){ //techinically, it still is
         //enable promotion window
@@ -74,7 +71,7 @@ void boardMaster::moveMake(const completeMove &move)
 
     //handle promotion AND update the engine, depending on whether it was or not
     if (game.getPosition().wasPromotion){
-        handlePromotion(originRow, originCol, destRow, destCol);
+        handlePromotion({{originRow, originCol}, {destRow, destCol}});
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
@@ -103,11 +100,11 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
     board.moveMake(move); //update view
     game.setPosition(move.getNewBoard()); //update model
 
-    if (promotionChoice != Piece::None){
-        toPromoteRow1 = row1;
-        toPromoteCol1 = col1;
-        toPromoteRow2 = row2;
-        toPromoteCol2 = col2;
+    if (promotionChoice != Piece::None){        
+        toPromote.square_1.row = row1;
+        toPromote.square_1.col = col1;
+        toPromote.square_2.row = row2;
+        toPromote.square_2.col = col2;
         promotionChoiceMade(promotionChoice);
     }
 
@@ -167,13 +164,13 @@ void boardMaster::promotionChoiceMade(Piece whichPiece)
     promotionChoice = whichPiece;
 
     //update view
-    board.setPromotion(toPromoteRow2, toPromoteCol2, whichPiece);
+    board.setPromotion(toPromote.square_2.row, toPromote.square_2.col, whichPiece);
 
     //update model
     Color whichSide;
     if (game.turnColor()==Color::White) whichSide = Color::Black;
     else whichSide = Color::White;
-    game.setPromotion(toPromoteRow2,toPromoteCol2, {whichSide, whichPiece});
+    game.setPromotion(toPromote.square_2.row,toPromote.square_2.col, {whichSide, whichPiece});
 
     promotionWindow->Show(false);
     enableWindow(true);
@@ -253,7 +250,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     premove(std::make_tuple(false,0,0,0,0)),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create()),
-    toPromoteRow1(0), toPromoteCol1(0), toPromoteRow2(0), toPromoteCol2(0), promotionChoice(Piece::None)
+    toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1,_2,_3,_4));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
