@@ -78,7 +78,7 @@ void boardMaster::moveMake(const completeMove &move)
     }
 
     //update move counter and move list widget
-    moveList.addMove(originRow,originCol,destRow,destCol,game.getPlyCount());
+    moveList.addMove({{originRow,originCol},{destRow,destCol}},game.getPlyCount());
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());
@@ -117,7 +117,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 //    }
 
     //update move counter and move list widget
-    moveList.addMove(row1,col1,row2,col2,game.getPlyCount());
+    moveList.addMove({{row1,col1},{row2,col2}},game.getPlyCount());
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());

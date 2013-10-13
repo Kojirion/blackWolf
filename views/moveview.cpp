@@ -1,5 +1,6 @@
 #include "moveview.h"
 #include <SFGUI/Label.hpp>
+#include "../blackWolf.h"
 
 moveView::moveView():
     moveListWindow(sfg::ScrolledWindow::Create()),
@@ -16,9 +17,9 @@ moveView::moveView():
     moveListWindow->AddWithViewport(moveList);
 }
 
-void moveView::addMove(const int row1, const int col1, const int row2, const int col2, const int plyCounter)
+void moveView::addMove(const Move& move, const int plyCounter)
 {
-    sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(row1,col1,row2,col2)));
+    sfg::Label::Ptr newMove(sfg::Label::Create(moveToString(move)));
     const unsigned int plyPairsCount = plyCounter/2;
     const unsigned int plyRemainder = (plyCounter)%2;
     moveList->Attach(newMove,{plyRemainder,plyPairsCount,1,1});
@@ -59,14 +60,14 @@ std::string moveView::colToString(const int col) const
     }
 }
 
-std::string moveView::moveToString(const int row1, const int col1, const int row2, const int col2) const
+std::string moveView::moveToString(const Move &move) const
 {
-    return (cellToString(row1,col1) + "-" + cellToString(row2,col2));
+    return (cellToString(move.square_1) + "-" + cellToString(move.square_2));
 }
 
-std::string moveView::cellToString(const int row, const int col) const
+std::string moveView::cellToString(const Square &square) const
 {
-    return (colToString(col) + std::to_string(row+1));
+    return (colToString(square.col) + std::to_string(square.row+1));
 }
 
 void moveView::autoscroll()

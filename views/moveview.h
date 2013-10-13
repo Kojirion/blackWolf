@@ -3,6 +3,9 @@
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Table.hpp>
 
+class Move;
+class Square;
+
 class moveView
 {
 private:
@@ -10,14 +13,14 @@ private:
     sfg::Table::Ptr moveList;
 
     std::string colToString(const int col) const;
-    std::string moveToString(const int row1, const int col1, const int row2, const int col2) const;
-    std::string cellToString(const int row, const int col) const;
+    std::string moveToString(const Move& move) const;
+    std::string cellToString(const Square& square) const;
 
     void autoscroll();
 public:
     moveView();
 
-    void addMove(const int row1, const int col1, const int row2, const int col2, const int plyCounter);
+    void addMove(const Move &move, const int plyCounter);
 
     sfg::Widget::Ptr getView();
 
