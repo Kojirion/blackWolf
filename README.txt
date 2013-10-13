@@ -1,4 +1,4 @@
-Black Wolf is a modern cross-platform chess gui, able to load engines using the UCI protocol.
+Black Wolf is a cross-platform chess gui, able to load engines using the UCI protocol.
 Currently configured to use Stockfish - http://stockfishchess.org/
 
 Board and piece art by Peter Wong - http://www.virtualpieces.net/
@@ -9,7 +9,7 @@ Libraries used:
 SFGUI - http://sfgui.sfml-dev.de/
 SFML - http://www.sfml-dev.org/
 Thor - http://www.bromeon.ch/libraries/thor/index.html
-tBoost - http://www.boost.org
+Boost - http://www.boost.org
 
 
 

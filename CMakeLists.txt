@@ -22,50 +22,50 @@ set(VERSION_PATCH 0)
 #add_subdirectory(ext)
 
 set(bw_HDRS
-    controller/boardmaster.h
-    views/components/piecesprite.h
-    common/position.h
-    guimanager.h
-    common/boardmove.h
-    common/completemove.h
-    chessengine.h    
-    resourcemanager.h
-    controller/components/settingsstate.h
-    views/moveview.h
-    views/boardcanvas.h
-    views/clocksview.h
-    model/gamedata.h
-    blackWolf.h
-    views/statusview.h
-    controller/components/buttonbox.h
-    controller/components/sidechoicewindow.h
-    views/components/firework.h
-    client.h
-    netwidgets.h
+    controller/BoardMaster.hpp
+    views/components/PieceSprite.hpp
+    common/Position.hpp
+    Application.hpp
+    common/PseudoMove.hpp
+    common/CompleteMove.hpp
+    Engine.hpp    
+    Resources.hpp
+    controller/components/Settings.hpp
+    views/MoveList.hpp
+    views/Canvas.hpp
+    views/Clocks.hpp
+    model/GameData.hpp
+    BlackWolf.hpp
+    views/Status.hpp
+    controller/components/ButtonBox.hpp
+    controller/components/ColorChoices.hpp
+    views/components/Firework.hpp
+    Client.hpp
+    NetWidgets.hpp
 )
 
 set(bw_SRCS
-    controller/boardmaster.cpp
-    views/components/piecesprite.cpp
-    common/position.cpp
-    guimanager.cpp
-    common/boardmove.cpp
-    common/completemove.cpp
-    chessengine.cpp    
-    ext/file_descriptor.cpp
-    resourcemanager.cpp
-    controller/components/settingsstate.cpp
-    views/moveview.cpp
-    views/boardcanvas.cpp
-    views/clocksview.cpp
-    model/gamedata.cpp    
-    views/statusview.cpp
-    controller/components/buttonbox.cpp
-    controller/components/sidechoicewindow.cpp
-    views/components/firework.cpp
-    client.cpp
-    netwidgets.cpp
-    blackWolf.cpp
+    controller/BoardMaster.cpp
+    views/components/PieceSprite.cpp
+    common/Position.cpp
+    Application.cpp
+    common/PseudoMove.cpp
+    common/CompleteMove.cpp
+    Engine.cpp    
+    Resources.cpp
+    controller/components/Settings.cpp
+    views/MoveList.cpp
+    views/Canvas.cpp
+    views/Clocks.cpp
+    model/GameData.cpp
+    BlackWolf.cpp
+    views/Status.cpp
+    controller/components/ButtonBox.cpp
+    controller/components/ColorChoices.cpp
+    views/components/Firework.cpp
+    Client.cpp
+    NetWidgets.cpp
+	ext/file_descriptor.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})

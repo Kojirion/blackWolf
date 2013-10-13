@@ -1,10 +1,8 @@
-#include "guimanager.h"
-#include <iostream>
-#include "options.h"
+#include "Application.hpp"
 
 int main()
 {
-    guiManager app;
+    Application app;
 
     app.run();
 
