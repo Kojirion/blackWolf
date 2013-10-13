@@ -26,10 +26,7 @@ public:
     bool isCheckmate() const;
     bool isStalemate() const;
 
-    int getRow1() const;
-    int getCol1() const;
-    int getRow2() const;
-    int getCol2() const;
+    const Move& getMove() const;
 
     position getNewBoard() const;
 

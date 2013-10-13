@@ -106,7 +106,7 @@ void client::handleData(boost::system::error_code ec)
                 }else promotionPiece = Piece::None;
 
 
-                positionReady(row1,col1,row2,col2, whiteTime, blackTime, promotionPiece);
+                positionReady({{row1,col1},{row2,col2}}, whiteTime, blackTime, promotionPiece);
             }else if (tokens[0] == "Creating:"){
                 int time = 60*std::stoi(tokens[7]);
                 if (tokens[1] == nickname) startGame(Color::White, time, tokens[1], tokens[3]);
@@ -153,9 +153,10 @@ int client::stringToCol(const std::string stringedCol) const
     return -1; //appease compiler
 }
 
-std::string client::moveString(const int row1, const int col1, const int row2, const int col2, Piece promotionChoice) const
+std::string client::moveString(const Move &move, Piece promotionChoice) const
 {
-    std::string toReturn(colToString(col1) + std::to_string(row1+1) + colToString(col2) + std::to_string(row2+1));
+    std::string toReturn(colToString(move.square_1.col) + std::to_string(move.square_1.row+1)
+                         + colToString(move.square_2.col) + std::to_string(move.square_2.row+1));
     if (promotionChoice != Piece::None) toReturn += "=" + pieceToSymbol(promotionChoice);
     return toReturn;
 }
@@ -203,7 +204,7 @@ Piece client::symbolToPiece(std::string symbol) const
 }
 
 
-void client::makeMove(int row1, int col1, int row2, int col2, Piece promotionChoice)
+void client::makeMove(const Move &move, Piece promotionChoice)
 {
-    toClient(moveString(row1,col1,row2,col2,promotionChoice));
+    toClient(moveString(move,promotionChoice));
 }

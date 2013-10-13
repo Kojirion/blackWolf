@@ -60,10 +60,7 @@ void boardMaster::settingsDone(std::string whitePrefix, std::string blackPrefix,
 
 void boardMaster::moveMake(const completeMove &move)
 {
-    const int originRow = move.getRow1();
-    const int originCol = move.getCol1();
-    const int destRow = move.getRow2();
-    const int destCol = move.getCol2();
+    const Move& toMake = move.getMove();
 
     board.moveMake(move); //update view
     board.releasePiece(); //release piece
@@ -71,14 +68,14 @@ void boardMaster::moveMake(const completeMove &move)
 
     //handle promotion AND update the engine, depending on whether it was or not
     if (game.getPosition().wasPromotion){
-        handlePromotion({{originRow, originCol}, {destRow, destCol}});
+        handlePromotion(toMake);
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
     }else{
         //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
     }
 
     //update move counter and move list widget
-    moveList.addMove({{originRow,originCol},{destRow,destCol}},game.getPlyCount());
+    moveList.addMove(toMake,game.getPlyCount());
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());
@@ -86,25 +83,22 @@ void boardMaster::moveMake(const completeMove &move)
     if (!game.ended()) switchTurn();
 }
 
-void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Piece promotionChoice)
+void boardMaster::networkMoveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
 {
     game.setTime(whiteTime, blackTime);
     game.startClock(); //this just means an unnecessary stop
 
     //now an ugly way to say: if we already made the move on the board,
     //we don't care what the client sent
-    if (game.getPosition()({row1,col1}).piece==Piece::None) return;
+    if (game.getPosition()(move.square_1).piece==Piece::None) return;
 
-    completeMove move(game.getPosition(),{{row1, col1}, {row2, col2}});
+    completeMove c_move(game.getPosition(), move);
 
-    board.moveMake(move); //update view
-    game.setPosition(move.getNewBoard()); //update model
+    board.moveMake(c_move); //update view
+    game.setPosition(c_move.getNewBoard()); //update model
 
-    if (promotionChoice != Piece::None){        
-        toPromote.square_1.row = row1;
-        toPromote.square_1.col = col1;
-        toPromote.square_2.row = row2;
-        toPromote.square_2.col = col2;
+    if (promotionChoice != Piece::None){
+        toPromote = move;
         promotionChoiceMade(promotionChoice);
     }
 
@@ -117,7 +111,7 @@ void boardMaster::networkMoveMake(int row1, int col1, int row2, int col2, int wh
 //    }
 
     //update move counter and move list widget
-    moveList.addMove({{row1,col1},{row2,col2}},game.getPlyCount());
+    moveList.addMove(move,game.getPlyCount());
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());
@@ -250,7 +244,7 @@ boardMaster::boardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     board.getSignal().connect(boost::bind(&boardMaster::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&boardMaster::settingsDone, this,_1,_2,_3));
-    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4, _5, _6, _7));
+    fics.positionReady.connect(boost::bind(&boardMaster::networkMoveMake, this, _1, _2, _3, _4));
     fics.startGame.connect(boost::bind(&boardMaster::newGame, this, _1, _2, _3, _4));
     fics.gameEnd.connect(boost::bind(&boardMaster::setGameEnded, this, _1));
     fics.textReady.connect(boost::bind(&netWidgets::addLine, &netWindow, _1));

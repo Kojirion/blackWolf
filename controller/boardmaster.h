@@ -104,7 +104,7 @@ private:
     void flagDown(Color loser);
 
     void moveMake (const completeMove &move);
-    void networkMoveMake (int row1, int col1, int row2, int col2, int whiteTime, int blackTime, Piece promotionChoice);
+    void networkMoveMake (const Move &move, int whiteTime, int blackTime, Piece promotionChoice);
 
 
 

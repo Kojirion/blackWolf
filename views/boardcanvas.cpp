@@ -86,19 +86,15 @@ void boardCanvas::display()
 
 void boardCanvas::moveMake(const completeMove& move)
 {
-    const int originRow = move.getRow1();
-    const int originCol = move.getCol1();
-    const int destRow = move.getRow2();
-    const int destCol = move.getCol2();
+    const Move& toMake(move.getMove());
 
-    destroy({destRow,destCol});
-    bimapMove({{originRow, originCol}, {destRow, destCol}});
-    pieces.by<squareId>().find(Square{destRow,destCol})->get<pieceId>().setPosition(cellToPosition({destRow,destCol}));
-    //pieces[].moveTo(destRow, destCol, cellToPosition());
+    destroy(toMake.square_2);
+    bimapMove(toMake);
+    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
 
     position currentPosition = move.getNewBoard();
-    if (currentPosition.wasCastle) handleCastle({destRow,destCol});
-    if (currentPosition.wasEnPassant) handleEnPassant({destRow,destCol});
+    if (currentPosition.wasCastle) handleCastle(toMake.square_2);
+    if (currentPosition.wasEnPassant) handleEnPassant(toMake.square_2);
 }
 
 void boardCanvas::bimapMove(const Move &move)
