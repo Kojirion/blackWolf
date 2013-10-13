@@ -83,3 +83,10 @@ bool operator &(const Color &lhs, const Color &rhs)
 {
     return static_cast<int>(lhs) & static_cast<int>(rhs);
 }
+
+
+bool operator <(const Square &lhs, const Square &rhs)
+{
+    if(lhs.row==rhs.row) return (lhs.col<rhs.col);
+    return (lhs.row<rhs.row);
+}

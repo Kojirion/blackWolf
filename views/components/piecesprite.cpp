@@ -37,7 +37,7 @@ bool pieceSprite::contains(const sf::Vector2f &point) const
             && (point.y >= topLeft.y) && (point.y <= lowRight.y);
 }
 
-void pieceSprite::setPosition(const sf::Vector2f &position)
+void pieceSprite::setPosition(const sf::Vector2f &position) const
 {
     m_quad[0].position = position;
     m_quad[1].position = m_quad[0].position + sf::Vector2f(50.f, 0);

@@ -11,7 +11,7 @@ private:
     Unit m_type;
     int m_id;
 
-    std::array<sf::Vertex, 4> m_quad;
+    mutable std::array<sf::Vertex, 4> m_quad;
 
     sf::Vector2f typeToTexPos(const Unit& type) const;
 
@@ -25,7 +25,7 @@ public:
     Color getColor() const;
     bool contains(const sf::Vector2f &point) const;
 
-    void setPosition(const sf::Vector2f& position);
+    void setPosition(const sf::Vector2f& position) const;
 
     const sf::Vector2f& getPosition() const;
 };

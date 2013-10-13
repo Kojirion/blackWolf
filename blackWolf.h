@@ -36,6 +36,8 @@ struct Square{
     int col;
 };
 
+bool operator<(const Square& lhs, const Square& rhs);
+
 struct Move{
     Square square_1;
     Square square_2;

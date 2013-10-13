@@ -4,37 +4,20 @@
 #include <boost/bimap/support/lambda.hpp>
 #include "../../views/components/piecesprite.h"
 
-class squareId{
-public:
-    int row;
-    int col;
-
-    squareId(int theRow, int theCol):
-        row(theRow),col(theCol)
-    {
-
-    }
-
-    bool operator< (const squareId &that) const{
-        if(row==that.row) return (col<that.col);
-        return (row<that.row);
-    }
-};
-
 class piecesBimap
 {
 public:
 
 
-    typedef boost::bimap<squareId, pieceSprite> cellsNpieces;
+    typedef boost::bimap<Square, pieceSprite> SquaresToPieces;
 
 
     class iterator{
     private:
         piecesBimap *parent;
-        cellsNpieces::right_iterator pos;
+        SquaresToPieces::right_iterator pos;
     public:
-        iterator(piecesBimap *p, cellsNpieces::right_iterator thePos):
+        iterator(piecesBimap *p, SquaresToPieces::right_iterator thePos):
             parent(p), pos(thePos)
         {
 
@@ -76,7 +59,7 @@ public:
             return pos->second.col;
         }
 
-        cellsNpieces::right_iterator getRI()
+        SquaresToPieces::right_iterator getRI()
         {
             return pos;
         }
@@ -87,7 +70,7 @@ public:
         piecesBimap &parent;
         int rowId;
         int colId;
-        cellsNpieces::right_iterator pieceToUse;
+        SquaresToPieces::right_iterator pieceToUse;
 
         pieceSprite changePosition(pieceSprite piece, const sf::Vector2f& position) const
         {
@@ -105,7 +88,7 @@ public:
         spriteHelper(piecesBimap &p, const int theRowId, const int theColId):
             parent(p), rowId(theRowId), colId(theColId)
         {
-            pieceToUse = parent.pieces.project_right(parent.pieces.left.find(squareId(rowId,colId)));
+            pieceToUse = parent.pieces.project_right(parent.pieces.left.find(Square{rowId,colId}));
         }
 
         spriteHelper(piecesBimap &p, const pieceSprite& piece):
@@ -131,7 +114,7 @@ public:
         }
 
         void moveTo(const int destRow, const int destCol, const sf::Vector2f position){
-            parent.pieces.right.modify_data(pieceToUse, boost::bimaps::_data = squareId(destRow,destCol));
+            parent.pieces.right.modify_data(pieceToUse, boost::bimaps::_data = Square{destRow,destCol});
             parent.pieces.right.modify_key(pieceToUse, boost::bimaps::_key = changePosition(pieceToUse->first,position));
         }
 
@@ -141,14 +124,14 @@ public:
         }
 
         bool erase(){ //returns true if element erased
-            squareId toDelete(rowId,colId);
+            Square toDelete{rowId,colId};
 
             return (parent.pieces.left.erase(toDelete));
         }
 
         void insert(const pieceSprite &toAdd){
-            squareId cellId(rowId,colId);
-            parent.pieces.insert(cellsNpieces::value_type(cellId,toAdd));
+            Square cellId{rowId,colId};
+            parent.pieces.insert(SquaresToPieces::value_type(cellId,toAdd));
         }
 
         Color getColor() const
@@ -223,7 +206,7 @@ public:
 
 private:
 
-    cellsNpieces pieces;
+    SquaresToPieces pieces;
 };
 
 #endif // PIECESBIMAP_H
