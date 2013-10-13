@@ -83,7 +83,7 @@ void boardCanvas::display()
 
 }
 
-void boardCanvas::moveMake(const completeMove move)
+void boardCanvas::moveMake(const completeMove& move)
 {
     const int originRow = move.getRow1();
     const int originCol = move.getCol1();
@@ -94,8 +94,8 @@ void boardCanvas::moveMake(const completeMove move)
     pieces[originRow][originCol].moveTo(destRow, destCol, cellToPosition({destRow, destCol}));
 
     position currentPosition = move.getNewBoard();
-    if (currentPosition.wasCastle) handleCastle(destRow,destCol);
-    if (currentPosition.wasEnPassant) handleEnPassant(destRow,destCol);
+    if (currentPosition.wasCastle) handleCastle({destRow,destCol});
+    if (currentPosition.wasEnPassant) handleEnPassant({destRow,destCol});
 }
 
 sfg::Widget::Ptr boardCanvas::getBoardWidget() const
@@ -172,33 +172,33 @@ void boardCanvas::clearArrows()
     arrows.clear();
 }
 
-void boardCanvas::handleCastle(const int row, const int col)
+void boardCanvas::handleCastle(const Square &square)
 {
-    if (row==0){
-        if (col==2){
+    if (square.row==0){
+        if (square.col==2){
             pieces[0][0].moveTo(0,3,cellToPosition({0,3}));
         }else{
-            BOOST_ASSERT_MSG(col==6, "Invalid Castle");
+            BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
             pieces[0][7].moveTo(0,5,cellToPosition({0,5}));
         }
     }else{
-        if (col==2){
-            BOOST_ASSERT_MSG(row==7, "Invalid Castle");
+        BOOST_ASSERT_MSG(square.row==7, "Invalid Castle");
+        if (square.col==2){
             pieces[7][0].moveTo(7,3,cellToPosition({7,3}));
         }else{
-            BOOST_ASSERT_MSG(col==6, "Invalid Castle");
+            BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
             pieces[7][7].moveTo(7,5,cellToPosition({7,5}));
         }
     }
 }
 
-void boardCanvas::handleEnPassant(const int row, const int col)
+void boardCanvas::handleEnPassant(const Square &square)
 {
-    if (row==5){
-        destroy({4,col});
+    if (square.row==5){
+        destroy({4,square.col});
     }else{
-        BOOST_ASSERT_MSG(row==2, "Invalid en passant");
-        destroy({3,col});
+        BOOST_ASSERT_MSG(square.row==2, "Invalid en passant");
+        destroy({3,square.col});
     }
 }
 
@@ -281,10 +281,10 @@ boost::signals2::signal<bool (const Move&)>& boardCanvas::getSignal()
     return requestMove;
 }
 
-void boardCanvas::setPromotion(int row, int col, Piece piece)
+void boardCanvas::setPromotion(const Square &square, Piece piece)
 {
-    const Color whichSide = pieces[row][col].getColor();
-    destroy({row,col});
-    pieceSprite toAdd(cellToPosition({row,col}),{whichSide, piece},idCount++);
-    pieces[row][col].insert(toAdd);
+    const Color whichSide = pieces[square.row][square.col].getColor();
+    destroy(square);
+    pieceSprite toAdd(cellToPosition(square),{whichSide, piece},idCount++);
+    pieces[square.row][square.col].insert(toAdd);
 }

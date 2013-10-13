@@ -63,11 +63,11 @@ private:
 
     //move was castle with destination the given square
     //so move rook to appropriate square
-    void handleCastle(const int row, const int col);
+    void handleCastle(const Square& square);
 
     //move was en passant moving onto given square
     //so destroy the real pawn
-    void handleEnPassant(const int row, const int col);
+    void handleEnPassant(const Square& square);
 
     //signals
     boost::signals2::signal<bool (const Move&)> requestMove;
@@ -85,7 +85,7 @@ private:
 public:
     boardCanvas(sf::Window& theWindow, resourceManager &theResources);
     void display();
-    void moveMake(const completeMove move);
+    void moveMake(const completeMove &move);
 
     sfg::Widget::Ptr getBoardWidget() const;
     void setPosition(const position &givenPosition);
@@ -93,7 +93,7 @@ public:
 
     boost::signals2::signal<bool (const Move &)> &getSignal();
 
-    void setPromotion(int row, int col, Piece piece);
+    void setPromotion(const Square& square, Piece piece);
 
     void flipBoard();
 

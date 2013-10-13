@@ -164,7 +164,7 @@ void boardMaster::promotionChoiceMade(Piece whichPiece)
     promotionChoice = whichPiece;
 
     //update view
-    board.setPromotion(toPromote.square_2.row, toPromote.square_2.col, whichPiece);
+    board.setPromotion(toPromote.square_2, whichPiece);
 
     //update model
     Color whichSide;
