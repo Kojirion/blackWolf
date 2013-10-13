@@ -28,8 +28,7 @@ set(bw_HDRS
     guimanager.h
     common/boardmove.h
     common/completemove.h
-    chessengine.h
-    views/components/piecesbimap.h
+    chessengine.h    
     resourcemanager.h
     controller/components/settingsstate.h
     views/moveview.h
@@ -52,8 +51,7 @@ set(bw_SRCS
     guimanager.cpp
     common/boardmove.cpp
     common/completemove.cpp
-    chessengine.cpp
-    views/components/piecesbimap.cpp
+    chessengine.cpp    
     ext/file_descriptor.cpp
     resourcemanager.cpp
     controller/components/settingsstate.cpp
