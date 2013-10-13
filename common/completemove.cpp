@@ -133,7 +133,7 @@ completeMove::completeMove(const position &thePosition, const int theRow1, const
 
 bool completeMove::isLegal() const
 {
-    if (m_piece.color == board.getTurnColor()) return false;
+    if (m_piece.color != board.getTurnColor()) return false;
     //assumes that color has been switched if necessary
 
     if (newBoard.wasCastle) return handleCastle();

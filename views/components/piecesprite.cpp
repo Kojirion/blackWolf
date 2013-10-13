@@ -61,12 +61,12 @@ sf::Vector2f pieceSprite::typeToTexPos(const Unit &type) const
 
     if (type.piece == Piece::Pawn){
         if (type.color == Color::White)
-            return (offset + sf::Vector2f(0, side));
-        else return (offset + sf::Vector2f(0, 6*side));
+            return (offset + sf::Vector2f(0, 6*side));
+        else return (offset + sf::Vector2f(0, side));
     }
 
     if (type.color == Color::White)
-        return (offset + sf::Vector2f(static_cast<int>(type.piece)*side, 0));
-    else
         return (offset + sf::Vector2f(static_cast<int>(type.piece)*side, 7*side));
+    else
+        return (offset + sf::Vector2f(static_cast<int>(type.piece)*side, 0));
 }

@@ -253,7 +253,7 @@ void boardCanvas::slotMouseRelease()
                     const int originCol = currentPiece.getCol();
                     sf::Vector2i gridPos = toGridPos(centrePos);
                     //send request move signal to controller
-                    std::cout << gridPos.x << "," << gridPos.y << std::endl;
+                    std::cout << originCol << "," << originRow << " -> " << gridPos.x << "," << gridPos.y << std::endl;
                     if (!(*requestMove(originRow, originCol, gridPos.y, gridPos.x)))
                         sendBack(); //if rejected send piece back
                     return;

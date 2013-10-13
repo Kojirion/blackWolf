@@ -136,7 +136,7 @@ void boardMaster::newGame(Color whoUser, int time, std::string p1, std::string p
 
     game.newGame(whoUser, time);
 
-    board.resetFor(whoUser);
+    //board.resetFor(whoUser);
 
     board.setPosition(game.getPosition());
 
@@ -145,10 +145,6 @@ void boardMaster::newGame(Color whoUser, int time, std::string p1, std::string p
     status.setToPlay(Color::White);
 
     updateClocks();
-
-    //if (!game.userBoth()) chessAi.newGame();
-
-    //if (!game.userTurn()) aiTurn();
 
 }
 
