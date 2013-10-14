@@ -1,5 +1,7 @@
 #include "GameData.hpp"
 #include <boost/assert.hpp>
+#include <boost/cast.hpp>
+#include "../controller/BoardMaster.hpp"
 
 GameData::GameData():
     m_userColor(Color::None),
@@ -7,7 +9,13 @@ GameData::GameData():
     plyCounter(0)
 {
     //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
-    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));   
+    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
+
+    messageSystem.connect("moveMade", [this](const Message& message){
+       const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+       setPosition(received->move.getNewBoard());
+       switchTurn();
+     });
 }
 
 void GameData::setTime(int whiteTime, int blackTime)

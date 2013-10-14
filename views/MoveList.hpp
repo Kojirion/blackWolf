@@ -2,11 +2,12 @@
 #define MOVEVIEW_H
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Table.hpp>
+#include "../Entity.hpp"
 
 class Move;
 class Square;
 
-class MoveList
+class MoveList : private Entity
 {
 private:
     sfg::ScrolledWindow::Ptr moveListWindow;
@@ -17,10 +18,12 @@ private:
     std::string cellToString(const Square& square) const;
 
     void autoscroll();
+
+    int plyCount;
 public:
     MoveList();
 
-    void addMove(const Move &move, const int plyCounter);
+    void addMove(const Move &move);
 
     sfg::Widget::Ptr getView();
 

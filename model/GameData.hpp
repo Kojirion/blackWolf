@@ -3,8 +3,9 @@
 #include <Thor/Time/CallbackTimer.hpp>
 #include "../BlackWolf.hpp"
 #include "../common/Position.hpp"
+#include "../Entity.hpp"
 
-class GameData
+class GameData : private Entity
 {
 private:
     Position m_position;

@@ -86,22 +86,22 @@ void BoardMaster::moveMake(const CompleteMove &move)
 
 void BoardMaster::networkMoveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
 {
-    game.setTime(whiteTime, blackTime);
-    game.startClock(); //this just means an unnecessary stop
+//    game.setTime(whiteTime, blackTime);
+//    game.startClock(); //this just means an unnecessary stop
 
-    //now an ugly way to say: if we already made the move on the board,
-    //we don't care what the client sent
-    if (game.getPosition()(move.square_1).piece==Piece::None) return;
+//    //now an ugly way to say: if we already made the move on the board,
+//    //we don't care what the client sent
+//    if (game.getPosition()(move.square_1).piece==Piece::None) return;
 
-    CompleteMove c_move(game.getPosition(), move);
+//    CompleteMove c_move(game.getPosition(), move);
 
-    board.moveMake(c_move); //update view
-    game.setPosition(c_move.getNewBoard()); //update model
+//    board.moveMake(c_move); //update view
+//    game.setPosition(c_move.getNewBoard()); //update model
 
-    if (promotionChoice != Piece::None){
-        toPromote = move;
-        promotionChoiceMade(promotionChoice);
-    }
+//    if (promotionChoice != Piece::None){
+//        toPromote = move;
+//        promotionChoiceMade(promotionChoice);
+//    }
 
     //handle promotion AND update the engine, depending on whether it was or not
 //    if (game.getPosition().wasPromotion){
@@ -112,12 +112,12 @@ void BoardMaster::networkMoveMake(const Move& move, int whiteTime, int blackTime
 //    }
 
     //update move counter and move list widget
-    moveList.addMove(move,game.getPlyCount());
+    //moveList.addMove(move,game.getPlyCount());
 
     //check for game end or switch turn
     //if (move.isCheckmate()) setGameEnded(-game.turnColor());
     //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
-    if (!game.ended()) switchTurn();
+    //if (!game.ended()) switchTurn();
 
 }
 
