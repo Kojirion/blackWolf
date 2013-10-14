@@ -12,10 +12,10 @@ GameData::GameData():
     //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
 
     messageSystem.connect("moveMade", [this](const Message& message){
-       const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-       setPosition(received->move.getNewBoard());
-       switchTurn();
-     });
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        setPosition(received->move.getNewBoard());
+        switchTurn();
+    });
 }
 
 void GameData::setTime(int whiteTime, int blackTime)

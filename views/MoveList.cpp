@@ -20,9 +20,9 @@ MoveList::MoveList():
     moveListWindow->AddWithViewport(moveList);
 
     messageSystem.connect("moveMade", [this](const Message& message){
-       const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-       addMove(received->move.getMove());
-     });
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        addMove(received->move.getMove());
+    });
 }
 
 void MoveList::addMove(const Move& move)

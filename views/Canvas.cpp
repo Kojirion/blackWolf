@@ -30,10 +30,10 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
     window->GetSignal(sfg::Widget::OnMouseEnter).Connect(&Canvas::slotEnterCanvas, this);
 
     messageSystem.connect("moveMade", [this](const Message& message){
-       const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-       moveMake(received->move);
-       releasePiece();
-     });
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        moveMake(received->move);
+        releasePiece();
+    });
 }
 
 bool Canvas::flipped() const
