@@ -16,12 +16,21 @@
 #include "../controller/components/Settings.hpp"
 #include "../Client.hpp"
 #include "../NetWidgets.hpp"
+#include "../Entity.hpp"
+
+struct MoveMessage : public Message{
+    MoveMessage(const std::string& id, const CompleteMove& move):
+      Message(id), move(move)
+    {}
+
+    CompleteMove move;
+};
 
 
 
 
 
-class BoardMaster
+class BoardMaster : private Entity
 {
 public:
     BoardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);

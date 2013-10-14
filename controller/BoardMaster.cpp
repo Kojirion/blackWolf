@@ -60,27 +60,28 @@ void BoardMaster::settingsDone(std::string whitePrefix, std::string blackPrefix,
 
 void BoardMaster::moveMake(const CompleteMove &move)
 {
-    const Move& toMake = move.getMove();
+    messageSystem.triggerEvent(MoveMessage("moveMade", move));
+//    const Move& toMake = move.getMove();
 
-    board.moveMake(move); //update view
-    board.releasePiece(); //release piece
-    game.setPosition(move.getNewBoard()); //update model
+//    board.moveMake(move); //update view
+//    board.releasePiece(); //release piece
+//    game.setPosition(move.getNewBoard()); //update model
 
-    //handle promotion AND update the engine, depending on whether it was or not
-    if (game.getPosition().wasPromotion){
-        handlePromotion(toMake);
-        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
-    }else{
-        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
-    }
+//    //handle promotion AND update the engine, depending on whether it was or not
+//    if (game.getPosition().wasPromotion){
+//        handlePromotion(toMake);
+//        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
+//    }else{
+//        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
+//    }
 
-    //update move counter and move list widget
-    moveList.addMove(toMake,game.getPlyCount());
+//    //update move counter and move list widget
+//    moveList.addMove(toMake,game.getPlyCount());
 
-    //check for game end or switch turn
-    //if (move.isCheckmate()) setGameEnded(-game.turnColor());
-    //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
-    if (!game.ended()) switchTurn();
+//    //check for game end or switch turn
+//    //if (move.isCheckmate()) setGameEnded(-game.turnColor());
+//    //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
+//    if (!game.ended()) switchTurn();
 }
 
 void BoardMaster::networkMoveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)

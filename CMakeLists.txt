@@ -42,6 +42,7 @@ set(bw_HDRS
     views/components/Firework.hpp
     Client.hpp
     NetWidgets.hpp
+    Entity.hpp
 )
 
 set(bw_SRCS
@@ -66,6 +67,7 @@ set(bw_SRCS
     Client.cpp
     NetWidgets.cpp
 	ext/file_descriptor.cpp
+    Entity.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
