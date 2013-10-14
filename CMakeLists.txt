@@ -91,8 +91,8 @@ include_directories(${BOOST_INCLUDE_DIRS})
 set(test_SRCS
     tests/tests.cpp
 )
-add_executable(tests ${test_SRCS})
-target_link_libraries(tests asLibrary)
-target_link_libraries(tests /usr/local/lib/libboost_unit_test_framework.so)
-target_link_libraries(tests /usr/local/lib/libboost_system.so)
-target_link_libraries(tests /usr/local/lib/libboost_timer.so)
+add_executable(test ${test_SRCS})
+target_link_libraries(test asLibrary)
+target_link_libraries(test /usr/local/lib/libboost_unit_test_framework.so)
+target_link_libraries(test /usr/local/lib/libboost_system.so)
+target_link_libraries(test /usr/local/lib/libboost_timer.so)
