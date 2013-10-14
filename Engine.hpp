@@ -12,6 +12,7 @@ class Engine
 public:
 
     Engine();
+    ~Engine();
 
     void makeMove(const Move& move, const int pieceChoice = 0);
 
@@ -57,6 +58,8 @@ private:
     int symbolToInt(std::string symbol) const;
     std::string intToSymbol(const int which) const;
     int promotedChoice;
+
+    bool loaded;
 
 };
 

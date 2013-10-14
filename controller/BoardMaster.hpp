@@ -34,7 +34,6 @@ class BoardMaster : private Entity
 {
 public:
     BoardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
-    ~BoardMaster();
 
     sfg::Desktop& desktop;
     sfg::Window::Ptr promotionWindow;

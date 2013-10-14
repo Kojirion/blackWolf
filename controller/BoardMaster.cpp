@@ -4,6 +4,7 @@
 #include <SFGUI/ScrolledWindow.hpp>
 #include "components/ButtonBox.hpp"
 #include <SFGUI/Notebook.hpp>
+#include <boost/cast.hpp>
 
 void BoardMaster::setGameEnded(Color result)
 {
@@ -318,20 +319,19 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     //fics.connect();
     newGame(Color::Both, 300, "lol", "what");
 
-//    if (!chessAi.load()) newGame(bw::White | bw::Black);
-//    else newGame(bw::White);
+    //    if (!chessAi.load()) newGame(bw::White | bw::Black);
+    //    else newGame(bw::White);
 
-    //VALGRIND_CHECK_MEM_IS_DEFINED;
-    //VALGRIND_CHECK_VALUE_IS_DEFINED(game);
+    messageSystem.connect("moveMade", [this](const Message& message){
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        if (received->move.getNewBoard().wasPromotion)
+            handlePromotion(received->move.getMove());
+    });
 
 
 
-}
 
-BoardMaster::~BoardMaster()
 
-{
-    if (!game.userBoth()) chessAi.unLoad();
 }
 
 void BoardMaster::display() //should rename to update

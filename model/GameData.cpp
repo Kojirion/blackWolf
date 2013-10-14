@@ -14,7 +14,8 @@ GameData::GameData():
     messageSystem.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         setPosition(received->move.getNewBoard());
-        switchTurn();
+        if (!ended())
+            switchTurn();
     });
 }
 

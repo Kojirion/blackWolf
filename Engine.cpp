@@ -105,9 +105,15 @@ Engine::Engine():
     engineInSink(engineIn.sink, boost::iostreams::close_handle),
     engineInSource(engineIn.source, boost::iostreams::close_handle),
     engineOutStream(engineOutSource),
-    engineInStream(engineInSink)
+    engineInStream(engineInSink),
+    loaded(false)
 {
 
+}
+
+Engine::~Engine()
+{
+    if (loaded) unLoad();
 }
 
 void Engine::makeMove(const Move &move, const int pieceChoice)
@@ -157,7 +163,7 @@ bool Engine::load()
 
     waitForOk();
 
-    return true;
+    return loaded = true;
 }
 
 void Engine::unLoad()
