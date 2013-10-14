@@ -31,6 +31,8 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
 
     messageSystem.connect("moveMade", [this](const Message& message){
        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+       moveMake(received->move);
+       releasePiece();
      });
 }
 
