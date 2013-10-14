@@ -51,6 +51,7 @@ private:
     SquaresToPieces::const_iterator currentPiece;
 
     bool pieceHeld();
+    sf::Vector2f pieceOffset;
 
     int idCount;
 

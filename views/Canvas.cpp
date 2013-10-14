@@ -215,6 +215,7 @@ void Canvas::slotLeftClick()
         //if (piece.getSide()!=whoseTurn) continue;
         if (piece.get<pieceId>().contains(clickedPoint)){
             currentPiece = pieces.project_up(pieces.by<pieceId>().find(piece.get<pieceId>()));
+            pieceOffset = currentPiece->get<pieceId>().getPosition() - clickedPoint;
             break;
         }
     }
@@ -223,7 +224,7 @@ void Canvas::slotLeftClick()
 void Canvas::slotMouseMove()
 {
     if (pieceHeld()){
-        currentPiece->get<pieceId>().setPosition(getMousePosition()-offToCenter);
+        currentPiece->get<pieceId>().setPosition(getMousePosition() + pieceOffset);
     }
 }
 
