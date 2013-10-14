@@ -4,8 +4,8 @@
 #include <SFGUI/Table.hpp>
 #include "../Entity.hpp"
 
-class Move;
-class Square;
+struct Move;
+struct Square;
 
 class MoveList : private Entity
 {

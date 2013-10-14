@@ -6,7 +6,7 @@ struct Message{
     Message(const std::string& id):
       id(id) {}
 
-    virtual ~Message() {}
+    virtual ~Message();
 
     std::string id;
 };

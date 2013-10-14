@@ -10,3 +10,8 @@ std::string getEventId(const Message &message)
 {
     return message.id;
 }
+
+
+Message::~Message()
+{
+}

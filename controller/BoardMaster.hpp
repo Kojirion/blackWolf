@@ -19,9 +19,7 @@
 #include "../Entity.hpp"
 
 struct MoveMessage : public Message{
-    MoveMessage(const std::string& id, const CompleteMove& move):
-      Message(id), move(move)
-    {}
+    MoveMessage(const std::string& id, const CompleteMove& move);
 
     CompleteMove move;
 };

@@ -381,3 +381,10 @@ void BoardMaster::updateClocks()
     game.update(); //update model
     clocks.update(game.getWhiteTime(), game.getBlackTime()); //update view
 }
+
+
+MoveMessage::MoveMessage(const std::string &id, const CompleteMove &move):
+    Message(id), move(move)
+{
+
+}
