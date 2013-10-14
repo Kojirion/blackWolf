@@ -1,6 +1,8 @@
 #include "Canvas.hpp"
 #include <boost/bimap/support/lambda.hpp>
 #include <boost/assert.hpp>
+#include <boost/cast.hpp>
+#include "../controller/BoardMaster.hpp"
 
 const sf::Vector2f Canvas::offToCenter(25.f,25.f);
 
@@ -26,6 +28,10 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
     window->GetSignal(sfg::Widget::OnMouseMove).Connect(&Canvas::slotMouseMove, this);
     window->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&Canvas::slotMouseRelease, this);
     window->GetSignal(sfg::Widget::OnMouseEnter).Connect(&Canvas::slotEnterCanvas, this);
+
+    messageSystem.connect("moveMade", [this](const Message& message){
+       const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+     });
 }
 
 bool Canvas::flipped() const

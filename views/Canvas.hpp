@@ -13,8 +13,9 @@
 #include "../BlackWolf.hpp"
 #include "../views/components/Firework.hpp"
 #include <Thor/Shapes/Arrow.hpp>
+#include "../Entity.hpp"
 
-class Canvas
+class Canvas : private Entity
 {
 private:
 
