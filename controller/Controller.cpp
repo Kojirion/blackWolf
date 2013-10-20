@@ -70,28 +70,7 @@ void Controller::moveMake(const CompleteMove &move)
         requestMove(premove);
     }
 
-
-//    const Move& toMake = move.getMove();
-
-//    board.moveMake(move); //update view
-//    board.releasePiece(); //release piece
-//    game.setPosition(move.getNewBoard()); //update model
-
-//    //handle promotion AND update the engine, depending on whether it was or not
-//    if (game.getPosition().wasPromotion){
-//        handlePromotion(toMake);
-//        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
-//    }else{
-//        //if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
-//    }
-
-//    //update move counter and move list widget
-//    moveList.addMove(toMake,game.getPlyCount());
-
-//    //check for game end or switch turn
-//    //if (move.isCheckmate()) setGameEnded(-game.turnColor());
-//    //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
-//    if (!game.ended()) switchTurn();
+    //check for game end?
 }
 
 void Controller::newGame(Color whoUser, int time, std::string p1, std::string p2)
@@ -305,7 +284,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 }
 
-void Controller::update() //should rename to update
+void Controller::update()
 {
     //fics.update();
     board.display();    
