@@ -24,7 +24,7 @@ set(VERSION_PATCH 0)
 #add_subdirectory(ext)
 
 set(bw_HDRS
-    controller/BoardMaster.hpp
+    controller/Controller.hpp
     views/components/PieceSprite.hpp
     common/Position.hpp
     Application.hpp
@@ -48,7 +48,7 @@ set(bw_HDRS
 )
 
 set(bw_SRCS
-    controller/BoardMaster.cpp
+    controller/Controller.cpp
     views/components/PieceSprite.cpp
     common/Position.cpp
     Application.cpp

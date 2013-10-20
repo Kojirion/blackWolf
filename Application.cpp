@@ -13,7 +13,7 @@ Application::Application():
 
 void Application::run()
 {
-    BoardMaster boss(window, desktop);
+    Controller boss(window, desktop);
 
     window.resetGLStates();
     sf::Clock clock;
@@ -32,7 +32,7 @@ void Application::run()
         desktop.Update(clock.restart().asSeconds());
 
         window.clear();
-        boss.display();
+        boss.update();
         sfgui_.Display(window);
         window.display();
     }

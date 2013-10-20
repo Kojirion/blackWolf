@@ -2,7 +2,7 @@
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
 #include <boost/cast.hpp>
-#include "../controller/BoardMaster.hpp"
+#include "../controller/Controller.hpp"
 
 MoveList::MoveList():
     moveListWindow(sfg::ScrolledWindow::Create()),
@@ -19,7 +19,7 @@ MoveList::MoveList():
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(moveList);
 
-    messageSystem.connect("moveMade", [this](const Message& message){
+    messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         addMove(received->move.getMove());
     });

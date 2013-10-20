@@ -22,7 +22,7 @@ public:
     Entity();
 
 protected:
-    static thor::EventSystem<Message, std::string> messageSystem;
+    static thor::EventSystem<Message, std::string> messages;
 };
 
 #endif // ENTITY_HPP

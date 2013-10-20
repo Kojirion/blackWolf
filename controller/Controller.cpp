@@ -1,4 +1,4 @@
-#include "BoardMaster.hpp"
+#include "Controller.hpp"
 #include <boost/assert.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
@@ -6,7 +6,7 @@
 #include <SFGUI/Notebook.hpp>
 #include <boost/cast.hpp>
 
-void BoardMaster::setGameEnded(Color result)
+void Controller::setGameEnded(Color result)
 {
     //update model
     game.setResult(result);
@@ -16,19 +16,19 @@ void BoardMaster::setGameEnded(Color result)
     board.setResult(result);
 }
 
-void BoardMaster::enableWindow(const bool enable)
+void Controller::enableWindow(const bool enable)
 {
     if (enable) boardWindow->SetState(sfg::Widget::NORMAL);
     else boardWindow->SetState(sfg::Widget::INSENSITIVE);
 }
 
-void BoardMaster::flagDown(Color loser)
+void Controller::flagDown(Color loser)
 {
     clocks.setFlagDown(loser);
     setGameEnded(!loser);
 }
 
-void BoardMaster::handlePromotion(const Move& move)
+void Controller::handlePromotion(const Move& move)
 {
     toPromote = move;
 
@@ -44,14 +44,14 @@ void BoardMaster::handlePromotion(const Move& move)
     }
 }
 
-void BoardMaster::settingsClicked()
+void Controller::settingsClicked()
 {
     enableWindow(false);
     settingsWindow.setTree(resources.getTree());
     settingsWindow.enable(true);
 }
 
-void BoardMaster::settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix)
+void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix)
 {
     settingsWindow.enable(false);
     enableWindow(true);
@@ -59,9 +59,9 @@ void BoardMaster::settingsDone(std::string whitePrefix, std::string blackPrefix,
     board.reload(game.getPosition());
 }
 
-void BoardMaster::moveMake(const CompleteMove &move)
+void Controller::moveMake(const CompleteMove &move)
 {
-    messageSystem.triggerEvent(MoveMessage("moveMade", move));
+    messages.triggerEvent(MoveMessage("moveMade", move));
 //    const Move& toMake = move.getMove();
 
 //    board.moveMake(move); //update view
@@ -85,44 +85,7 @@ void BoardMaster::moveMake(const CompleteMove &move)
 //    if (!game.ended()) switchTurn();
 }
 
-void BoardMaster::networkMoveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
-{
-//    game.setTime(whiteTime, blackTime);
-//    game.startClock(); //this just means an unnecessary stop
-
-//    //now an ugly way to say: if we already made the move on the board,
-//    //we don't care what the client sent
-//    if (game.getPosition()(move.square_1).piece==Piece::None) return;
-
-//    CompleteMove c_move(game.getPosition(), move);
-
-//    board.moveMake(c_move); //update view
-//    game.setPosition(c_move.getNewBoard()); //update model
-
-//    if (promotionChoice != Piece::None){
-//        toPromote = move;
-//        promotionChoiceMade(promotionChoice);
-//    }
-
-    //handle promotion AND update the engine, depending on whether it was or not
-//    if (game.getPosition().wasPromotion){
-//        handlePromotion(destRow, destCol);
-//        if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol, promotionChoice);
-//    }else{
-//        if (!game.userBoth()) chessAi.makeMove(originRow,originCol,destRow,destCol);
-//    }
-
-    //update move counter and move list widget
-    //moveList.addMove(move,game.getPlyCount());
-
-    //check for game end or switch turn
-    //if (move.isCheckmate()) setGameEnded(-game.turnColor());
-    //if (move.isStalemate()) setGameEnded(bw::White | bw::Black);
-    //if (!game.ended()) switchTurn();
-
-}
-
-void BoardMaster::newGame(Color whoUser, int time, std::string p1, std::string p2)
+void Controller::newGame(Color whoUser, int time, std::string p1, std::string p2)
 {
     player1->SetText(p1);
     player2->SetText(p2);
@@ -141,7 +104,7 @@ void BoardMaster::newGame(Color whoUser, int time, std::string p1, std::string p
 
 }
 
-void BoardMaster::aiTurn()
+void Controller::aiTurn()
 {
     Move moveToMake = chessAi.getMove();
 
@@ -151,7 +114,7 @@ void BoardMaster::aiTurn()
     moveMake(toCheck);
 }
 
-void BoardMaster::promotionChoiceMade(Piece whichPiece)
+void Controller::promotionChoiceMade(Piece whichPiece)
 {
     promotionChoice = whichPiece;
 
@@ -171,48 +134,48 @@ void BoardMaster::promotionChoiceMade(Piece whichPiece)
 //        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, whichPiece);
 }
 
-void BoardMaster::promoteQueen()
+void Controller::promoteQueen()
 {
     promotionChoiceMade(Piece::Queen);
 }
 
-void BoardMaster::promoteBishop()
+void Controller::promoteBishop()
 {
     promotionChoiceMade(Piece::Bishop);
 }
 
-void BoardMaster::promoteKnight()
+void Controller::promoteKnight()
 {
     promotionChoiceMade(Piece::Knight);
 }
 
-void BoardMaster::promoteRook()
+void Controller::promoteRook()
 {
     promotionChoiceMade(Piece::Rook);
 }
 
-void BoardMaster::whiteNewGame()
+void Controller::whiteNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
     newGame(Color::White, 300, "White", "Black");
 }
 
-void BoardMaster::blackNewGame()
+void Controller::blackNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
     newGame(Color::Black, 300, "White", "Black");
 }
 
-void BoardMaster::bothNewGame()
+void Controller::bothNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
     newGame(Color::Both, 300, "White", "Black");
 }
 
-bool BoardMaster::requestMove(const Move& move)
+bool Controller::requestMove(const Move& move)
 {
     if (!game.userTurn()) //set premove
     {
@@ -231,7 +194,7 @@ bool BoardMaster::requestMove(const Move& move)
     return false;
 }
 
-BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
+Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
@@ -244,11 +207,10 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     player2(sfg::Label::Create()),
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
-    board.getSignal().connect(boost::bind(&BoardMaster::requestMove, this,_1));
-    settingsWindow.settingsDone.connect(boost::bind(&BoardMaster::settingsDone, this,_1,_2,_3));
-    fics.positionReady.connect(boost::bind(&BoardMaster::networkMoveMake, this, _1, _2, _3, _4));
-    fics.startGame.connect(boost::bind(&BoardMaster::newGame, this, _1, _2, _3, _4));
-    fics.gameEnd.connect(boost::bind(&BoardMaster::setGameEnded, this, _1));
+    board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
+    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
+    fics.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
+    fics.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     fics.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &fics, _1));
 
@@ -271,10 +233,10 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));
     promotionWindow->SetTitle("Choose piece");
 
-    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&BoardMaster::promoteQueen,this);
-    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&BoardMaster::promoteBishop,this);
-    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&BoardMaster::promoteKnight,this);
-    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&BoardMaster::promoteRook,this);
+    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteQueen,this);
+    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteBishop,this);
+    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteKnight,this);
+    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteRook,this);
 
     promotionWindow->Show(false);
 
@@ -283,7 +245,7 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
     //buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&Canvas::flipBoard, &board);
-    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&BoardMaster::settingsClicked, this);
+    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::settingsClicked, this);
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
@@ -297,9 +259,9 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(buttons.getWidget(),{0,12,2,2});
 
     //when making new game
-    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&BoardMaster::whiteNewGame, this);
-    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&BoardMaster::blackNewGame, this);
-    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&BoardMaster::bothNewGame, this);
+    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::whiteNewGame, this);
+    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::blackNewGame, this);
+    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::bothNewGame, this);
 
     desktop.Add(sideChoice.getWidget());
     desktop.Add(settingsWindow.getWidget());
@@ -322,7 +284,7 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
     //    if (!chessAi.load()) newGame(bw::White | bw::Black);
     //    else newGame(bw::White);
 
-    messageSystem.connect("moveMade", [this](const Message& message){
+    messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         if (received->move.getNewBoard().wasPromotion)
             handlePromotion(received->move.getMove());
@@ -334,14 +296,14 @@ BoardMaster::BoardMaster(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 }
 
-void BoardMaster::display() //should rename to update
+void Controller::update() //should rename to update
 {
     //fics.update();
     board.display();    
     if (!game.ended()) updateClocks();
 }
 
-void BoardMaster::switchTurn()
+void Controller::switchTurn()
 {
     status.setToPlay(game.turnColor());
     game.switchTurn();
@@ -359,24 +321,24 @@ void BoardMaster::switchTurn()
 }
 
 
-void BoardMaster::resign()
+void Controller::resign()
 {
     setGameEnded(!game.getUserColor()); //should be turncolor
 }
 
-void BoardMaster::offerDraw()
+void Controller::offerDraw()
 {
     return; //ai rejects all offers for now
 }
 
 
-void BoardMaster::requestNewGame()
+void Controller::requestNewGame()
 {
     sideChoice.enable(true);
     enableWindow(false);
 }
 
-void BoardMaster::updateClocks()
+void Controller::updateClocks()
 {
     game.update(); //update model
     clocks.update(game.getWhiteTime(), game.getBlackTime()); //update view

@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-thor::EventSystem<Message, std::string> Entity::messageSystem;
+thor::EventSystem<Message, std::string> Entity::messages;
 
 Entity::Entity()
 {

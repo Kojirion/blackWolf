@@ -1,8 +1,5 @@
-//'Controller' class
-//owns a gameData 'model' and several 'view' classes
-
-#ifndef BOARDMASTER_H
-#define BOARDMASTER_H
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 #include "../common/Position.hpp"
 #include "../common/CompleteMove.hpp"
 #include "../Engine.hpp"
@@ -28,10 +25,10 @@ struct MoveMessage : public Message{
 
 
 
-class BoardMaster : private Entity
+class Controller : private Entity
 {
 public:
-    BoardMaster(sf::Window& theWindow, sfg::Desktop& theDesktop);
+    Controller(sf::Window& theWindow, sfg::Desktop& theDesktop);
 
     sfg::Desktop& desktop;
     sfg::Window::Ptr promotionWindow;
@@ -39,7 +36,7 @@ public:
     sfg::Window::Ptr boardWindow;
     sfg::Button::Ptr settingsButton;
 
-    void display();
+    void update();
 
     void switchTurn();
 
@@ -110,9 +107,6 @@ private:
     void flagDown(Color loser);
 
     void moveMake (const CompleteMove &move);
-    void networkMoveMake (const Move &move, int whiteTime, int blackTime, Piece promotionChoice);
-
-
 
     void newGame(Color whoUser, int time, std::string p1, std::string p2);
 
@@ -124,4 +118,4 @@ private:
 
 };
 
-#endif // BOARDMASTER_H
+#endif // CONTROLLER_H

@@ -2,7 +2,7 @@
 #define GUIMANAGER_H
 #include <SFML/Graphics.hpp>
 #include <SFGUI/SFGUI.hpp>
-#include "controller/BoardMaster.hpp"
+#include "controller/Controller.hpp"
 
 class Application
 {
