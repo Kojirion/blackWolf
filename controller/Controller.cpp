@@ -61,7 +61,7 @@ void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, 
 
 void Controller::moveMake(const CompleteMove &move)
 {
-    messages.triggerEvent(MoveMessage("moveMade", move));
+    messages.triggerEvent(MoveMessage(move));
 
     if (premoveOn)
     {
@@ -70,23 +70,12 @@ void Controller::moveMake(const CompleteMove &move)
         requestMove(premove);
     }
 
-    //check for game end?
+    //check for game end?    
 }
 
 void Controller::newGame(Color whoUser, int time, std::string p1, std::string p2)
 {
-    player1->SetText(p1);
-    player2->SetText(p2);
-
-    game.newGame(whoUser, time);
-
-    board.resetFor(whoUser);
-
-    board.setPosition(game.getPosition());
-
-    moveList.reset();
-
-    //status.setToPlay(Color::White);
+    messages.triggerEvent(NewGameMessage(whoUser, time, p1, p2));
 
     updateClocks();
 
@@ -270,9 +259,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
             handlePromotion(received->move.getMove());
     });
 
-
-
-
+    messages.connect("newGame", [this](const Message& message){
+        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        player1->SetText(received->p1);
+        player2->SetText(received->p2);
+    });
 
 }
 

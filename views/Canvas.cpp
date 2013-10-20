@@ -34,6 +34,12 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
         moveMake(received->move);
         releasePiece();
     });
+
+    messages.connect("newGame", [this](const Message& message){
+        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        resetFor(received->user);
+        setPosition(Position());
+    });
 }
 
 bool Canvas::flipped() const

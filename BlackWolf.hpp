@@ -44,6 +44,4 @@ struct Move{
 };
 
 
-//#include "blackWolf.inl"
-
 #endif // BLACKWOLF_H

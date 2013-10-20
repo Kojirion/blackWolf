@@ -4,18 +4,26 @@
 #include "common/CompleteMove.hpp"
 
 struct Message{
-    Message(const std::string& id):
-      id(id) {}
+    Message(const std::string& id);
 
     virtual ~Message();
 
     std::string id;
 };
 
-struct MoveMessage : public Message{
-    MoveMessage(const std::string& id, const CompleteMove& move);
+struct MoveMessage : public Message {
+    MoveMessage(const CompleteMove& move);
 
     CompleteMove move;
+};
+
+struct NewGameMessage : public Message {
+    NewGameMessage(Color whoUser, int time, std::string p1, std::string p2);
+
+    Color user;
+    int time;
+    std::string p1;
+    std::string p2;
 };
 
 

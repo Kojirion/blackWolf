@@ -8,6 +8,11 @@ Status::Status():
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         setToPlay(received->move.getNewBoard().getTurnColor());
     });
+
+    messages.connect("newGame", [this](const Message& message){
+        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        setToPlay(Color::White);
+    });
 }
 
 void Status::setToPlay(Color side)

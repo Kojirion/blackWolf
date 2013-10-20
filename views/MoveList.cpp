@@ -23,6 +23,11 @@ MoveList::MoveList():
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         addMove(received->move.getMove());
     });
+
+    messages.connect("newGame", [this](const Message& message){
+        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        reset();
+    });
 }
 
 void MoveList::addMove(const Move& move)

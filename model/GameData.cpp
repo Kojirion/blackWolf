@@ -17,6 +17,11 @@ GameData::GameData():
         if (!ended())
             switchTurn();
     });
+
+    messages.connect("newGame", [this](const Message& message){
+        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        newGame(received->user, received->time);
+    });
 }
 
 void GameData::setTime(int whiteTime, int blackTime)

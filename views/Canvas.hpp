@@ -78,11 +78,12 @@ private:
     void slotMouseMove();
     void slotMouseRelease();
     void slotLeftClick();
-    void slotEnterCanvas();
-
-    void resetRects();
+    void slotEnterCanvas();    
 
     std::vector<thor::Arrow> arrows;
+
+    void setPosition(const Position &givenPosition);
+    void resetFor(Color whoFaceUp);
 
 public:
     Canvas(sf::Window& theWindow, Resources &theResources);
@@ -92,8 +93,6 @@ public:
     void bimapMove(const Move &move);
 
     sfg::Widget::Ptr getBoardWidget() const;
-    void setPosition(const Position &givenPosition);
-    void resetFor(Color whoFaceUp);
 
     boost::signals2::signal<bool (const Move &)> &getSignal();
 
