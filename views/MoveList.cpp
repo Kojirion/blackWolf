@@ -25,7 +25,6 @@ MoveList::MoveList():
     });
 
     messages.connect("newGame", [this](const Message& message){
-        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         reset();
     });
 }

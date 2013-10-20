@@ -87,10 +87,6 @@ private:
 
     void flagDown(Color loser);
 
-    void moveMake (const CompleteMove &move);
-
-    void newGame(Color whoUser, int time, std::string p1, std::string p2);
-
     void aiTurn();
 
     void setGameEnded(Color result);

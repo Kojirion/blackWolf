@@ -59,28 +59,6 @@ void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, 
     board.reload(game.getPosition());
 }
 
-void Controller::moveMake(const CompleteMove &move)
-{
-    messages.triggerEvent(MoveMessage(move));
-
-    if (premoveOn)
-    {
-        premoveOn = false;
-        board.clearArrows();
-        requestMove(premove);
-    }
-
-    //check for game end?    
-}
-
-void Controller::newGame(Color whoUser, int time, std::string p1, std::string p2)
-{
-    messages.triggerEvent(NewGameMessage(whoUser, time, p1, p2));
-
-    updateClocks();
-
-}
-
 void Controller::aiTurn()
 {
     Move moveToMake = chessAi.getMove();
@@ -88,7 +66,7 @@ void Controller::aiTurn()
     CompleteMove toCheck(game.getPosition(), moveToMake);
     BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
-    moveMake(toCheck);
+    //moveMake(toCheck);
 }
 
 void Controller::slotNewGame()
@@ -106,7 +84,7 @@ void Controller::slotNewGame()
         toSet = Color::Both;
     }
 
-    newGame(toSet, 300, "White", "Black");
+    messages.triggerEvent(NewGameMessage(toSet, 300, "White", "Black"));
 }
 
 void Controller::slotPromote()
@@ -150,9 +128,7 @@ bool Controller::requestMove(const Move& move)
 
     CompleteMove toCheck(game.getPosition(), move);
     if (toCheck.isLegal()){
-        moveMake(toCheck);
-//        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
-//            fics.makeMove(row1, col1, row2, col2);
+        messages.triggerEvent(MoveMessage(toCheck));
         return true;
     }
     return false;
@@ -172,8 +148,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
-    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
-    fics.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
+    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));    
     fics.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     fics.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &fics, _1));
@@ -245,10 +220,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 
     desktop.Add(promotionWindow);
-    desktop.Add(boardWindow);
-
-    //fics.connect();
-    newGame(Color::Both, 300, "lol", "what");
+    desktop.Add(boardWindow);   
 
     //    if (!chessAi.load()) newGame(bw::White | bw::Black);
     //    else newGame(bw::White);
@@ -257,12 +229,23 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         if (received->move.getNewBoard().wasPromotion)
             handlePromotion(received->move.getMove());
+
+        if (premoveOn)
+        {
+            premoveOn = false;
+            board.clearArrows();
+            requestMove(premove);
+        }
+
+        //check for game end?
     });
 
     messages.connect("newGame", [this](const Message& message){
         const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         player1->SetText(received->p1);
         player2->SetText(received->p2);
+
+        updateClocks();
     });
 
 }
