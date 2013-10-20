@@ -45,9 +45,7 @@ public:
     void promoteKnight();
     void promoteRook();
 
-    void whiteNewGame();
-    void blackNewGame();
-    void bothNewGame();
+    void slotNewGame();
 
     //boost slots
     bool requestMove(const Move& move);

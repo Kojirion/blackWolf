@@ -12,6 +12,10 @@ ColorChoices::ColorChoices(sfg::Desktop &theDesktop):
     window->SetRequisition(sf::Vector2f(200.f,200.f));
     window->SetTitle("Choose color");
 
+    whiteSide->SetId("whiteNewGame");
+    blackSide->SetId("blackNewGame");
+    bothSide->SetId("bothNewGame");
+
     sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::VERTICAL, 5.f));
 
     sideChoiceBox->Pack(whiteSide);

@@ -142,25 +142,22 @@ void Controller::promoteRook()
     promotionChoiceMade(Piece::Rook);
 }
 
-void Controller::whiteNewGame()
+void Controller::slotNewGame()
 {
     sideChoice.enable(false);
     enableWindow(true);
-    newGame(Color::White, 300, "White", "Black");
-}
 
-void Controller::blackNewGame()
-{
-    sideChoice.enable(false);
-    enableWindow(true);
-    newGame(Color::Black, 300, "White", "Black");
-}
+    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
+    Color toSet;
 
-void Controller::bothNewGame()
-{
-    sideChoice.enable(false);
-    enableWindow(true);
-    newGame(Color::Both, 300, "White", "Black");
+    if      (toCheck == "whiteNewGame") toSet = Color::White;
+    else if (toCheck == "blackNewGame") toSet = Color::Black;
+    else {
+        BOOST_ASSERT_MSG(toCheck == "bothNewGame", "Invalid widget requests new game");
+        toSet = Color::Both;
+    }
+
+    newGame(toSet, 300, "White", "Black");
 }
 
 bool Controller::requestMove(const Move& move)
@@ -231,7 +228,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     ButtonBox buttons;
     //buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
     //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
-    //buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::requestNewGame, this);
+    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::requestNewGame, this);
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&Canvas::flipBoard, &board);
     buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::settingsClicked, this);
 
@@ -247,9 +244,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(buttons.getWidget(),{0,12,2,2});
 
     //when making new game
-    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::whiteNewGame, this);
-    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::blackNewGame, this);
-    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::bothNewGame, this);
+    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
+    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
+    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
 
     desktop.Add(sideChoice.getWidget());
     desktop.Add(settingsWindow.getWidget());
