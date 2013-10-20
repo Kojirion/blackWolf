@@ -39,13 +39,9 @@ public:
     void resign();
     void offerDraw();
     void requestNewGame();
-    void promotionChoiceMade(Piece whichPiece);
-    void promoteQueen();
-    void promoteBishop();
-    void promoteKnight();
-    void promoteRook();
 
     void slotNewGame();
+    void slotPromote();
 
     //boost slots
     bool requestMove(const Move& move);

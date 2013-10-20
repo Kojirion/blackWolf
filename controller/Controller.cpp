@@ -102,46 +102,6 @@ void Controller::aiTurn()
     moveMake(toCheck);
 }
 
-void Controller::promotionChoiceMade(Piece whichPiece)
-{
-    promotionChoice = whichPiece;
-
-    //update view
-    board.setPromotion(toPromote.square_2, whichPiece);
-
-    //update model
-    Color whichSide;
-    if (game.turnColor()==Color::White) whichSide = Color::Black;
-    else whichSide = Color::White;
-    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
-
-    promotionWindow->Show(false);
-    enableWindow(true);
-
-//    if (!game.userTurn()) //means user made promotion, so send to client
-//        fics.makeMove(toPromoteRow1, toPromoteCol1, toPromoteRow2, toPromoteCol2, whichPiece);
-}
-
-void Controller::promoteQueen()
-{
-    promotionChoiceMade(Piece::Queen);
-}
-
-void Controller::promoteBishop()
-{
-    promotionChoiceMade(Piece::Bishop);
-}
-
-void Controller::promoteKnight()
-{
-    promotionChoiceMade(Piece::Knight);
-}
-
-void Controller::promoteRook()
-{
-    promotionChoiceMade(Piece::Rook);
-}
-
 void Controller::slotNewGame()
 {
     sideChoice.enable(false);
@@ -158,6 +118,36 @@ void Controller::slotNewGame()
     }
 
     newGame(toSet, 300, "White", "Black");
+}
+
+void Controller::slotPromote()
+{
+    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
+    Piece whichPiece;
+
+    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
+    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
+    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
+    else{
+        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
+        whichPiece = Piece::Rook;
+    }
+
+
+
+    promotionChoice = whichPiece;
+
+    //update view
+    board.setPromotion(toPromote.square_2, whichPiece);
+
+    //update model
+    Color whichSide;
+    if (game.turnColor()==Color::White) whichSide = Color::Black;
+    else whichSide = Color::White;
+    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
+
+    promotionWindow->Show(false);
+    enableWindow(true);
 }
 
 bool Controller::requestMove(const Move& move)
@@ -207,6 +197,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sfg::Button::Ptr knightButton(sfg::Button::Create("Knight"));
     sfg::Button::Ptr rookButton(sfg::Button::Create("Rook"));
 
+    queenButton->SetId("promoteQueen");
+    bishopButton->SetId("promoteBishop");
+    knightButton->SetId("promoteKnight");
+    rookButton->SetId("promoteRook");
+
     sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::HORIZONTAL, 3.f));
 
     promotionBox->PackEnd(queenButton);
@@ -218,10 +213,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));
     promotionWindow->SetTitle("Choose piece");
 
-    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteQueen,this);
-    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteBishop,this);
-    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteKnight,this);
-    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::promoteRook,this);
+    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
+    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
+    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
+    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
 
     promotionWindow->Show(false);
 
