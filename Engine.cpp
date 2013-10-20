@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/asio.hpp>
 
 
 void Engine::waitForOk()
@@ -108,7 +109,14 @@ Engine::Engine():
     engineInStream(engineInSink),
     loaded(false)
 {
+#if defined(BOOST_WINDOWS_API)
+    typedef boost::asio::windows::stream_handle pipe_end;
+#elif defined(BOOST_POSIX_API)
+    typedef boost::asio::posix::stream_descriptor pipe_end;
+#endif
 
+    boost::asio::io_service io_service;
+    pipe_end pend(io_service, engineOut.source);
 }
 
 Engine::~Engine()
