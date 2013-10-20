@@ -87,9 +87,7 @@ private:
 
     void flagDown(Color loser);
 
-    void aiTurn();
-
-    void setGameEnded(Color result);
+    void aiTurn();    
 
     void enableWindow(const bool enable = true);
 

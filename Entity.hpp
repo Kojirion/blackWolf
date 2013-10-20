@@ -26,6 +26,12 @@ struct NewGameMessage : public Message {
     std::string p2;
 };
 
+struct EndGameMessage : public Message {
+    EndGameMessage(Color result);
+
+    Color result;
+};
+
 
 
 std::string getEventId(const Message &message);

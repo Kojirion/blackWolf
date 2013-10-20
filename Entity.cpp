@@ -31,3 +31,9 @@ NewGameMessage::NewGameMessage(Color whoUser, int time, std::string p1, std::str
     Message("newGame"), user(whoUser), time(time), p1(p1), p2(p2)
 {
 }
+
+
+EndGameMessage::EndGameMessage(Color result):
+    Message("endGame"), result(result)
+{
+}

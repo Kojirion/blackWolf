@@ -85,6 +85,8 @@ private:
     void setPosition(const Position &givenPosition);
     void resetFor(Color whoFaceUp);
 
+    void setResult(Color result);
+
 public:
     Canvas(sf::Window& theWindow, Resources &theResources);
     void display();
@@ -100,9 +102,7 @@ public:
 
     void flipBoard();
 
-    void reload(const Position &givenPosition);
-
-    void setResult(Color result);
+    void reload(const Position &givenPosition);    
 
     void setArrow(const Move& move);
     void clearArrows();

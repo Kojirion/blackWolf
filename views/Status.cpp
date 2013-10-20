@@ -12,6 +12,11 @@ Status::Status():
     messages.connect("newGame", [this](const Message& message){
         setToPlay(Color::White);
     });
+
+    messages.connect("endGame", [this](const Message& message){
+        const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        setResult(received->result);
+    });
 }
 
 void Status::setToPlay(Color side)

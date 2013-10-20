@@ -40,6 +40,11 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
         resetFor(received->user);
         setPosition(Position());
     });
+
+    messages.connect("endGame", [this](const Message& message){
+        const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        setResult(received->result);
+    });
 }
 
 bool Canvas::flipped() const

@@ -6,16 +6,6 @@
 #include <SFGUI/Notebook.hpp>
 #include <boost/cast.hpp>
 
-void Controller::setGameEnded(Color result)
-{
-    //update model
-    game.setResult(result);
-
-    //update view
-    //status.setResult(result);
-    board.setResult(result);
-}
-
 void Controller::enableWindow(const bool enable)
 {
     if (enable) boardWindow->SetState(sfg::Widget::NORMAL);
@@ -25,7 +15,7 @@ void Controller::enableWindow(const bool enable)
 void Controller::flagDown(Color loser)
 {
     clocks.setFlagDown(loser);
-    setGameEnded(!loser);
+    messages.triggerEvent(EndGameMessage(!loser));
 }
 
 void Controller::handlePromotion(const Move& move)
@@ -148,8 +138,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
-    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));    
-    fics.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
+    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
     fics.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &fics, _1));
 
@@ -259,7 +248,7 @@ void Controller::update()
 
 void Controller::resign()
 {
-    setGameEnded(!game.getUserColor()); //should be turncolor
+    messages.triggerEvent(EndGameMessage(game.turnColor()));
 }
 
 void Controller::offerDraw()

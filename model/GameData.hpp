@@ -17,6 +17,8 @@ private:
 
     int plyCounter;
 
+    void setResult(Color winner);
+
 public:
     GameData();
 
@@ -32,7 +34,7 @@ public:
     const Position& getPosition() const;
     void setPosition(Position toSet);
 
-    void setResult(Color winner);
+
     void newGame(Color whoUser, int time);
     void update();
     void switchTurn();
