@@ -15,15 +15,6 @@
 #include "../NetWidgets.hpp"
 #include "../Entity.hpp"
 
-struct MoveMessage : public Message{
-    MoveMessage(const std::string& id, const CompleteMove& move);
-
-    CompleteMove move;
-};
-
-
-
-
 
 class Controller : private Entity
 {
@@ -37,10 +28,6 @@ public:
     sfg::Button::Ptr settingsButton;
 
     void update();
-
-    void switchTurn();
-
-
 
     void updateClocks();
 

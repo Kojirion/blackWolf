@@ -1,8 +1,13 @@
 #include "Status.hpp"
+#include <boost/cast.hpp>
 
 Status::Status():
     statusLabel(sfg::Label::Create())
 {
+    messages.connect("moveMade", [this](const Message& message){
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        setToPlay(received->move.getNewBoard().getTurnColor());
+    });
 }
 
 void Status::setToPlay(Color side)

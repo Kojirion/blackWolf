@@ -2,15 +2,16 @@
 #define STATUSVIEW_H
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
+#include "../Entity.hpp"
 
-class Status
+class Status : private Entity
 {
 private:
     sfg::Label::Ptr statusLabel;
+    void setToPlay(Color side);
+    void setResult(Color winner);
 public:
-    Status();
-    void setToPlay(Color side); //set the status to denote side to play
-    void setResult(Color winner); //set status to show winner
+    Status();    
 
     sfg::Widget::Ptr getView();
 };

@@ -12,7 +12,7 @@ void Controller::setGameEnded(Color result)
     game.setResult(result);
 
     //update view
-    status.setResult(result);
+    //status.setResult(result);
     board.setResult(result);
 }
 
@@ -62,6 +62,15 @@ void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, 
 void Controller::moveMake(const CompleteMove &move)
 {
     messages.triggerEvent(MoveMessage("moveMade", move));
+
+    if (premoveOn)
+    {
+        premoveOn = false;
+        board.clearArrows();
+        requestMove(premove);
+    }
+
+
 //    const Move& toMake = move.getMove();
 
 //    board.moveMake(move); //update view
@@ -98,7 +107,7 @@ void Controller::newGame(Color whoUser, int time, std::string p1, std::string p2
 
     moveList.reset();
 
-    status.setToPlay(Color::White);
+    //status.setToPlay(Color::White);
 
     updateClocks();
 
@@ -303,24 +312,6 @@ void Controller::update() //should rename to update
     if (!game.ended()) updateClocks();
 }
 
-void Controller::switchTurn()
-{
-    status.setToPlay(game.turnColor());
-    game.switchTurn();
-
-    if (premoveOn)
-    {
-        premoveOn = false;
-        board.clearArrows();
-        requestMove(premove);
-    }
-
-//    if (!game.userTurn()){
-//        aiTurn();
-//    }
-}
-
-
 void Controller::resign()
 {
     setGameEnded(!game.getUserColor()); //should be turncolor
@@ -342,11 +333,4 @@ void Controller::updateClocks()
 {
     game.update(); //update model
     clocks.update(game.getWhiteTime(), game.getBlackTime()); //update view
-}
-
-
-MoveMessage::MoveMessage(const std::string &id, const CompleteMove &move):
-    Message(id), move(move)
-{
-
 }

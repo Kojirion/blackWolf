@@ -2,8 +2,14 @@
 
 thor::EventSystem<Message, std::string> Entity::messages;
 
-Entity::Entity()
+Message::~Message()
 {
+}
+
+MoveMessage::MoveMessage(const std::string &id, const CompleteMove &move):
+    Message(id), move(move)
+{
+
 }
 
 std::string getEventId(const Message &message)
@@ -11,7 +17,6 @@ std::string getEventId(const Message &message)
     return message.id;
 }
 
-
-Message::~Message()
+Entity::Entity()
 {
 }
