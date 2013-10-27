@@ -1,6 +1,5 @@
 #include "Engine.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/asio.hpp>
 
 
 void Engine::waitForOk()
@@ -96,6 +95,22 @@ std::string Engine::intToSymbol(const int which) const
     return "-"; //appease compiler
 }
 
+void Engine::handleData(boost::system::error_code ec)
+{
+    if (!ec)
+    {
+        std::istream is(&data);
+        std::string str;
+        std::getline(is, str);
+
+        std::cout << str << std::endl;
+
+        boost::asio::async_read_until(pend, data, "\n",
+                boost::bind(&Engine::handleData, this, _1));
+    }
+
+}
+
 
 
 Engine::Engine():
@@ -107,16 +122,10 @@ Engine::Engine():
     engineInSource(engineIn.source, boost::iostreams::close_handle),
     engineOutStream(engineOutSource),
     engineInStream(engineInSink),
-    loaded(false)
+    loaded(false),
+    pend(io_service, engineOut.source)
 {
-#if defined(BOOST_WINDOWS_API)
-    typedef boost::asio::windows::stream_handle pipe_end;
-#elif defined(BOOST_POSIX_API)
-    typedef boost::asio::posix::stream_descriptor pipe_end;
-#endif
 
-    boost::asio::io_service io_service;
-    pipe_end pend(io_service, engineOut.source);
 }
 
 Engine::~Engine()
@@ -159,17 +168,20 @@ bool Engine::load()
 
     toEngine("uci");
 
+    boost::asio::async_read_until(pend, data, "\n",
+            boost::bind(&Engine::handleData, this, _1));
+
     //boost::ptr_vector<option> options;
 
-    while (fromEngine()!="uciok")
-    {
-        /*if (fromEngine()=="option")
-        {
-            std::string name = fromEngine();
-        }*/
-    }
+//    while (fromEngine()!="uciok")
+//    {
+//        /*if (fromEngine()=="option")
+//        {
+//            std::string name = fromEngine();
+//        }*/
+//    }
 
-    waitForOk();
+//    waitForOk();
 
     return loaded = true;
 }
@@ -177,6 +189,11 @@ bool Engine::load()
 void Engine::unLoad()
 {
     toEngine("quit");
+}
+
+void Engine::update()
+{
+    if (!io_service.poll()) io_service.reset();
 }
 
 int Engine::getPromotionChoice() const

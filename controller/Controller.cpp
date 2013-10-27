@@ -237,11 +237,14 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         updateClocks();
     });
 
+    chessAi.load();
+
 }
 
 void Controller::update()
 {
     //fics.update();
+    chessAi.update();
     board.display();    
     if (!game.ended()) updateClocks();
 }

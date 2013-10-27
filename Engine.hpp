@@ -5,6 +5,8 @@
 #include "BlackWolf.hpp"
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
 
 class Engine
 {
@@ -23,6 +25,8 @@ public:
     bool load();
 
     void unLoad();
+
+    void update();
 
     int getPromotionChoice() const;
 
@@ -60,6 +64,20 @@ private:
     int promotedChoice;
 
     bool loaded;
+
+    void handleData(boost::system::error_code ec);
+
+    boost::asio::streambuf data;
+
+    boost::asio::io_service io_service;
+
+#if defined(BOOST_WINDOWS_API)
+    typedef boost::asio::windows::stream_handle pipe_end;
+#elif defined(BOOST_POSIX_API)
+    typedef boost::asio::posix::stream_descriptor pipe_end;
+#endif
+
+    pipe_end pend;
 
 };
 
