@@ -7,8 +7,9 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include "Entity.hpp"
 
-class Engine
+class Engine : private Entity
 {
 
 public:

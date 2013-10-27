@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/cast.hpp>
 
 
 void Engine::waitForOk()
@@ -125,7 +126,12 @@ Engine::Engine():
     loaded(false),
     pend(io_service, engineOut.source)
 {
-
+    messages.connect("moveMade", [this](const Message& message){
+        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+        makeMove(received->move.getMove());
+        toEngine("position startpos moves " + moveList);
+        toEngine("go infinite");
+    });
 }
 
 Engine::~Engine()
