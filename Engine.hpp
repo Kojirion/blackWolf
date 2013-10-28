@@ -9,6 +9,12 @@
 #include <boost/bind.hpp>
 #include "Entity.hpp"
 
+struct EngineOutput : public Message {
+    EngineOutput(const std::string& output);
+
+    std::string output;
+};
+
 class Engine : private Entity
 {
 

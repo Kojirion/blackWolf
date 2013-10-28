@@ -104,7 +104,7 @@ void Engine::handleData(boost::system::error_code ec)
         std::string str;
         std::getline(is, str);
 
-        std::cout << str << std::endl;
+        messages.triggerEvent(EngineOutput(str));
 
         boost::asio::async_read_until(pend, data, "\n",
                 boost::bind(&Engine::handleData, this, _1));
@@ -205,4 +205,10 @@ void Engine::update()
 int Engine::getPromotionChoice() const
 {
     return promotedChoice;
+}
+
+
+EngineOutput::EngineOutput(const std::string &output):
+    Message("engineOutput"), output(output)
+{
 }

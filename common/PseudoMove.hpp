@@ -1,8 +1,3 @@
-//Describes a move by
-//The starting position
-//Four ints to describe starting and end square
-//The final position
-
 #ifndef BOARDMOVE_H
 #define BOARDMOVE_H
 #include "Position.hpp"

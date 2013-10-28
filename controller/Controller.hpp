@@ -14,6 +14,7 @@
 #include "../Client.hpp"
 #include "../NetWidgets.hpp"
 #include "../Entity.hpp"
+#include "../views/EngineAnalysis.hpp"
 
 
 class Controller : private Entity
@@ -63,6 +64,8 @@ private:
     ColorChoices sideChoice;
 
     Settings settingsWindow;
+
+    EngineAnalysis analysis;
 
     Move premove;
     bool premoveOn;

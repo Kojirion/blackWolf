@@ -45,6 +45,7 @@ set(bw_HDRS
     Client.hpp
     NetWidgets.hpp
     Entity.hpp
+    views/EngineAnalysis.hpp
 )
 
 set(bw_SRCS
@@ -70,6 +71,7 @@ set(bw_SRCS
     NetWidgets.cpp
 	ext/file_descriptor.cpp
     Entity.cpp
+    views/EngineAnalysis.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
