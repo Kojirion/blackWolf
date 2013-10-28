@@ -3,7 +3,7 @@
 #include <boost/cast.hpp>
 
 EngineAnalysis::EngineAnalysis():
-    label(sfg::Label::Create("boohoo"))
+    label(sfg::Label::Create())
 {
     messages.connect("engineOutput", [this](const Message& message){
         const EngineOutput* received = boost::polymorphic_downcast<const EngineOutput*>(&message);

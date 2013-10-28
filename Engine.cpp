@@ -168,7 +168,7 @@ Move Engine::getMove()
 
 bool Engine::load()
 {
-    boost::process::execute(boost::process::initializers::run_exe("./stockfish"),
+    instance = boost::process::execute(boost::process::initializers::run_exe("./stockfish"),
                             boost::process::initializers::bind_stdout(engineOutSink),
                             boost::process::initializers::bind_stdin(engineInSource));
 
@@ -195,6 +195,7 @@ bool Engine::load()
 void Engine::unLoad()
 {
     toEngine("quit");
+    boost::process::wait_for_exit(instance);
 }
 
 void Engine::update()

@@ -39,6 +39,8 @@ public:
 
 
 private:
+    boost::process::child instance;
+
     boost::process::pipe engineOut;
     boost::process::pipe engineIn;
 
