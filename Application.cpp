@@ -12,6 +12,9 @@ Application::Application():
 
     actions["close"] = thor::Action(sf::Event::Closed);
     system.connect("close", std::bind(&sf::RenderWindow::close, &window));
+
+    actions["resized"] = thor::Action(sf::Event::Resized);
+    system.connect("resized", std::bind(&MessageSystem::triggerEvent, &messages, ResizeMessage(window)));
 }
 
 void Application::run()

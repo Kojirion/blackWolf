@@ -37,3 +37,9 @@ EndGameMessage::EndGameMessage(Color result):
     Message("endGame"), result(result)
 {
 }
+
+
+ResizeMessage::ResizeMessage(const sf::RenderWindow &window):
+    Message("resized"), window(window)
+{
+}

@@ -2,6 +2,7 @@
 #define ENTITY_HPP
 #include <Thor/Input.hpp>
 #include "common/CompleteMove.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 struct Message{
     Message(const std::string& id);
@@ -10,6 +11,8 @@ struct Message{
 
     std::string id;
 };
+
+typedef thor::EventSystem<Message, std::string> MessageSystem;
 
 struct MoveMessage : public Message {
     MoveMessage(const CompleteMove& move);
@@ -32,6 +35,12 @@ struct EndGameMessage : public Message {
     Color result;
 };
 
+struct ResizeMessage : public Message {
+    ResizeMessage(const sf::RenderWindow& window);
+
+    const sf::RenderWindow& window;
+};
+
 
 
 std::string getEventId(const Message &message);
@@ -44,7 +53,7 @@ public:
     Entity();
 
 protected:
-    static thor::EventSystem<Message, std::string> messages;
+    static MessageSystem messages;
 };
 
 #endif // ENTITY_HPP

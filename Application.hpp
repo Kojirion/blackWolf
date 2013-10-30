@@ -4,8 +4,9 @@
 #include <SFGUI/SFGUI.hpp>
 #include "controller/Controller.hpp"
 #include <Thor/Input/ActionMap.hpp>
+#include "Entity.hpp"
 
-class Application
+class Application : private Entity
 {
 private:
     sfg::SFGUI sfgui_;
