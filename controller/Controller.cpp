@@ -242,7 +242,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     messages.connect("resized", [this](const Message& message){
         const ResizeMessage* received = boost::polymorphic_downcast<const ResizeMessage*>(&message);
-        boardWindow->SetRequisition(static_cast<sf::Vector2f>(received->window.getSize()));
+        boardWindow->SetAllocation({boardWindow->GetAbsolutePosition(),
+                                    static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
     chessAi.load();
