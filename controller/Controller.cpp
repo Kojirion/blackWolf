@@ -137,6 +137,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     player2(sfg::Label::Create()),
     toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
 {
+    boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
+
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
     fics.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));

@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 Application::Application():
-    window(sf::VideoMode(634, 694), "Black Wolf")
+    window(sf::VideoMode(1000, 1000), "Black Wolf")
 {
     window.setFramerateLimit(60);
 
@@ -9,6 +9,9 @@ Application::Application():
 
     //icon.loadFromFile("Graphics/Boardbrown.jpg");
     //window.setIcon(32,32,icon.getPixelsPtr());
+
+    actions["close"] = thor::Action(sf::Event::Closed);
+    system.connect("close", std::bind(&sf::RenderWindow::close, &window));
 }
 
 void Application::run()
@@ -20,14 +23,15 @@ void Application::run()
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            desktop.HandleEvent(event);
+        actions.clearEvents();
 
-            if (event.type == sf::Event::Closed)
-                window.close();            
+        sf::Event event;
+        while (window.pollEvent(event)){
+          actions.pushEvent(event);
+          desktop.HandleEvent(event);
         }
+
+        actions.invokeCallbacks(system, &(window));
 
         desktop.Update(clock.restart().asSeconds());
 
