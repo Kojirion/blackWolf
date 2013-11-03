@@ -2,8 +2,8 @@
 #include <SFGUI/Label.hpp>
 
 NetWidgets::NetWidgets():
-    chatLayout(sfg::Box::Create(sfg::Box::VERTICAL, 5.f)),
-    chatAreaLayout(sfg::Box::Create(sfg::Box::VERTICAL)),
+    chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
+    chatAreaLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL)),
     chatEntry(sfg::Entry::Create()),
     chatWindow(sfg::ScrolledWindow::Create())
 {
@@ -14,7 +14,7 @@ NetWidgets::NetWidgets():
     chatLayout->Pack(chatWindow);
     chatLayout->Pack(chatEntry);
 
-    chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(&NetWidgets::sendData, this);
+    chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
     chatEntry->GrabFocus();
 
     //chatWindow->GetSignal(sfg::Adjustment::OnChange).Connect(&netWidgets::autoscroll, this);

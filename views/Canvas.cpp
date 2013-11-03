@@ -24,10 +24,10 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
     system->addAffector(FireworkAffector());
 
     window->SetRequisition(sf::Vector2f( 440.f, 440.f ));
-    window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(&Canvas::slotLeftClick, this);
-    window->GetSignal(sfg::Widget::OnMouseMove).Connect(&Canvas::slotMouseMove, this);
-    window->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(&Canvas::slotMouseRelease, this);
-    window->GetSignal(sfg::Widget::OnMouseEnter).Connect(&Canvas::slotEnterCanvas, this);
+    window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(std::bind(&Canvas::slotLeftClick, this));
+    window->GetSignal(sfg::Widget::OnMouseMove).Connect(std::bind(&Canvas::slotMouseMove, this));
+    window->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(std::bind(&Canvas::slotMouseRelease, this));
+    window->GetSignal(sfg::Widget::OnMouseEnter).Connect(std::bind(&Canvas::slotEnterCanvas, this));
 
     messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);

@@ -46,11 +46,13 @@ Settings::Settings(sfg::Desktop &theDesktop):
     window->SetTitle("Settings");
     window->Show(false);
 
-    sfg::Box::Ptr buttonLayout1 = sfg::Box::Create(sfg::Box::VERTICAL);
-    sfg::RadioButtonGroup::Ptr buttonGroup1(sfg::RadioButtonGroup::Create());
+    typedef sfg::RadioButton::RadioButtonGroup RadioButtonGroup;
 
-    sfg::Box::Ptr buttonLayout2 = sfg::Box::Create(sfg::Box::VERTICAL);
-    sfg::RadioButtonGroup::Ptr buttonGroup2(sfg::RadioButtonGroup::Create());
+    sfg::Box::Ptr buttonLayout1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    RadioButtonGroup::Ptr buttonGroup1(RadioButtonGroup::Create());
+
+    sfg::Box::Ptr buttonLayout2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    RadioButtonGroup::Ptr buttonGroup2(RadioButtonGroup::Create());
 
     int iMax(colors.size());
     for (int i=0; i<iMax; ++i)
@@ -68,8 +70,8 @@ Settings::Settings(sfg::Desktop &theDesktop):
     sfg::Frame::Ptr frame2(sfg::Frame::Create("Black"));
     frame2->Add(buttonLayout2);
 
-    sfg::Box::Ptr buttonLayout3 = sfg::Box::Create(sfg::Box::VERTICAL);
-    sfg::RadioButtonGroup::Ptr buttonGroup3(sfg::RadioButtonGroup::Create());
+    sfg::Box::Ptr buttonLayout3 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    RadioButtonGroup::Ptr buttonGroup3(RadioButtonGroup::Create());
 
     iMax = boardColors.size();
     for (int i=0; i<iMax; ++i)
@@ -91,7 +93,7 @@ Settings::Settings(sfg::Desktop &theDesktop):
     mainLayout->Attach(frame3,{2,0,1,1});
     mainLayout->Attach(closeButton,{2,1,1,1});
 
-    closeButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Settings::requestClose,this);
+    closeButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Settings::requestClose,this));
 
     window->Add(mainLayout);
 }

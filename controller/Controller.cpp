@@ -8,8 +8,8 @@
 
 void Controller::enableWindow(const bool enable)
 {
-    if (enable) boardWindow->SetState(sfg::Widget::NORMAL);
-    else boardWindow->SetState(sfg::Widget::INSENSITIVE);
+    if (enable) boardWindow->SetState(sfg::Widget::State::NORMAL);
+    else boardWindow->SetState(sfg::Widget::State::INSENSITIVE);
 }
 
 void Controller::flagDown(Color loser)
@@ -157,7 +157,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     knightButton->SetId("promoteKnight");
     rookButton->SetId("promoteRook");
 
-    sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::HORIZONTAL, 3.f));
+    sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 3.f));
 
     promotionBox->PackEnd(queenButton);
     promotionBox->PackEnd(bishopButton);
@@ -168,19 +168,19 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));
     promotionWindow->SetTitle("Choose piece");
 
-    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
-    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
-    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
-    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(&Controller::slotPromote,this);
+    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
+    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
+    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
+    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
 
     promotionWindow->Show(false);
 
     ButtonBox buttons;
     //buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
     //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
-    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::requestNewGame, this);
-    buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(&Canvas::flipBoard, &board);
-    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::settingsClicked, this);
+    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::requestNewGame, this));
+    buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
+    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
@@ -195,9 +195,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(analysis.getWidget(),{1,9,1,2});
 
     //when making new game
-    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
-    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
-    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(&Controller::slotNewGame, this);
+    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
+    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
+    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
 
     desktop.Add(sideChoice.getWidget());
     desktop.Add(settingsWindow.getWidget());

@@ -16,7 +16,7 @@ ColorChoices::ColorChoices(sfg::Desktop &theDesktop):
     blackSide->SetId("blackNewGame");
     bothSide->SetId("bothNewGame");
 
-    sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::VERTICAL, 5.f));
+    sfg::Box::Ptr sideChoiceBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f));
 
     sideChoiceBox->Pack(whiteSide);
     sideChoiceBox->Pack(blackSide);

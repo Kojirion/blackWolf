@@ -3,7 +3,7 @@
 #include <boost/cast.hpp>
 
 EngineAnalysis::EngineAnalysis():
-    outputLayout(sfg::Box::Create(sfg::Box::VERTICAL)),
+    outputLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL)),
     outputWindow(sfg::ScrolledWindow::Create())
 {
     outputWindow->SetRequisition(sf::Vector2f(200.f,100.f));
