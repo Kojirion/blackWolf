@@ -89,14 +89,14 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} asLibrary)
 
 #tests
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-include_directories(${BOOST_INCLUDE_DIRS})
-
-set(test_SRCS
-    tests/tests.cpp
-)
-add_executable(test ${test_SRCS})
-target_link_libraries(test asLibrary)
-target_link_libraries(test /usr/local/lib/libboost_unit_test_framework.so)
-target_link_libraries(test /usr/local/lib/libboost_system.so)
-target_link_libraries(test /usr/local/lib/libboost_timer.so)
+#find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+#include_directories(${BOOST_INCLUDE_DIRS})
+#
+#set(test_SRCS
+#    tests/tests.cpp
+#)
+#add_executable(test ${test_SRCS})
+#target_link_libraries(test asLibrary)
+#target_link_libraries(test /usr/local/lib/libboost_unit_test_framework.so)
+#target_link_libraries(test /usr/local/lib/libboost_system.so)
+#target_link_libraries(test /usr/local/lib/libboost_timer.so)
