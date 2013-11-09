@@ -70,18 +70,6 @@ void Resources::load()
 
     try
     {
-        whiteRook = cache.acquire(whiteRookT);
-        whiteBishop = cache.acquire(whiteBishopT);
-        whiteKnight = cache.acquire(whiteKnightT);
-        whiteQueen = cache.acquire(whiteQueenT);
-        whitePawn = cache.acquire(whitePawnT);
-        whiteKing = cache.acquire(whiteKingT);
-        blackRook = cache.acquire(blackRookT);
-        blackBishop = cache.acquire(blackBishopT);
-        blackKnight = cache.acquire(blackKnightT);
-        blackQueen = cache.acquire(blackQueenT);
-        blackPawn = cache.acquire(blackPawnT);
-        blackKing = cache.acquire(blackKingT);
 
         board = cache.acquire(boardTexture);
     }
