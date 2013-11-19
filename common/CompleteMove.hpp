@@ -12,6 +12,8 @@ private:
 
     bool hasLegalMoves() const; //checks if the new side will have legal moves in new position
 
+    Square findKing(const Position& position, Color color) const;
+
 
 public:
     CompleteMove(const Position &thePosition, const Move& move);

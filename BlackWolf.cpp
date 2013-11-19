@@ -13,6 +13,7 @@ Color operator !(Color rhs)
 {
     if (rhs==Color::White) return Color::Black;
     if (rhs==Color::Black) return Color::White;
+    BOOST_ASSERT_MSG(true, "Requesting to flip none or both");
     return rhs;
 }
 

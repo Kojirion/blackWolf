@@ -3,32 +3,7 @@
 
 bool CompleteMove::isCheckSafe() const
 {
-    int kingRow, kingCol;
-
-    for (int i=0; i<8; ++i){
-        bool found = false;
-        for (int j=0; j<8; ++j){
-            const Unit pieceId = newBoard({i, j});
-            if (pieceId == Unit{m_board.getTurnColor(), Piece::King}){ //found our king
-                kingRow = i;
-                kingCol = j;
-                break;
-            }
-        }
-        if (found) break;
-    }
-
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            const Unit pieceId = newBoard({i, j});
-            if (pieceId.color == !m_board.getTurnColor() && (pieceId.piece != Piece::Shadow)){ //enemy piece
-                PseudoMove toCheck(newBoard,{{i,j},{kingRow,kingCol}});
-                if (toCheck.isLegal()) return false;
-            }
-        }
-    }
-
-    return true;
+    return inCheck(newBoard, m_board.getTurnColor());
 }
 
 bool CompleteMove::handleCastle() const
@@ -81,26 +56,14 @@ bool CompleteMove::handleCastle() const
 
 bool CompleteMove::inCheck(const Position &givenPos, Color side) const
 {
-    int kingRow, kingCol;
 
-    for (int i=0; i<8; ++i){
-        bool found = false;
-        for (int j=0; j<8; ++j){
-            const Unit pieceId = givenPos({i, j});
-            if (pieceId == Unit{m_board.getTurnColor(), Piece::King}){ //found our king
-                kingRow = i;
-                kingCol = j;
-                break;
-            }
-        }
-        if (found) break;
-    }
+    auto kingSquare = findKing(givenPos, side);
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const Unit pieceId = givenPos({i, j});
-            if (pieceId.color != m_board.getTurnColor()){ //enemy piece
-                PseudoMove toCheck(givenPos,{{i,j},{kingRow,kingCol}});
+            if (pieceId.color != side && (pieceId.piece != Piece::Shadow)){
+                PseudoMove toCheck(givenPos,{{i,j}, kingSquare});
                 if (toCheck.isLegal()) return true;
             }
         }
@@ -124,6 +87,18 @@ bool CompleteMove::hasLegalMoves() const
         }
     }
     return false;
+}
+
+Square CompleteMove::findKing(const Position &position, Color color) const
+{
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            const Unit pieceId = position({i, j});
+            if (pieceId == Unit{color, Piece::King})
+                return {i,j};
+        }
+    }
+    return {-1, -1};
 }
 
 CompleteMove::CompleteMove(const Position &thePosition, const Move &move):
