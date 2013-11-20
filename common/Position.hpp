@@ -33,7 +33,7 @@ public:
 private:
     Color m_turnColor;
 
-    std::array<std::array<Unit, 8>, 8> m_cells;
+    std::array<Unit, 64> m_cells;
 
 
 

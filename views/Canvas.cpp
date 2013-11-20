@@ -3,6 +3,7 @@
 #include <boost/assert.hpp>
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
+//#include <boost/range/adaptor/filtered.hpp>
 
 const sf::Vector2f Canvas::offToCenter(25.f,25.f);
 
