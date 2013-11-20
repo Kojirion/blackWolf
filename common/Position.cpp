@@ -1,6 +1,6 @@
 #include "Position.hpp"
 #include <boost/assert.hpp>
-#include <boost/range/algorithm/replace_copy_if.hpp>
+#include <algorithm>
 
 Position::Position()
 {
@@ -33,15 +33,16 @@ Position::Position(const Position &givenPos, const Move& move):
 
 
     //copy all cells unless shadow pawn in which case clear it
-    //boost::replace_copy_if()
+    std::replace_copy_if(givenPos.begin(), givenPos.end(), m_cells.begin(),
+                           [](Unit unit) { return unit.piece == Piece::Shadow;}, Unit{Color::None, Piece::None});
 
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            const Unit givenPiece = givenPos({i,j});
-            if (givenPiece.piece == Piece::Shadow) m_cells[i*8 + j] = {Color::None, Piece::None}; //clear shadow pawn
-            else m_cells[i*8 + j] = givenPiece;
-        }
-    }
+//    for (int i=0; i<8; ++i){
+//        for (int j=0; j<8; ++j){
+//            const Unit givenPiece = givenPos({i,j});
+//            if (givenPiece.piece == Piece::Shadow) m_cells[i*8 + j] = {Color::None, Piece::None}; //clear shadow pawn
+//            else m_cells[i*8 + j] = givenPiece;
+//        }
+//    }
 
     const Unit pieceCode = m_cells[move.square_1.row*8 + move.square_1.col];
     const Unit destPiece = givenPos(move.square_2);
@@ -187,6 +188,16 @@ Color Position::getTurnColor() const
 void Position::setTurnColor(Color color)
 {
     m_turnColor = color;
+}
+
+Position::iterator Position::begin() const
+{
+    return m_cells.begin();
+}
+
+Position::iterator Position::end() const
+{
+    return m_cells.end();
 }
 
 const Unit& Position::operator ()(const Square& square) const
