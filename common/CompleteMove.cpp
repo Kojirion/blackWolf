@@ -3,7 +3,7 @@
 
 bool CompleteMove::isCheckSafe() const
 {
-    return inCheck(newBoard, m_board.getTurnColor());
+    return !inCheck(newBoard, m_board.getTurnColor());
 }
 
 bool CompleteMove::handleCastle() const
@@ -62,7 +62,7 @@ bool CompleteMove::inCheck(const Position &givenPos, Color side) const
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
             const Unit pieceId = givenPos({i, j});
-            if (pieceId.color != side && (pieceId.piece != Piece::Shadow)){
+            if (pieceId.color == !side && (pieceId.piece != Piece::Shadow)){
                 PseudoMove toCheck(givenPos,{{i,j}, kingSquare});
                 if (toCheck.isLegal()) return true;
             }
