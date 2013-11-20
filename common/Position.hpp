@@ -7,6 +7,8 @@
 class Position{
 public:
 
+    typedef std::array<Unit, 64>::const_iterator iterator;
+
     Position();
 
     Position (int boardArray[8][8]);
@@ -30,7 +32,12 @@ public:
     Color getTurnColor() const;
     void setTurnColor(Color color);
 
+    iterator begin() const;
+    iterator end() const;
+
 private:
+
+
     Color m_turnColor;
 
     std::array<Unit, 64> m_cells;

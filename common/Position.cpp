@@ -1,5 +1,6 @@
 #include "Position.hpp"
 #include <boost/assert.hpp>
+#include <boost/range/algorithm/replace_copy_if.hpp>
 
 Position::Position()
 {
@@ -28,7 +29,11 @@ Position::Position(const Position &givenPos, const Move& move):
     wasPromotion(false),
     m_turnColor(!givenPos.m_turnColor)
 {
-    //makes a new position out of the given one, moving the piece on first to square to second    
+    //makes a new position out of the given one, moving the piece on first to square to second
+
+
+    //copy all cells unless shadow pawn in which case clear it
+    //boost::replace_copy_if()
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
