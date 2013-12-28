@@ -34,15 +34,8 @@ Position::Position(const Position &givenPos, const Move& move):
 
     //copy all cells unless shadow pawn in which case clear it
     std::replace_copy_if(givenPos.begin(), givenPos.end(), m_cells.begin(),
-                           [](Unit unit) { return unit.piece == Piece::Shadow;}, Unit{Color::None, Piece::None});
+                           [](Unit unit) { return unit.piece == Piece::Shadow; }, Unit{Color::None, Piece::None});
 
-//    for (int i=0; i<8; ++i){
-//        for (int j=0; j<8; ++j){
-//            const Unit givenPiece = givenPos({i,j});
-//            if (givenPiece.piece == Piece::Shadow) m_cells[i*8 + j] = {Color::None, Piece::None}; //clear shadow pawn
-//            else m_cells[i*8 + j] = givenPiece;
-//        }
-//    }
 
     const Unit pieceCode = m_cells[move.square_1.row*8 + move.square_1.col];
     const Unit destPiece = givenPos(move.square_2);
