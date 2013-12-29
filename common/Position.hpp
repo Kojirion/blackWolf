@@ -11,8 +11,6 @@ public:
 
     Position();
 
-    Position (int boardArray[8][8]);
-
     Position(const Position &givenPos, const Move &move);
 
     const Unit& operator()(const Square& square) const;

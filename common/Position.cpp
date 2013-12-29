@@ -7,18 +7,6 @@ Position::Position()
     init();
 }
 
-Position::Position(int boardArray[8][8])
-{
-    init();
-    for (int i=0; i<8; ++i)
-    {
-        for (int j=0; j<8; ++j)
-        {
-            //cells[i*8 + j] = boardArray[i*8 + j];
-        }
-    }    
-}
-
 Position::Position(const Position &givenPos, const Move& move):    
     wasCastle(false),
     wasEnPassant(false),
