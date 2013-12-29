@@ -70,7 +70,7 @@ private:
 
     sfg::Label::Ptr player1;
     sfg::Label::Ptr player2;    
-    Client fics;
+    Client client;
 
     void handlePromotion(const Move &move);
 
@@ -79,12 +79,13 @@ private:
 
 
     void settingsClicked();
-    void settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix);
+    void settingsDone(const std::string &whitePrefix, const std::string &blackPrefix, const std::string &boardSuffix);
 
 
     void flagDown(Color loser);
 
-    void aiTurn();    
+    void moveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice = Piece::None);
+    void newGame(Color player, int time, const std::string& player_1, const std::string& player_2);
 
     void enableWindow(const bool enable = true);
 

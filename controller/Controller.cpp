@@ -18,6 +18,28 @@ void Controller::flagDown(Color loser)
     messages.triggerEvent(EndGameMessage(!loser));
 }
 
+void Controller::moveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
+{
+    game.setTime(whiteTime, blackTime);
+    game.startClock();
+
+    //now an ugly way to say: if we already made the move on the board,
+    //we don't care what the client sent
+    if (game.getPosition()(move.square_1) == Unit{Color::None, Piece::None}) return;
+
+    CompleteMove completeMove(game.getPosition(), move);
+    messages.triggerEvent(MoveMessage(completeMove));
+    //if (promotionChoice != Piece::None)
+        //promotionChoiceMade(bwToInt(promotionChoice));
+
+
+}
+
+void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
+{
+    messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
+}
+
 void Controller::handlePromotion(const Move& move)
 {
     toPromote = move;
@@ -41,22 +63,12 @@ void Controller::settingsClicked()
     settingsWindow.enable(true);
 }
 
-void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, std::string boardSuffix)
+void Controller::settingsDone(const std::string& whitePrefix, const std::string& blackPrefix, const std::string& boardSuffix)
 {
     settingsWindow.enable(false);
     enableWindow(true);
     resources.reload(whitePrefix, blackPrefix, boardSuffix);
     board.reload(game.getPosition());
-}
-
-void Controller::aiTurn()
-{
-//    Move moveToMake = chessAi.getMove();
-
-//    CompleteMove toCheck(game.getPosition(), moveToMake);
-//    BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
-
-    //moveMake(toCheck);
 }
 
 void Controller::slotNewGame()
@@ -128,9 +140,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
-    settingsButton(sfg::Button::Create("Settings")),    
-    board(theWindow,resources),    
-    sideChoice(desktop),    
+    settingsButton(sfg::Button::Create("Settings")),
+    board(theWindow,resources),
+    sideChoice(desktop),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
     player1(sfg::Label::Create()),
@@ -141,8 +153,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
-    fics.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
-    netWindow.sendText.connect(boost::bind(&Client::toClient, &fics, _1));
+    client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3, _4));
+    client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
+    //client.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
+    client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
+    netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
     //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
     //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
@@ -211,10 +226,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
 
     desktop.Add(promotionWindow);
-    desktop.Add(boardWindow);   
-
-    //    if (!chessAi.load()) newGame(bw::White | bw::Black);
-    //    else newGame(bw::White);
+    desktop.Add(boardWindow);
 
     messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
@@ -227,8 +239,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
             board.clearArrows();
             requestMove(premove);
         }
-
-        //check for game end?
     });
 
     messages.connect("newGame", [this](const Message& message){
@@ -245,12 +255,14 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
                                     static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
+    client.connect();
+
 }
 
 void Controller::update()
 {
-    //fics.update();
-    board.display();    
+    client.update();
+    board.display();
     if (!game.ended()) updateClocks();
 }
 
@@ -261,7 +273,7 @@ void Controller::resign()
 
 void Controller::offerDraw()
 {
-    return; //ai rejects all offers for now
+    return; //TODO: forward this to the client
 }
 
 
