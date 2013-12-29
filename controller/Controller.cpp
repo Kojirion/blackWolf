@@ -51,10 +51,10 @@ void Controller::settingsDone(std::string whitePrefix, std::string blackPrefix, 
 
 void Controller::aiTurn()
 {
-    Move moveToMake = chessAi.getMove();
+//    Move moveToMake = chessAi.getMove();
 
-    CompleteMove toCheck(game.getPosition(), moveToMake);
-    BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
+//    CompleteMove toCheck(game.getPosition(), moveToMake);
+//    BOOST_ASSERT_MSG(toCheck.isLegal(), "Engine tries to play illegal move");
 
     //moveMake(toCheck);
 }
@@ -246,14 +246,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
                                     static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
-    chessAi.load();
-
 }
 
 void Controller::update()
 {
     //fics.update();
-    chessAi.update();
     board.display();    
     if (!game.ended()) updateClocks();
 }

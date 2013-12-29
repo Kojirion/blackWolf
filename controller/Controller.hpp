@@ -73,9 +73,7 @@ private:
     NetWidgets netWindow;
 
     sfg::Label::Ptr player1;
-    sfg::Label::Ptr player2;
-
-    Engine chessAi;
+    sfg::Label::Ptr player2;    
     Client fics;
 
     void handlePromotion(const Move &move);

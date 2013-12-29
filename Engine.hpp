@@ -1,6 +1,6 @@
 #ifndef CHESSENGINE_H
 #define CHESSENGINE_H
-#include <boost/process.hpp>
+//#include <boost/process.hpp>
 #include <iostream>
 #include "BlackWolf.hpp"
 #include <boost/iostreams/stream.hpp>
@@ -39,10 +39,10 @@ public:
 
 
 private:
-    boost::process::child instance;
+//    boost::process::child instance;
 
-    boost::process::pipe engineOut;
-    boost::process::pipe engineIn;
+//    boost::process::pipe engineOut;
+//    boost::process::pipe engineIn;
 
     boost::iostreams::file_descriptor_sink engineOutSink;
     boost::iostreams::file_descriptor_source engineOutSource;

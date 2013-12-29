@@ -52,7 +52,7 @@ Position::Position(const Position &givenPos, const Move& move):
 
     //this will perform the castle regardless of whether the side has castling rights
     //will produce gibberish if castling rights have been lost or way is obstructed
-    if (pieceCode == Unit{Color::White, Piece::Rook}){
+    if (pieceCode == Unit{Color::White, Piece::King}){
         if ((move.square_1.row==0)&&(move.square_2.row==0)){
             if (move.square_1.col==4){
                 if (move.square_2.col==6){
@@ -66,7 +66,7 @@ Position::Position(const Position &givenPos, const Move& move):
                 }
             }
         }
-    }else if (pieceCode == Unit{Color::Black, Piece::Rook}){
+    }else if (pieceCode == Unit{Color::Black, Piece::King}){
         if ((move.square_1.row==7)&&(move.square_2.row==7)){
             if (move.square_1.col==4){
                 if (move.square_2.col==6){
