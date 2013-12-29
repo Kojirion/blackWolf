@@ -131,6 +131,8 @@ bool Controller::requestMove(const Move& move)
     CompleteMove toCheck(game.getPosition(), move);
     if (toCheck.isLegal()){
         messages.triggerEvent(MoveMessage(toCheck));
+        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
+            client.makeMove(move);
         return true;
     }
     return false;
