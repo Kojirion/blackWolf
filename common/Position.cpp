@@ -178,11 +178,6 @@ Color Position::getTurnColor() const
     return m_turnColor;
 }
 
-void Position::setTurnColor(Color color)
-{
-    m_turnColor = color;
-}
-
 Position::iterator Position::begin() const
 {
     return m_cells.begin();

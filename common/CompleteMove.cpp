@@ -1,5 +1,13 @@
 #include "CompleteMove.hpp"
 #include <boost/assert.hpp>
+#include <map>
+
+//maps the castle to the second move required to be made by the king
+//static const std::map<Castle, Move> castlingMap = {
+//    {{Color::White, Side::King}, {{
+//}
+
+
 
 bool CompleteMove::isCheckSafe() const
 {
@@ -16,8 +24,7 @@ bool CompleteMove::handleCastle() const
             CompleteMove toCheck1(m_board,{{0,4},{0,5}});
             if (!toCheck1.isLegal()) return false;
             CompleteMove toCheck2(toCheck1.getNewBoard(),{{0,5},{0,6}});
-            toCheck2.m_board.setTurnColor(m_board.getTurnColor());
-            if (!toCheck2.isLegal()) return false;
+            if (!toCheck2.isLegalColorblind()) return false;
             return true;
         }else if (m_move.square_2.col==2){
             if (!m_board.whiteCastleQueen) return false;
@@ -25,8 +32,7 @@ bool CompleteMove::handleCastle() const
             CompleteMove toCheck1(m_board,{{0,4},{0,3}});
             if (!toCheck1.isLegal()) return false;
             CompleteMove toCheck2(toCheck1.getNewBoard(),{{0,3},{0,2}});
-            toCheck2.m_board.setTurnColor(m_board.getTurnColor());
-            if (!toCheck2.isLegal()) return false;
+            if (!toCheck2.isLegalColorblind()) return false;
             return true;
         }
     }else{
@@ -37,8 +43,7 @@ bool CompleteMove::handleCastle() const
             CompleteMove toCheck1(m_board,{{7,4},{7,5}});
             if (!toCheck1.isLegal()) return false;
             CompleteMove toCheck2(toCheck1.getNewBoard(),{{7,5},{7,6}});
-            toCheck2.m_board.setTurnColor(m_board.getTurnColor());
-            if (!toCheck2.isLegal()) return false;
+            if (!toCheck2.isLegalColorblind()) return false;
             return true;
         }else if (m_move.square_2.col==2){
             if (!m_board.blackCastleQueen) return false;
@@ -46,8 +51,7 @@ bool CompleteMove::handleCastle() const
             CompleteMove toCheck1(m_board,{{7,4},{7,3}});
             if (!toCheck1.isLegal()) return false;
             CompleteMove toCheck2(toCheck1.getNewBoard(),{{7,3},{7,2}});
-            toCheck2.m_board.setTurnColor(m_board.getTurnColor());
-            if (!toCheck2.isLegal()) return false;
+            if (!toCheck2.isLegalColorblind()) return false;
             return true;
         }
     }
@@ -101,6 +105,17 @@ Square CompleteMove::findKing(const Position &position, Color color) const
     return {-1, -1};
 }
 
+bool CompleteMove::isLegalColorblind() const
+{
+    if (newBoard.wasCastle)
+        return handleCastle();
+
+    if (!PseudoMove::isLegal())
+        return false;
+
+    return isCheckSafe();
+}
+
 CompleteMove::CompleteMove(const Position &thePosition, const Move &move):
     PseudoMove(thePosition, move)
 {
@@ -108,14 +123,11 @@ CompleteMove::CompleteMove(const Position &thePosition, const Move &move):
 
 bool CompleteMove::isLegal() const
 {
-    if (m_piece.color != m_board.getTurnColor()) return false;
-    //assumes that color has been switched if necessary
+    if (m_piece.color != m_board.getTurnColor())
+        return false;
 
-    if (newBoard.wasCastle) return handleCastle();
+    return isLegalColorblind();
 
-    if (!PseudoMove::isLegal()) return false;
-
-    return isCheckSafe();
 }
 
 bool CompleteMove::isCheckmate() const

@@ -14,6 +14,8 @@ private:
 
     Square findKing(const Position& position, Color color) const;
 
+    bool isLegalColorblind() const;
+
 
 public:
     CompleteMove(const Position &thePosition, const Move& move);

@@ -30,7 +30,6 @@ public:
     void setPromotion(const Square& square, const Unit& chosenPiece);
 
     Color getTurnColor() const;
-    void setTurnColor(Color color);
 
     iterator begin() const;
     iterator end() const;
