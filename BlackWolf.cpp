@@ -35,3 +35,11 @@ bool operator <(const Square &lhs, const Square &rhs)
     if(lhs.row==rhs.row) return (lhs.col<rhs.col);
     return (lhs.row<rhs.row);
 }
+
+
+bool operator<(const Castle &lhs, const Castle &rhs)
+{
+    if (lhs.color != rhs.color)
+        return (lhs.color < rhs.color);
+    else return (lhs.side < rhs.side);
+}

@@ -16,6 +16,8 @@ private:
 
     bool isLegalColorblind() const;
 
+    Castle getCastle() const;
+
 
 public:
     CompleteMove(const Position &thePosition, const Move& move);

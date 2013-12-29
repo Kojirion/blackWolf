@@ -2,11 +2,13 @@
 #include <boost/assert.hpp>
 #include <map>
 
-//maps the castle to the second move required to be made by the king
-//static const std::map<Castle, Move> castlingMap = {
-//    {{Color::White, Side::King}, {{
-//}
-
+//maps the castle to the square the king has to go through
+static const std::map<Castle, Square> castlingMap = {
+    {{Color::White, Side::King}, {0,5}},
+    {{Color::White, Side::Queen}, {0,3}},
+    {{Color::Black, Side::King}, {7,5}},
+    {{Color::Black, Side::Queen}, {7,3}}
+};
 
 
 bool CompleteMove::isCheckSafe() const
@@ -16,46 +18,23 @@ bool CompleteMove::isCheckSafe() const
 
 bool CompleteMove::handleCastle() const
 {
-    if (inCheck(m_board,m_board.getTurnColor())) return false;
+    BOOST_ASSERT_MSG((m_piece.piece == Piece::King), "Castle without king move");
+    BOOST_ASSERT_MSG((m_piece.color == m_board.getTurnColor()), "Opponent requests castle");
 
-    if (m_piece == Unit{Color::White, Piece::King}){
-        if (m_move.square_2.col==6){ //kingside
-            if (!m_board.whiteCastleKing) return false;
-            CompleteMove toCheck1(m_board,{{0,4},{0,5}});
-            if (!toCheck1.isLegal()) return false;
-            CompleteMove toCheck2(toCheck1.getNewBoard(),{{0,5},{0,6}});
-            if (!toCheck2.isLegalColorblind()) return false;
-            return true;
-        }else if (m_move.square_2.col==2){
-            if (!m_board.whiteCastleQueen) return false;
-            if (isObstructed(m_board({0, 1}))) return false;
-            CompleteMove toCheck1(m_board,{{0,4},{0,3}});
-            if (!toCheck1.isLegal()) return false;
-            CompleteMove toCheck2(toCheck1.getNewBoard(),{{0,3},{0,2}});
-            if (!toCheck2.isLegalColorblind()) return false;
-            return true;
-        }
-    }else{
-        BOOST_ASSERT_MSG((m_piece == Unit{Color::Black, Piece::King}), "Castle without king move");
+    if (inCheck(m_board, m_board.getTurnColor()))
+        return false;
 
-        if (m_move.square_2.col==6){ //kingside
-            if (!m_board.blackCastleKing) return false;
-            CompleteMove toCheck1(m_board,{{7,4},{7,5}});
-            if (!toCheck1.isLegal()) return false;
-            CompleteMove toCheck2(toCheck1.getNewBoard(),{{7,5},{7,6}});
-            if (!toCheck2.isLegalColorblind()) return false;
-            return true;
-        }else if (m_move.square_2.col==2){
-            if (!m_board.blackCastleQueen) return false;
-            if (isObstructed(m_board({7, 1}))) return false;
-            CompleteMove toCheck1(m_board,{{7,4},{7,3}});
-            if (!toCheck1.isLegal()) return false;
-            CompleteMove toCheck2(toCheck1.getNewBoard(),{{7,3},{7,2}});
-            if (!toCheck2.isLegalColorblind()) return false;
-            return true;
-        }
-    }
-    return false; //appease compiler
+    Castle castle = getCastle();
+
+    if (!m_board.castlingRights(castle))
+        return false;
+
+    const Square& square = castlingMap.at(castle);
+    CompleteMove move_1(m_board, {m_move.square_1, square});
+    if (!move_1.isLegal())
+        return false;
+    CompleteMove move_2(move_1.getNewBoard(), {square, m_move.square_2});
+    return move_2.isLegalColorblind();
 }
 
 bool CompleteMove::inCheck(const Position &givenPos, Color side) const
@@ -114,6 +93,19 @@ bool CompleteMove::isLegalColorblind() const
         return false;
 
     return isCheckSafe();
+}
+
+Castle CompleteMove::getCastle() const
+{
+    Color color = m_piece.color;
+    Side side;
+    if (m_move.square_2.col==6)
+        side = Side::King;
+    else {
+        BOOST_ASSERT_MSG (m_move.square_2.col == 2, "Invalid square to castle to");
+        side = Side::Queen;
+    }
+    return {color, side};
 }
 
 CompleteMove::CompleteMove(const Position &thePosition, const Move &move):

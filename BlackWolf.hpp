@@ -43,5 +43,17 @@ struct Move{
     Square square_2;
 };
 
+enum class Side {
+    King = 0,
+    Queen = 1
+};
+
+struct Castle{
+    Color color;
+    Side side;
+};
+
+bool operator<(const Castle& lhs, const Castle& rhs);
+
 
 #endif // BLACKWOLF_H

@@ -17,11 +17,7 @@ public:
 
     const Unit& operator()(const Square& square) const;
 
-
-    bool whiteCastleQueen;
-    bool whiteCastleKing;
-    bool blackCastleQueen;
-    bool blackCastleKing;
+    bool castlingRights(const Castle& castle) const;
 
     bool wasCastle;
     bool wasEnPassant;
@@ -38,6 +34,10 @@ private:
 
 
     Color m_turnColor;
+    bool whiteCastleQueen;
+    bool whiteCastleKing;
+    bool blackCastleQueen;
+    bool blackCastleKing;
 
     std::array<Unit, 64> m_cells;
 

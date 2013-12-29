@@ -19,15 +19,15 @@ Position::Position(int boardArray[8][8])
     }    
 }
 
-Position::Position(const Position &givenPos, const Move& move):
-    whiteCastleQueen(givenPos.whiteCastleQueen),
-    whiteCastleKing(givenPos.whiteCastleKing),
-    blackCastleQueen(givenPos.blackCastleQueen),
-    blackCastleKing(givenPos.blackCastleKing),
+Position::Position(const Position &givenPos, const Move& move):    
     wasCastle(false),
     wasEnPassant(false),
     wasPromotion(false),
-    m_turnColor(!givenPos.m_turnColor)
+    m_turnColor(!givenPos.m_turnColor),
+    whiteCastleQueen(givenPos.whiteCastleQueen),
+    whiteCastleKing(givenPos.whiteCastleKing),
+    blackCastleQueen(givenPos.blackCastleQueen),
+    blackCastleKing(givenPos.blackCastleKing)
 {
     //makes a new position out of the given one, moving the piece on first to square to second
 
@@ -194,4 +194,17 @@ const Unit& Position::operator ()(const Square& square) const
                      (square.col>=0)&&(square.col<8), "Invalid square");
 
     return m_cells[square.row*8+square.col];
+}
+
+bool Position::castlingRights(const Castle &castle) const
+{
+    if (castle.color == Color::White){
+        if (castle.side == Side::King)
+            return whiteCastleKing;
+        else return whiteCastleQueen;
+    }else{
+        if (castle.side == Side::King)
+            return blackCastleKing;
+        else return blackCastleQueen;
+    }
 }
