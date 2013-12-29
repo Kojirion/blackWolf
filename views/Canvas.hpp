@@ -46,7 +46,7 @@ private:
     std::unique_ptr<thor::ParticleSystem> system;    
     sf::Clock frameClock; //redundant?
 
-    sf::Vector2i toGridPos(const sf::Vector2f& Position) const;
+    Square toGridPos(const sf::Vector2f& Position) const;
 
     SquaresToPieces::const_iterator currentPiece;
 

@@ -53,10 +53,14 @@ bool Canvas::flipped() const
     return (flipOffset!=0);
 }
 
-sf::Vector2i Canvas::toGridPos(const sf::Vector2f &position) const
+Square Canvas::toGridPos(const sf::Vector2f &position) const
 {
-    return sf::Vector2i((position.x-7*flipOffset-20)/(50-2*flipOffset),
-                        (position.y+7*flipOffset-370)/(2*flipOffset-50)+1);
+    if (!flipped())
+        return {static_cast<int>(std::ceil((position.y+7*flipOffset-370)/(2*flipOffset-50))),
+                      static_cast<int>(std::floor((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
+    else
+        return {static_cast<int>(std::floor((position.y+7*flipOffset-370)/(2*flipOffset-50))),
+                      static_cast<int>(std::ceil((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
 }
 
 bool Canvas::pieceHeld()
@@ -245,9 +249,9 @@ void Canvas::slotMouseRelease()
     if (pieceHeld()){
         sf::Vector2f centrePos = currentPiece->get<pieceId>().getPosition() + offToCenter;
 
-        sf::Vector2i gridPos = toGridPos(centrePos);
+        Square gridPos = toGridPos(centrePos);
 
-        if (!(*requestMove({currentPiece->get<squareId>(), {gridPos.y, gridPos.x}})))
+        if (!(*requestMove({currentPiece->get<squareId>(), gridPos})))
             sendBack();
     }
 }
