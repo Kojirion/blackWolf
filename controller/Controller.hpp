@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 #include "../common/Position.hpp"
 #include "../common/CompleteMove.hpp"
-#include "../Engine.hpp"
 #include "../Resources.hpp"
 #include "../views/Canvas.hpp"
 #include "../model/GameData.hpp"
@@ -14,7 +13,6 @@
 #include "../Client.hpp"
 #include "../NetWidgets.hpp"
 #include "../Entity.hpp"
-#include "../views/EngineAnalysis.hpp"
 
 
 class Controller : private Entity
@@ -64,8 +62,6 @@ private:
     ColorChoices sideChoice;
 
     Settings settingsWindow;
-
-    EngineAnalysis analysis;
 
     Move premove;
     bool premoveOn;

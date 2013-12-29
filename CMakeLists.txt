@@ -30,7 +30,6 @@ set(bw_HDRS
     Application.hpp
     common/PseudoMove.hpp
     common/CompleteMove.hpp
-    Engine.hpp    
     Resources.hpp
     controller/components/Settings.hpp
     views/MoveList.hpp
@@ -45,7 +44,6 @@ set(bw_HDRS
     Client.hpp
     NetWidgets.hpp
     Entity.hpp
-    views/EngineAnalysis.hpp
 )
 
 set(bw_SRCS
@@ -55,7 +53,6 @@ set(bw_SRCS
     Application.cpp
     common/PseudoMove.cpp
     common/CompleteMove.cpp
-    Engine.cpp    
     Resources.cpp
     controller/components/Settings.cpp
     views/MoveList.cpp
@@ -69,9 +66,7 @@ set(bw_SRCS
     views/components/Firework.cpp
     Client.cpp
     NetWidgets.cpp
-	ext/file_descriptor.cpp
     Entity.cpp
-    views/EngineAnalysis.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})

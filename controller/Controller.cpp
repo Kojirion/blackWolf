@@ -192,7 +192,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(status.getView(),{1, 4, 1, 1});
     mainLayout->Attach(moveList.getView(),{1, 5, 1, 4});
     mainLayout->Attach(buttons.getWidget(),{0,12,2,2});
-    mainLayout->Attach(analysis.getWidget(),{1,9,1,2});
 
     //when making new game
     sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));

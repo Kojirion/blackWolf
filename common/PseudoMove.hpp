@@ -23,7 +23,7 @@ protected:
     bool isKingLegal() const;
     bool isPawnLegal() const;
 
-    bool isObstructed(Unit piece) const; //returns true if square occupied
+    bool isObstructed(const Unit& unit) const; //returns true if square occupied
 
 
 

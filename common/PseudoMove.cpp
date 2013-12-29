@@ -151,7 +151,7 @@ bool PseudoMove::isPawnLegal() const
     return false;
 }
 
-bool PseudoMove::isObstructed(Unit pieceCode) const
+bool PseudoMove::isObstructed(const Unit &unit) const
 {
-    return (pieceCode.piece != Piece::None) && (pieceCode.piece != Piece::Shadow);
+    return (unit.piece != Piece::None) && (unit.piece != Piece::Shadow);
 }
