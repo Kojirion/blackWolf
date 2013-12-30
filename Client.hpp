@@ -24,7 +24,7 @@ public:
 
     void makeMove(const Move& move, Piece promotionChoice = Piece::None);
 
-    void toClient(std::string toWrite);
+    void toClient(const std::string &toWrite);
 
 private:
     std::string nickname;
@@ -37,7 +37,7 @@ private:
 
     void handleData(boost::system::error_code ec);    
 
-    int stringToCol(const std::string stringedCol) const;
+    int stringToCol(const std::string &stringedCol) const;
     std::string moveString(const Move& move, Piece promotionChoice) const;
     std::string colToString(const int col) const;
     std::string pieceToSymbol(Piece piece) const;

@@ -134,13 +134,13 @@ void Client::handleData(boost::system::error_code ec)
     }
 }
 
-void Client::toClient(std::string toWrite)
+void Client::toClient(const std::string& toWrite)
 {
     toWrite += "\r\n";
     socket.write_some(boost::asio::buffer(toWrite));
 }
 
-int Client::stringToCol(const std::string stringedCol) const
+int Client::stringToCol(const std::string& stringedCol) const
 {
     if (stringedCol=="a") return 0;
     else if (stringedCol=="b") return 1;
