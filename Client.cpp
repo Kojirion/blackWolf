@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 Client::Client():
-     socket(io_service)
+    socket(io_service)
 {
 }
 
@@ -28,7 +28,7 @@ void Client::connect()
     }
 
     boost::asio::async_read_until(socket, data, "\n\r",
-            boost::bind(&Client::handleData, this, _1));
+                                  boost::bind(&Client::handleData, this, _1));
 }
 
 void Client::update()
@@ -129,15 +129,14 @@ void Client::handleData(boost::system::error_code ec)
         }
 
         boost::asio::async_read_until(socket, data, "\n\r",
-                boost::bind(&Client::handleData, this, _1));
+                                      boost::bind(&Client::handleData, this, _1));
 
     }
 }
 
 void Client::toClient(const std::string& toWrite)
 {
-    toWrite += "\r\n";
-    socket.write_some(boost::asio::buffer(toWrite));
+    socket.write_some(boost::asio::buffer(toWrite + "\r\n"));
 }
 
 int Client::stringToCol(const std::string& stringedCol) const
