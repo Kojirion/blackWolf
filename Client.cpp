@@ -193,9 +193,12 @@ void Client::handleData(boost::system::error_code ec)
                     else startGame(Color::Black, time, tokens[1], tokens[3]);
                 }else if (tokens[0] == "{Game"){
                     std::string toCheck = tokens.back();
-                    if (toCheck == "1-0") gameEnd(Color::White);
-                    else if (toCheck == "0-1") gameEnd(Color::Black);
-                    else if (toCheck == "1/2-1/2") gameEnd(Color::Both);
+                    if (toCheck == "1-0")
+                        messages.triggerEvent(EndGameMessage(Color::White));
+                    else if (toCheck == "0-1")
+                        messages.triggerEvent(EndGameMessage(Color::Black));
+                    else if (toCheck == "1/2-1/2")
+                        messages.triggerEvent(EndGameMessage(Color::Both));
                 }else if ((tokens[0]=="****")&&(tokens[1]=="Starting")&&(tokens[2]=="FICS")){
                     //succesfully logged in
                     boost::erase_all(tokens[5],"(U)");

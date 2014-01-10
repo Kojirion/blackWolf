@@ -6,8 +6,9 @@
 #include "common/Position.hpp"
 #include <boost/signals2.hpp>
 #include "BlackWolf.hpp"
+#include "Entity.hpp"
 
-class Client
+class Client : private Entity
 {
 public:
     Client();

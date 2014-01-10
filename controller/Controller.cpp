@@ -15,7 +15,7 @@ void Controller::enableWindow(const bool enable)
 void Controller::flagDown(Color loser)
 {
     clocks.setFlagDown(loser);
-    messages.triggerEvent(EndGameMessage(!loser));
+    //messages.triggerEvent(EndGameMessage(!loser));
 }
 
 void Controller::moveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
@@ -260,6 +260,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
                                     static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
+//    messages.connect("endGame", [this](const Message& message){
+//        const ResizeMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+
+//    });
+
     client.connect();
 
 }
@@ -273,7 +278,7 @@ void Controller::update()
 
 void Controller::resign()
 {
-    messages.triggerEvent(EndGameMessage(game.turnColor()));
+    //messages.triggerEvent(EndGameMessage(game.turnColor()));
 }
 
 void Controller::offerDraw()
