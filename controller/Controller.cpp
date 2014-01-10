@@ -29,10 +29,16 @@ void Controller::moveMake(const Move& move, int whiteTime, int blackTime, Piece 
 
     CompleteMove completeMove(game.getPosition(), move);
     messages.triggerEvent(MoveMessage(completeMove));
-    //if (promotionChoice != Piece::None)
-    //promotionChoiceMade(bwToInt(promotionChoice));
+    if (promotionChoice != Piece::None){
+        //update view
+        board.setPromotion(move.square_2, promotionChoice);
 
-
+        //update model
+        Color whichSide;
+        if (game.turnColor()==Color::White) whichSide = Color::Black;
+        else whichSide = Color::White;
+        game.setPromotion(toPromote.square_2, {whichSide, promotionChoice});
+    }
 }
 
 void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
@@ -114,6 +120,8 @@ void Controller::slotPromote()
     if (game.turnColor()==Color::White) whichSide = Color::Black;
     else whichSide = Color::White;
     game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
+
+    client.makeMove(toPromote, whichPiece);
 
     promotionWindow->Show(false);
     enableWindow(true);

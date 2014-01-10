@@ -281,7 +281,7 @@ Piece Client::symbolToPiece(std::string symbol) const
 {
     if (symbol == "Q") return Piece::Queen;
     if (symbol == "B") return Piece::Bishop;
-    if (symbol == "N") return Piece::Bishop;
+    if (symbol == "N") return Piece::Knight;
     if (symbol == "R") return Piece::Rook;
     return Piece::None; //appease compiler
 }
