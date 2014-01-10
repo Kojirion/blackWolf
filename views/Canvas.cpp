@@ -33,7 +33,6 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
     messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         moveMake(received->move);
-        releasePiece();
     });
 
     messages.connect("newGame", [this](const Message& message){
@@ -258,6 +257,7 @@ void Canvas::slotMouseRelease()
 
         if (!(*requestMove({currentPiece->get<squareId>(), gridPos})))
             sendBack();
+        else releasePiece();
     }
 }
 
