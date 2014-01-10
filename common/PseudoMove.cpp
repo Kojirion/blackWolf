@@ -132,7 +132,7 @@ bool PseudoMove::isPawnLegal() const
                 if (m_move.square_1.col==m_move.square_2.col)
                     if (m_board(m_move.square_2) == noPiece) return true;
                 if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
-                    if (m_piece.color != m_board(m_move.square_2).color) return true;
+                    if (m_piece.color == !m_board(m_move.square_2).color) return true;
             }
         }
     }else{
@@ -144,7 +144,7 @@ bool PseudoMove::isPawnLegal() const
                 if (m_move.square_1.col==m_move.square_2.col)
                     if (m_board(m_move.square_2) == noPiece) return true;
                 if ((m_move.square_1.col+1==m_move.square_2.col)||(m_move.square_1.col-1==m_move.square_2.col))
-                    if (m_piece.color != m_board(m_move.square_2).color) return true;
+                    if (m_piece.color == !m_board(m_move.square_2).color) return true;
             }
         }
     }
