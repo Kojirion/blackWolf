@@ -8,7 +8,7 @@ if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL
         set( CMAKE_CXX_FLAGS "-std=c++11 -Weverything -g -Wno-c++98-compat ${CMAKE_CXX_FLAGS}" )
         set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
 elseif( CMAKE_COMPILER_IS_GNUCXX )
-        set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -g -pedantic ${CMAKE_CXX_FLAGS}" )
+        set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -gdwarf-3 -pedantic ${CMAKE_CXX_FLAGS}" )
         set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
 endif()
 #set(CMAKE_CXX_COMPILER  clang++)
