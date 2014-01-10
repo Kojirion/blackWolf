@@ -79,6 +79,11 @@ void Canvas::releasePiece()
     currentPiece = pieces.end();
 }
 
+Color Canvas::getColorOn(const Square &square) const
+{
+    return pieces.by<squareId>().find(square)->get<pieceId>().getColor();
+}
+
 void Canvas::destroy(const Square& square)
 {
     if (pieces.by<squareId>().erase(square)) //if true then firework

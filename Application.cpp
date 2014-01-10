@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 Application::Application():
-    window(sf::VideoMode(1000, 1000), "Black Wolf")
+    window(sf::VideoMode(800, 800), "Black Wolf")
 {
     window.setFramerateLimit(60);
 

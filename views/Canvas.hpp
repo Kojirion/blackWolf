@@ -108,6 +108,8 @@ public:
     void clearArrows();
 
     void releasePiece();
+
+    Color getColorOn(const Square& square) const;
 };
 
 #endif // BOARDCANVAS_H

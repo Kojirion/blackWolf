@@ -30,7 +30,7 @@ void Controller::moveMake(const Move& move, int whiteTime, int blackTime, Piece 
     CompleteMove completeMove(game.getPosition(), move);
     messages.triggerEvent(MoveMessage(completeMove));
     //if (promotionChoice != Piece::None)
-        //promotionChoiceMade(bwToInt(promotionChoice));
+    //promotionChoiceMade(bwToInt(promotionChoice));
 
 
 }
@@ -121,10 +121,13 @@ void Controller::slotPromote()
 
 bool Controller::requestMove(const Move& move)
 {
-    if (!game.userTurn()) //set premove
-    {
-        premove = move;
-        board.setArrow(move);
+   if (!game.userTurn()) {
+        //premove
+        if (board.getColorOn(move.square_1) == game.getUserColor()) {
+            premove = move;
+            premoveOn = true;
+            board.setArrow(move);
+        }
         return false;
     }
 
