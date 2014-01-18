@@ -12,6 +12,7 @@
 #include "../controller/components/Settings.hpp"
 #include "../Client.hpp"
 #include "../NetWidgets.hpp"
+#include "../views/Counters.hpp"
 #include "../Entity.hpp"
 
 
@@ -58,6 +59,8 @@ private:
     Clocks clocks;
 
     MoveList moveList;
+
+    Counters counters;
 
     ColorChoices sideChoice;
 

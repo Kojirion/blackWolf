@@ -28,6 +28,8 @@ public:
     iterator begin() const;
     iterator end() const;
 
+    bool operator==(const Position& that) const;
+
 private:
 
 

@@ -8,14 +8,15 @@
 class GameData : private Entity
 {
 private:
-    Position m_position;
+    std::vector<Position> m_positions;
     Color m_userColor; //color(s) of user
     Color m_result; //who won
 
     thor::CallbackTimer whiteClock;
     thor::CallbackTimer blackClock;
 
-    int plyCounter;
+    unsigned int plyCounter;
+    unsigned int fiftyMovePlyCounter;
 
     void setResult(Color winner);
 
@@ -32,7 +33,7 @@ public:
     int getPlyCount() const;
 
     const Position& getPosition() const;
-    void setPosition(Position toSet);
+    void setPosition(const Position &toSet);
 
 
     void newGame(Color whoUser, int time);

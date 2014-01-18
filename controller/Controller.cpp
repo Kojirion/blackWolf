@@ -213,6 +213,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
     mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 12},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(counters.getView(), {0, 10, 1, 2});
     mainLayout->Attach(player1, {1,0,1,1});
     mainLayout->Attach(clocks.getWhiteClock(),{1, 1, 1, 1});
     mainLayout->Attach(player2, {1,2,1,1});

@@ -41,6 +41,7 @@ set(bw_HDRS
     views/MoveList.hpp
     views/Canvas.hpp
     views/Clocks.hpp
+    views/Counters.hpp
     model/GameData.hpp
     BlackWolf.hpp
     views/Status.hpp
@@ -64,6 +65,7 @@ set(bw_SRCS
     views/MoveList.cpp
     views/Canvas.cpp
     views/Clocks.cpp
+    views/Counters.cpp
     model/GameData.cpp
     BlackWolf.cpp
     views/Status.cpp

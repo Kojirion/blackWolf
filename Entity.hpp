@@ -41,6 +41,13 @@ struct ResizeMessage : public Message {
     const sf::RenderWindow& window;
 };
 
+struct CountMessage : public Message {
+    CountMessage(unsigned int repetitions, unsigned int fiftyMoves);
+
+    unsigned int repetitions;
+    unsigned int fiftyMoves;
+};
+
 
 
 std::string getEventId(const Message &message);

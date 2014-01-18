@@ -24,6 +24,8 @@ public:
 
     bool isLegal() const;
 
+    bool fiftyMoveValid;
+
     bool isCheckmate() const;
     bool isStalemate() const;
 

@@ -109,8 +109,9 @@ Castle CompleteMove::getCastle() const
 }
 
 CompleteMove::CompleteMove(const Position &thePosition, const Move &move):
-    PseudoMove(thePosition, move)
-{
+    PseudoMove(thePosition, move),
+    fiftyMoveValid((m_piece.piece != Piece::Pawn)&&(m_board(m_move.square_2) == Unit{Color::None, Piece::None}))
+{    
 }
 
 bool CompleteMove::isLegal() const

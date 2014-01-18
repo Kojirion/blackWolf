@@ -6,7 +6,8 @@
 GameData::GameData():
     m_userColor(Color::None),
     m_result(Color::Both), //init a game 'finished' as draw
-    plyCounter(0)
+    plyCounter(0),
+    fiftyMovePlyCounter(0)
 {
     //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
     //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
@@ -14,6 +15,10 @@ GameData::GameData():
     messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
         setPosition(received->move.getNewBoard());
+        if (received->move.fiftyMoveValid)
+            ++fiftyMovePlyCounter;
+        else fiftyMovePlyCounter = 0;
+        messages.triggerEvent(CountMessage(std::count(m_positions.begin(), m_positions.end(), m_positions.back()), fiftyMovePlyCounter/2));
         if (!ended())
             switchTurn();
     });
@@ -52,7 +57,7 @@ bool GameData::userBoth() const
 
 Color GameData::turnColor() const
 {
-    return m_position.getTurnColor();
+    return m_positions.back().getTurnColor();
 }
 
 Color GameData::getUserColor() const
@@ -67,12 +72,12 @@ int GameData::getPlyCount() const
 
 const Position &GameData::getPosition() const
 {
-    return m_position;
+    return m_positions.back();
 }
 
-void GameData::setPosition(Position toSet)
+void GameData::setPosition(const Position& toSet)
 {
-    m_position = toSet;
+    m_positions.push_back(toSet);
 }
 
 void GameData::setResult(Color winner)
@@ -83,8 +88,10 @@ void GameData::setResult(Color winner)
 void GameData::newGame(Color whoUser, int time)
 {
     plyCounter = 0;
+    fiftyMovePlyCounter = 0;
 
-    m_position = Position();
+    m_positions.clear();
+    m_positions.emplace_back();
 
     m_userColor = whoUser;
 
@@ -110,7 +117,7 @@ void GameData::switchTurn()
 
 void GameData::setPromotion(const Square& square, Unit piece)
 {
-    m_position.setPromotion(square, piece);
+    m_positions.back().setPromotion(square, piece);
 }
 
 sf::Time GameData::getWhiteTime() const

@@ -22,7 +22,7 @@ Position::Position(const Position &givenPos, const Move& move):
 
     //copy all cells unless shadow pawn in which case clear it
     std::replace_copy_if(givenPos.begin(), givenPos.end(), m_cells.begin(),
-                           [](Unit unit) { return unit.piece == Piece::Shadow; }, Unit{Color::None, Piece::None});
+                         [](Unit unit) { return unit.piece == Piece::Shadow; }, Unit{Color::None, Piece::None});
 
 
     const Unit pieceCode = m_cells[move.square_1.row*8 + move.square_1.col];
@@ -102,11 +102,11 @@ Position::Position(const Position &givenPos, const Move& move):
     //check if promotion
     if (pieceCode == Unit{Color::White, Piece::Pawn}){
         if (move.square_2.row==7){
-            wasPromotion = true;            
+            wasPromotion = true;
         }
     }else if (pieceCode == Unit{Color::Black, Piece::Pawn}){
         if (move.square_2.row==0){
-            wasPromotion = true;            
+            wasPromotion = true;
         }
     }
 
@@ -174,6 +174,16 @@ Position::iterator Position::begin() const
 Position::iterator Position::end() const
 {
     return m_cells.end();
+}
+
+bool Position::operator==(const Position &that) const
+{
+    return (m_turnColor == that.m_turnColor) &&
+            (m_cells == that.m_cells) &&
+            (whiteCastleKing == that.whiteCastleKing) &&
+            (whiteCastleQueen == that.whiteCastleQueen) &&
+            (blackCastleKing == that.blackCastleKing) &&
+            (blackCastleQueen == that.blackCastleQueen);
 }
 
 const Unit& Position::operator ()(const Square& square) const
