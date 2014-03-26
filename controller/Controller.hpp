@@ -32,10 +32,6 @@ public:
     void updateClocks();
 
     //slots
-    void processLeftClick();
-    void processMouseMove();
-    void processMouseRelease();
-    void processEnterCanvas();
     void resign();
     void offerDraw();
     void requestNewGame();
