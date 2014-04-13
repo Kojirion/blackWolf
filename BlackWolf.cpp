@@ -43,3 +43,18 @@ bool operator<(const Castle &lhs, const Castle &rhs)
         return (lhs.color < rhs.color);
     else return (lhs.side < rhs.side);
 }
+
+
+std::ostream &operator<<(std::ostream &stream, const Square &square)
+{
+    static const char* colToChar = "abcdefgh";
+    stream << colToChar[square.col] << (square.row+1);
+    return stream;
+}
+
+
+std::ostream &operator<<(std::ostream &stream, const Move &move)
+{
+    stream << move.square_1 << "-" << move.square_2;
+    return stream;
+}

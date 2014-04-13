@@ -30,7 +30,8 @@ public:
 private:
     std::string nickname;
 
-    boost::asio::streambuf data;
+    boost::asio::streambuf data, output;
+    std::ostream outputStream;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::socket socket;
 

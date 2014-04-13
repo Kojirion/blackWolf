@@ -59,6 +59,7 @@
 //}}}
 
 Client::Client():
+    outputStream(&output),
     socket(io_service)
 {
 }
@@ -91,19 +92,11 @@ void Client::connect()
 
 void Client::update()
 {
-    if (!io_service.poll()) io_service.reset();
+    boost::asio::write(socket, output);
+
+    if (!io_service.poll())
+        io_service.reset();
 }
-
-//void print(int const& i)
-// {
-//     std::cout << i << std::endl;
-// }
-
-//void print_string (char character)
-//{
-//    std::cout << character << std::endl;
-//}
-
 
 void Client::handleData(boost::system::error_code ec)
 {
@@ -220,7 +213,7 @@ void Client::handleData(boost::system::error_code ec)
 
 void Client::toClient(const std::string& toWrite)
 {
-    socket.write_some(boost::asio::buffer(toWrite + "\r\n"));
+    outputStream << toWrite << "\r\n";
 }
 
 int Client::stringToCol(const std::string& stringedCol) const
@@ -288,6 +281,6 @@ Piece Client::symbolToPiece(std::string symbol) const
 
 
 void Client::makeMove(const Move &move, Piece promotionChoice)
-{
+{    
     toClient(moveString(move,promotionChoice));
 }

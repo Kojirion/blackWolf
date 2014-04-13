@@ -1,5 +1,6 @@
 #ifndef BLACKWOLF_H
 #define BLACKWOLF_H
+#include <ostream>
 
 enum class Color{
     None = 0,
@@ -38,10 +39,14 @@ struct Square{
 
 bool operator<(const Square& lhs, const Square& rhs);
 
+std::ostream& operator<<(std::ostream& stream, const Square& square);
+
 struct Move{
     Square square_1;
     Square square_2;
 };
+
+std::ostream& operator<<(std::ostream& stream, const Move& move);
 
 enum class Side {
     King = 0,
