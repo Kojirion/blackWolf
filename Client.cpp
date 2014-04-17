@@ -129,44 +129,30 @@ void Client::handleData(boost::system::error_code ec)
             {
                 if ((tokens[0] == "<12>")&&(tokens[27]!="none"))
                 {
-                    int row1;
-                    int col1;
-                    int row2;
-                    int col2;
+                    Move move;
 
                     if (tokens[27]=="o-o")
                     {
                         if (tokens[9]=="W")
                         {
-                            row1 = 7;
-                            col1 = 4;
-                            row2 = 7;
-                            col2 = 6;
+                            move = {{7, 4}, {7, 6}};
                         }else{
-                            row1 = 0;
-                            col1 = 4;
-                            row2 = 0;
-                            col2 = 6;
+                            move = {{0, 4}, {0, 6}};
                         }
                     }else if (tokens[27]=="o-o-o"){
                         if (tokens[9]=="W")
                         {
-                            row1 = 7;
-                            col1 = 4;
-                            row2 = 7;
-                            col2 = 2;
+                            move = {{7, 4}, {7, 2}};
                         }else{
-                            row1 = 0;
-                            col1 = 4;
-                            row2 = 0;
-                            col2 = 2;
+                            move = {{0, 4}, {0, 2}};
                         }
 
                     }else{
-                        row1 = std::stoi(tokens[27].substr(3,1)) - 1;
-                        col1 = stringToCol(tokens[27].substr(2,1));
-                        row2 = std::stoi(tokens[27].substr(6,1)) - 1;
-                        col2 = stringToCol(tokens[27].substr(5,1));
+                        auto row1 = std::stoi(tokens[27].substr(3,1)) - 1;
+                        auto col1 = stringToCol(tokens[27].substr(2,1));
+                        auto row2 = std::stoi(tokens[27].substr(6,1)) - 1;
+                        auto col2 = stringToCol(tokens[27].substr(5,1));
+                        move = {{row1, col1}, {row2, col2}};
                     }
 
                     int whiteTime = std::stoi(tokens[24]);
@@ -179,7 +165,7 @@ void Client::handleData(boost::system::error_code ec)
                     }else promotionPiece = Piece::None;
 
 
-                    positionReady({{row1,col1},{row2,col2}}, whiteTime, blackTime, promotionPiece);
+                    positionReady(move, whiteTime, blackTime, promotionPiece);
                 }else if (tokens[0] == "Creating:"){
                     int time = 60*std::stoi(tokens[7]);
                     if (tokens[1] == nickname) startGame(Color::White, time, tokens[1], tokens[3]);
