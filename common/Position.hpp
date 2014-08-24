@@ -1,8 +1,8 @@
-#ifndef POSITION_H
-#define POSITION_H
+#pragma once
 #include <vector>
 #include <array>
 #include "../BlackWolf.hpp"
+
 
 class Position{
 public:
@@ -10,6 +10,8 @@ public:
     typedef std::array<Unit, 64>::const_iterator iterator;
 
     Position();
+
+    Position(std::initializer_list<Unit> cells);
 
     Position(const Position &givenPos, const Move &move);
 
@@ -41,12 +43,7 @@ private:
 
     std::array<Unit, 64> m_cells;
 
-
-
-
     void init();
 
 
 };
-
-#endif // POSITION_H

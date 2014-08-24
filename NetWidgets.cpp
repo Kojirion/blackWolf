@@ -1,5 +1,6 @@
 #include "NetWidgets.hpp"
 #include <SFGUI/Label.hpp>
+#include <SFGUI/Adjustment.hpp>
 
 NetWidgets::NetWidgets():
     chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),

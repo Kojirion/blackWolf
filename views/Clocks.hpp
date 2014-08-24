@@ -2,6 +2,7 @@
 #define CLOCKSVIEW_H
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
+#include <SFML/System/Time.hpp>
 
 class Clocks
 {

@@ -7,6 +7,11 @@ Position::Position()
     init();
 }
 
+Position::Position(std::initializer_list<Unit> cells)
+{
+    std::copy(cells.begin(), cells.end(), m_cells.begin());
+}
+
 Position::Position(const Position &givenPos, const Move& move):    
     wasCastle(false),
     wasEnPassant(false),

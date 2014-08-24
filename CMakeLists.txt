@@ -4,30 +4,12 @@ cmake_minimum_required(VERSION 2.8)
 project(blackWolf)
 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
-if( CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
-        set( CMAKE_CXX_FLAGS "-std=c++11 -Weverything -g -Wno-c++98-compat ${CMAKE_CXX_FLAGS}" )
-        set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
-elseif( CMAKE_COMPILER_IS_GNUCXX )
-        set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -gdwarf-3 -pedantic ${CMAKE_CXX_FLAGS}" )
-        set( CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-long-long -pedantic ${CMAKE_C_FLAGS}" )
-endif()
-#set(CMAKE_CXX_COMPILER  clang++)
-#set(CMAKE_CXX_FLAGS "-std=c++11 -Weverything -g -Wno-c++98-compat")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g -pthread")
 
-# setup version numbers
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 2)
-set(VERSION_PATCH 0)
-
-#find_package( SFML 2 REQUIRED COMPONENTS GRAPHICS WINDOW SYSTEM )
-#link_directories(/usr/local/lib/)
-
-#directories
-#add_subdirectory(common)
-#add_subdirectory(model)
-#add_subdirectory(views)
-#add_subdirectory(controller)
-#add_subdirectory(ext)
+find_package(Boost COMPONENTS system REQUIRED)
+find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
+find_package(SFGUI REQUIRED)
+find_package(Thor REQUIRED)
 
 set(bw_HDRS
     controller/Controller.hpp
@@ -51,6 +33,12 @@ set(bw_HDRS
     Client.hpp
     NetWidgets.hpp
     Entity.hpp
+    parsers/GameStateParser.hpp
+    parsers/SquareParser.hpp
+    parsers/GameStartParser.hpp
+    parsers/GameEndParser.hpp
+    parsers/SessionStartParser.hpp
+    parsers/Grammars.hpp
 )
 
 set(bw_SRCS
@@ -75,31 +63,29 @@ set(bw_SRCS
     Client.cpp
     NetWidgets.cpp
     Entity.cpp
+    parsers/GameStateParser.cpp
+    parsers/GameStartParser.cpp
+    parsers/SquareParser.cpp
+    parsers/GameEndParser.cpp
+    parsers/SessionStartParser.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
 
 #Executable
-add_library(asLibrary ${bw_ALL})
-target_link_libraries(asLibrary /usr/local/lib/libboost_system.so)
-target_link_libraries(asLibrary /usr/local/lib/libsfgui.so)
-target_link_libraries(asLibrary /usr/local/lib/libthor.so)
-target_link_libraries(asLibrary /usr/local/lib/libsfml-graphics.so.2)
-target_link_libraries(asLibrary /usr/local/lib/libsfml-window.so.2)
-target_link_libraries(asLibrary /usr/local/lib/libsfml-system.so.2)
+add_library(core ${bw_ALL})
+target_link_libraries(core ${Boost_SYSTEM_LIBRARY})
+target_link_libraries(core ${SFML_LIBRARIES})
+target_link_libraries(core ${THOR_LIBRARY})
+target_link_libraries(core ${SFGUI_LIBRARY})
+
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} asLibrary)
+target_link_libraries(${PROJECT_NAME} core)
 
 #tests
-#find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-#include_directories(${BOOST_INCLUDE_DIRS})
-#
 set(test_SRCS
     tests/tests.cpp
 )
 add_executable(test ${test_SRCS})
-#target_link_libraries(test asLibrary)
-#target_link_libraries(test /usr/local/lib/libboost_unit_test_framework.so)
-#target_link_libraries(test /usr/local/lib/libboost_system.so)
-#target_link_libraries(test /usr/local/lib/libboost_timer.so)
+target_link_libraries(test core)

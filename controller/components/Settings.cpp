@@ -2,6 +2,7 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Frame.hpp>
+//#include <SFGUI/RadioButtonGroup.hpp>
 
 void Settings::requestClose()
 {
@@ -34,6 +35,8 @@ void Settings::requestClose()
     settingsDone(toSetWhite,toSetBlack,toSetBoard);
 }
 
+namespace sfg {typedef RadioButton::RadioButtonGroup RadioButtonGroup; }
+
 Settings::Settings(sfg::Desktop &theDesktop):
     window(sfg::Window::Create()),
     desktop(theDesktop),
@@ -46,13 +49,13 @@ Settings::Settings(sfg::Desktop &theDesktop):
     window->SetTitle("Settings");
     window->Show(false);
 
-    typedef sfg::RadioButton::RadioButtonGroup RadioButtonGroup;
+
 
     sfg::Box::Ptr buttonLayout1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
-    RadioButtonGroup::Ptr buttonGroup1(RadioButtonGroup::Create());
+    sfg::RadioButtonGroup::Ptr buttonGroup1(sfg::RadioButtonGroup::Create());
 
     sfg::Box::Ptr buttonLayout2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
-    RadioButtonGroup::Ptr buttonGroup2(RadioButtonGroup::Create());
+    sfg::RadioButtonGroup::Ptr buttonGroup2(sfg::RadioButtonGroup::Create());
 
     int iMax(colors.size());
     for (int i=0; i<iMax; ++i)
@@ -71,7 +74,7 @@ Settings::Settings(sfg::Desktop &theDesktop):
     frame2->Add(buttonLayout2);
 
     sfg::Box::Ptr buttonLayout3 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
-    RadioButtonGroup::Ptr buttonGroup3(RadioButtonGroup::Create());
+    sfg::RadioButtonGroup::Ptr buttonGroup3(sfg::RadioButtonGroup::Create());
 
     iMax = boardColors.size();
     for (int i=0; i<iMax; ++i)

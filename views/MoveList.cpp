@@ -3,6 +3,7 @@
 #include "../BlackWolf.hpp"
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
+#include <SFGUI/Adjustment.hpp>
 
 MoveList::MoveList():
     moveListWindow(sfg::ScrolledWindow::Create()),

@@ -1,62 +1,9 @@
 #include "Client.hpp"
-//#include <boost/spirit/include/qi.hpp>
-//#include <boost/spirit/include/qi_parse.hpp>
-
-//namespace boost { namespace spirit { namespace repository { namespace qi
-//{
-//    BOOST_SPIRIT_TERMINAL(unit)
-//}}}}
-
-//namespace boost { namespace spirit
-//{
-//    template <>
-//    struct use_terminal<qi::domain, repository::qi::tag::unit>
-//      : mpl::true_
-//    {};
-//}}
-
-//namespace boost { namespace spirit { namespace repository { namespace qi
-//{
-//    struct unit_parser
-//      : boost::spirit::qi::primitive_parser<unit_parser>
-//    {
-//        template <typename Context, typename Iterator>
-//        struct attribute
-//        {
-//            typedef Iterator type;
-//        };
-
-//        template <typename Iterator, typename Context
-//          , typename Skipper, typename Attribute>
-//        bool parse(Iterator& first, Iterator const& last
-//          , Context&, Skipper const& skipper, Attribute& attr) const
-//        {
-//            boost::spirit::qi::skip_over(first, last, skipper);
-//            boost::spirit::traits::assign_to(first, attr);
-//            return true;
-//        }
-
-//        template <typename Context>
-//        boost::spirit::info what(Context&) const
-//        {
-//            return boost::spirit::info("unit");
-//        }
-//    };
-//}}}}
-
-//namespace boost { namespace spirit { namespace qi
-//{
-//    template <typename Modifiers>
-//    struct make_primitive<repository::qi::tag::unit, Modifiers>
-//    {
-//        typedef repository::qi::unit_parser result_type;
-
-//        result_type operator()(unused_type, unused_type) const
-//        {
-//            return result_type();
-//        }
-//    };
-//}}}
+#include "parsers/GameStateParser.hpp"
+#include "parsers/SessionStartParser.hpp"
+#include "parsers/GameStartParser.hpp"
+#include "parsers/GameEndParser.hpp"
+#include <boost/fusion/container/vector.hpp>
 
 Client::Client():
     outputStream(&output),
@@ -82,7 +29,7 @@ void Client::connect()
     if (error)
     {
         textReady("Failed to connect.");
-        std::cerr << "Failed to conect." << std::endl;
+        std::cerr << "Failed to connect." << std::endl;
         return;
     }
 
@@ -108,92 +55,55 @@ void Client::handleData(boost::system::error_code ec)
 
             boost::erase_all(str,"\r");
 
-            std::vector<std::string> tokens;
+            using boost::spirit::qi::parse;
 
-            boost::split(tokens, str, boost::is_any_of(" "));
+            static const GameEndParser gameEndParser;
+            static const GameStartParser gameStartParser;
+            static const SessionStartParser sessionStartParser;
+            static const GameStateParser gameStateParser;
+            GameStateTuple gameState;
 
-//            namespace qi = boost::spirit::qi;
-//            using qi::phrase_parse;
-//            using qi::int_;
-//            using qi::space;
+            if (parse(str.begin(), str.end(), gameStateParser, gameState)){
+                using boost::fusion::at_c;
+                Move move{at_c<2>(gameState), at_c<3>(gameState)};
+                int white_time = at_c<0>(gameState);
+                int black_time = at_c<1>(gameState);
+                /*Piece promotion;
+                if (at_c<4>(gameState))
+                    promotion = *at_c<4>(gameState);
+                else
+                    promotion = Piece::None;*/
+                positionReady(move, white_time, black_time, Piece::None);
+            }else{
+                GameStartTuple gameStart;
 
-
-//            phrase_parse(str.begin(), str.end(),
-//                         '<' >> int_[&print] >> '>' >> *boost::spirit::qi::char_[&print_string],
-//                         space);
-
-//            <12> rnbqk--r ppp--ppp -----n-- ---p--N- --P-p--- B-P---P- P--PPP-P R--QKB-R B -1 1 1 1 1 1
-//            197 chessbadboy SevenChecks 0 60 0 36 36 3511 3086 7 B/c1-a3 (0:45) Ba3 0 1 0
-
-            if (!tokens.empty())
-            {
-                if ((tokens[0] == "<12>")&&(tokens[27]!="none"))
-                {
-                    Move move;
-
-                    if (tokens[27]=="o-o")
-                    {
-                        if (tokens[9]=="W")
-                        {
-                            move = {{7, 4}, {7, 6}};
-                        }else{
-                            move = {{0, 4}, {0, 6}};
-                        }
-                    }else if (tokens[27]=="o-o-o"){
-                        if (tokens[9]=="W")
-                        {
-                            move = {{7, 4}, {7, 2}};
-                        }else{
-                            move = {{0, 4}, {0, 2}};
-                        }
-
+                if (parse(str.begin(), str.end(), gameStartParser, gameStart)){
+                    using boost::fusion::at_c;
+                    int time = 60*at_c<2>(gameStart);
+                    auto& name_1 = at_c<0>(gameStart);
+                    auto& name_2 = at_c<1>(gameStart);
+                    if (name_1 == nickname)
+                        startGame(Color::White, time, name_1, name_2);
+                    else
+                        startGame(Color::Black, time, name_1, name_2);
+                }else{
+                    Color winner;
+                    if (parse(str.begin(), str.end(), gameEndParser, winner)){
+                        messages.triggerEvent(EndGameMessage(winner));
                     }else{
-                        auto row1 = std::stoi(tokens[27].substr(3,1)) - 1;
-                        auto col1 = stringToCol(tokens[27].substr(2,1));
-                        auto row2 = std::stoi(tokens[27].substr(6,1)) - 1;
-                        auto col2 = stringToCol(tokens[27].substr(5,1));
-                        move = {{row1, col1}, {row2, col2}};
+                        if(parse(str.begin(), str.end(), sessionStartParser, nickname)){
+                            toClient("set style 12");
+                        }else{
+                            //not processed, so let's print it
+                            textReady(str);
+                        }
                     }
-
-                    int whiteTime = std::stoi(tokens[24]);
-                    int blackTime = std::stoi(tokens[25]);
-
-                    Piece promotionPiece;
-
-                    if (tokens[27].size()==9){ //means promotion
-                        promotionPiece = symbolToPiece(tokens[27].substr(8,1));
-                    }else promotionPiece = Piece::None;
-
-
-                    positionReady(move, whiteTime, blackTime, promotionPiece);
-                }else if (tokens[0] == "Creating:"){
-                    int time = 60*std::stoi(tokens[7]);
-                    if (tokens[1] == nickname) startGame(Color::White, time, tokens[1], tokens[3]);
-                    else startGame(Color::Black, time, tokens[1], tokens[3]);
-                }else if (tokens[0] == "{Game"){
-                    std::string toCheck = tokens.back();
-                    if (toCheck == "1-0")
-                        messages.triggerEvent(EndGameMessage(Color::White));
-                    else if (toCheck == "0-1")
-                        messages.triggerEvent(EndGameMessage(Color::Black));
-                    else if (toCheck == "1/2-1/2")
-                        messages.triggerEvent(EndGameMessage(Color::Both));
-                }else if ((tokens[0]=="****")&&(tokens[1]=="Starting")&&(tokens[2]=="FICS")){
-                    //succesfully logged in
-                    boost::erase_all(tokens[5],"(U)");
-                    boost::erase_all(tokens[5],"(R)");
-                    nickname = tokens[5];
-                    toClient("set style 12");
-                }else if (tokens[0] != "fics%"){
-                    //not processed, so let's print it
-                    textReady(str);
                 }
             }
         }
 
         boost::asio::async_read_until(socket, data, "\n\r",
                                       boost::bind(&Client::handleData, this, _1));
-
     }
 }
 
@@ -267,6 +177,6 @@ Piece Client::symbolToPiece(std::string symbol) const
 
 
 void Client::makeMove(const Move &move, Piece promotionChoice)
-{    
+{
     toClient(moveString(move,promotionChoice));
 }
