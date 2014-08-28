@@ -65,15 +65,9 @@ void Client::handleData(boost::system::error_code ec)
 
             if (parse(str.begin(), str.end(), gameStateParser, gameState)){
                 using boost::fusion::at_c;
-                Move move{at_c<2>(gameState), at_c<3>(gameState)};
-                int white_time = at_c<0>(gameState);
-                int black_time = at_c<1>(gameState);
-                /*Piece promotion;
-                if (at_c<4>(gameState))
-                    promotion = *at_c<4>(gameState);
-                else
-                    promotion = Piece::None;*/
-                positionReady(move, white_time, black_time, Piece::None);
+                int white_time = at_c<1>(gameState);
+                int black_time = at_c<2>(gameState);
+                positionReady(at_c<0>(gameState), white_time, black_time);
             }else{
                 GameStartTuple gameStart;
 

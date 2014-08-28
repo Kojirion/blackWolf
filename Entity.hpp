@@ -1,8 +1,8 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 #include <Thor/Input.hpp>
-#include "common/CompleteMove.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "BlackWolf.hpp"
 
 struct Message{
     Message(const std::string& id);
@@ -15,9 +15,8 @@ struct Message{
 typedef thor::EventSystem<Message, std::string> MessageSystem;
 
 struct MoveMessage : public Message {
-    MoveMessage(const CompleteMove& move);
+    MoveMessage();
 
-    CompleteMove move;
 };
 
 struct NewGameMessage : public Message {

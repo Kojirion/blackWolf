@@ -7,22 +7,18 @@
 
 const sf::Vector2f Canvas::offToCenter(25.f,25.f);
 
-Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
+Canvas::Canvas(sf::Window& theWindow):
     flipOffset(0),
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
-    resources(theResources),
     currentPiece(pieces.end()),
     idCount(1)
 {
-    boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
+    boardTexture.loadFromFile("Graphics/BoardBlack.jpg");
+
+    boardSprite_.setTexture(boardTexture);
 
     piecesTexture.loadFromFile("Graphics/Pieces/ArrayBlack.png");
-
-    particle.loadFromFile("Graphics/particle.png");
-    system.reset(new thor::ParticleSystem());
-    system->setTexture(particle);
-    system->addAffector(FireworkAffector());
 
     window->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(std::bind(&Canvas::slotLeftClick, this));
@@ -30,20 +26,19 @@ Canvas::Canvas(sf::Window& theWindow, Resources& theResources):
     window->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(std::bind(&Canvas::slotMouseRelease, this));
     window->GetSignal(sfg::Widget::OnMouseEnter).Connect(std::bind(&Canvas::slotEnterCanvas, this));
 
-    messages.connect("moveMade", [this](const Message& message){
-        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-        moveMake(received->move);
-    });
+    //    messages.connect("moveMade", [this](const Message& message){
+    //        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+    //        moveMake(received->move);
+    //    });
 
     messages.connect("newGame", [this](const Message& message){
         const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         resetFor(received->user);
-        setPosition(Position());
     });
 
     messages.connect("endGame", [this](const Message& message){
         const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
-        setResult(received->result);
+        //setResult(received->result);
     });
 }
 
@@ -56,10 +51,10 @@ Square Canvas::toGridPos(const sf::Vector2f &position) const
 {
     if (!flipped())
         return {static_cast<int>(std::ceil((position.y+7*flipOffset-370)/(2*flipOffset-50))),
-                      static_cast<int>(std::floor((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
+                    static_cast<int>(std::floor((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
     else
         return {static_cast<int>(std::floor((position.y+7*flipOffset-370)/(2*flipOffset-50))),
-                      static_cast<int>(std::ceil((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
+                    static_cast<int>(std::ceil((position.x-7*flipOffset-20)/(50-2*flipOffset)))};
 }
 
 bool Canvas::pieceHeld()
@@ -83,20 +78,11 @@ Color Canvas::getColorOn(const Square &square) const
     return pieces.by<squareId>().find(square)->get<pieceId>().getColor();
 }
 
-void Canvas::destroy(const Square& square)
-{
-    if (pieces.by<squareId>().erase(square)) //if true then firework
-        system->addEmitter(FireworkEmitter(cellToPosition(square) + offToCenter), sf::seconds(1.f));
-}
-
 void Canvas::display()
 {
-    system->update(frameClock.restart());
-
     window->Clear();
 
     window->Draw(boardSprite_);
-    window->Draw(*system, sf::BlendAdd);
 
     vertexArray.clear();
     for (const auto& piece : pieces)
@@ -112,22 +98,28 @@ void Canvas::display()
 
 }
 
-void Canvas::moveMake(const CompleteMove& move)
+void Canvas::moveMake(const std::vector<std::vector<Unit>>& position)
 {
-    const Move& toMake(move.getMove());
+    pieces.clear();
 
-    destroy(toMake.square_2);
-    bimapMove(toMake);
-    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
+    for (int i=0; i<8; ++i){
+        for (int j=0; j<8; ++j){
+            const Unit& unit = position[i][j];
+            if (unit.piece == Piece::None) continue;
+            PieceSprite toAdd(cellToPosition({7-i,j}),unit, idCount++);
+            pieces.insert(SquaresToPieces::value_type({7-i,j}, toAdd));
+        }
+    }
 
-    Position currentPosition = move.getNewBoard();
-    if (currentPosition.wasCastle) handleCastle(toMake.square_2);
-    if (currentPosition.wasEnPassant) handleEnPassant(toMake.square_2);
-}
+//    const Move& toMake(move.getMove());
 
-void Canvas::bimapMove(const Move &move)
-{
-    BOOST_VERIFY(pieces.by<squareId>().modify_key(pieces.by<squareId>().find(move.square_1), boost::bimaps::_key = move.square_2));
+//    destroy(toMake.square_2);
+//    bimapMove(toMake);
+//    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
+
+//    Position currentPosition = move.getNewBoard();
+//    if (currentPosition.wasCastle) handleCastle(toMake.square_2);
+//    if (currentPosition.wasEnPassant) handleEnPassant(toMake.square_2);
 }
 
 sfg::Widget::Ptr Canvas::getBoardWidget() const
@@ -158,23 +150,6 @@ void Canvas::flipBoard()
         piece.get<pieceId>().setPosition(cellToPosition(piece.get<squareId>()));
 }
 
-void Canvas::reload(const Position &givenPosition)
-{
-    pieces.clear();
-    setPosition(givenPosition);
-    boardSprite_.setTexture(resources.typeToTexture({Color::None, Piece::None}));
-}
-
-void Canvas::setResult(Color result)
-{
-    for (const auto& piece : pieces){
-        if (!(piece.get<pieceId>().getColor() & result)){
-            system->addEmitter(FireworkEmitter(piece.get<pieceId>().getPosition() + offToCenter), sf::seconds(1.f));
-            //pieces.erase(piece);
-        }
-    }
-}
-
 void Canvas::setArrow(const Move &move)
 {
     sf::Vector2f point1 = cellToPosition(move.square_1) + offToCenter;
@@ -186,40 +161,6 @@ void Canvas::setArrow(const Move &move)
 void Canvas::clearArrows()
 {
     arrows.clear();
-}
-
-void Canvas::handleCastle(const Square &square)
-{
-    if (square.row==0){
-        if (square.col==2){
-            bimapMove({{0,0},{0,3}});
-            pieces.by<squareId>().find(Square{0,3})->get<pieceId>().setPosition(cellToPosition({0,3}));
-        }else{
-            BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
-            bimapMove({{0,7},{0,5}});
-            pieces.by<squareId>().find(Square{0,5})->get<pieceId>().setPosition(cellToPosition({0,5}));
-        }
-    }else{
-        BOOST_ASSERT_MSG(square.row==7, "Invalid Castle");
-        if (square.col==2){
-            bimapMove({{7,0},{7,3}});
-            pieces.by<squareId>().find(Square{7,3})->get<pieceId>().setPosition(cellToPosition({7,3}));
-        }else{
-            BOOST_ASSERT_MSG(square.col==6, "Invalid Castle");
-            bimapMove({{7,7},{7,5}});
-            pieces.by<squareId>().find(Square{7,5})->get<pieceId>().setPosition(cellToPosition({7,5}));
-        }
-    }
-}
-
-void Canvas::handleEnPassant(const Square &square)
-{
-    if (square.row==5){
-        destroy({4,square.col});
-    }else{
-        BOOST_ASSERT_MSG(square.row==2, "Invalid en passant");
-        destroy({3,square.col});
-    }
 }
 
 void Canvas::slotLeftClick()
@@ -255,9 +196,8 @@ void Canvas::slotMouseRelease()
 
         Square gridPos = toGridPos(centrePos);
 
-        if (!(*requestMove({currentPiece->get<squareId>(), gridPos})))
-            sendBack();
-        else releasePiece();
+        requestMove({currentPiece->get<squareId>(), gridPos});
+        releasePiece();
     }
 }
 
@@ -268,26 +208,13 @@ void Canvas::slotEnterCanvas()
     }
 }
 
-void Canvas::setPosition(const Position& givenPosition)
-{
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
-            const Unit pieceId = givenPosition({i, j});
-            if ((pieceId.piece == Piece::None)||(pieceId.piece == Piece::Shadow)) continue;
-            PieceSprite toAdd(cellToPosition({i,j}),pieceId, idCount++);
-            pieces.insert(SquaresToPieces::value_type({i,j}, toAdd));
-        }
-    }
-
-}
-
 void Canvas::resetFor(Color whoFaceUp)
 {
     if (flipped()){
         if (whoFaceUp & Color::White) flipBoard();
     }else{
         if (!(whoFaceUp & Color::White)) flipBoard();
-    }    
+    }
 
     idCount = 1;
     pieces.clear();
@@ -296,13 +223,4 @@ void Canvas::resetFor(Color whoFaceUp)
 boost::signals2::signal<bool (const Move&)>& Canvas::getSignal()
 {
     return requestMove;
-}
-
-void Canvas::setPromotion(const Square &square, Piece piece)
-{
-    const Color whichSide = pieces.by<squareId>().find(square)->get<pieceId>().getColor();
-    destroy(square);
-    PieceSprite toAdd(cellToPosition(square),{whichSide, piece},idCount++);
-    pieces.insert(SquaresToPieces::value_type(square, toAdd));
-    //pieces[square].insert(toAdd);
 }

@@ -18,27 +18,15 @@ void Controller::flagDown(Color loser)
     //messages.triggerEvent(EndGameMessage(!loser));
 }
 
-void Controller::moveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice)
+void Controller::moveMake(const std::vector<std::vector<Unit>>& position, int whiteTime, int blackTime)
 {
     game.setTime(whiteTime, blackTime);
     game.startClock();
 
-    //now an ugly way to say: if we already made the move on the board,
-    //we don't care what the client sent
-    if (game.getPosition()(move.square_1) == Unit{Color::None, Piece::None}) return;
+    board.moveMake(position);
 
-    CompleteMove completeMove(game.getPosition(), move);
-    messages.triggerEvent(MoveMessage(completeMove));
-    if (promotionChoice != Piece::None){
-        //update view
-        board.setPromotion(move.square_2, promotionChoice);
-
-        //update model
-        Color whichSide;
-        if (game.turnColor()==Color::White) whichSide = Color::Black;
-        else whichSide = Color::White;
-        game.setPromotion(toPromote.square_2, {whichSide, promotionChoice});
-    }
+    //messages.triggerEvent(MoveMessage(completeMove));
+    //promotion choice if player move
 }
 
 void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
@@ -46,35 +34,19 @@ void Controller::newGame(Color player, int time, const std::string &player_1, co
     messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
 }
 
-void Controller::handlePromotion(const Move& move)
-{
-    toPromote = move;
-
-    if (!game.userTurn()){ //techinically, it still is
-        //enable promotion window
-        promotionWindow->Show(true);
-        desktop.BringToFront(promotionWindow);
-
-        //disable board window
-        enableWindow(false);
-    }else{
-        //promotionChoiceMade(chessAi.getPromotionChoice());
-    }
-}
-
 void Controller::settingsClicked()
 {
-    enableWindow(false);
-    settingsWindow.setTree(resources.getTree());
-    settingsWindow.enable(true);
+    //enableWindow(false);
+    //settingsWindow.setTree(resources.getTree());
+    //settingsWindow.enable(true);
 }
 
 void Controller::settingsDone(const std::string& whitePrefix, const std::string& blackPrefix, const std::string& boardSuffix)
 {
     settingsWindow.enable(false);
     enableWindow(true);
-    resources.reload(whitePrefix, blackPrefix, boardSuffix);
-    board.reload(game.getPosition());
+    //resources.reload(whitePrefix, blackPrefix, boardSuffix);
+    //board.reload(game.getPosition());
 }
 
 void Controller::slotNewGame()
@@ -97,56 +69,56 @@ void Controller::slotNewGame()
 
 void Controller::slotPromote()
 {
-    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
-    Piece whichPiece;
+//    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
+//    Piece whichPiece;
 
-    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
-    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
-    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
-    else{
-        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
-        whichPiece = Piece::Rook;
-    }
+//    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
+//    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
+//    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
+//    else{
+//        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
+//        whichPiece = Piece::Rook;
+//    }
 
 
 
-    promotionChoice = whichPiece;
+//    promotionChoice = whichPiece;
 
-    //update view
-    board.setPromotion(toPromote.square_2, whichPiece);
+//    //update view
+//    //board.setPromotion(toPromote.square_2, whichPiece);
 
-    //update model
-    Color whichSide;
-    if (game.turnColor()==Color::White) whichSide = Color::Black;
-    else whichSide = Color::White;
-    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
+//    //update model
+//    Color whichSide;
+//    if (game.turnColor()==Color::White) whichSide = Color::Black;
+//    else whichSide = Color::White;
+//    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
 
-    client.makeMove(toPromote, whichPiece);
+//    client.makeMove(toPromote, whichPiece);
 
-    promotionWindow->Show(false);
-    enableWindow(true);
+//    promotionWindow->Show(false);
+//    enableWindow(true);
 }
 
 bool Controller::requestMove(const Move& move)
 {
-   if (!game.userTurn()) {
-        //premove
-        if (board.getColorOn(move.square_1) == game.getUserColor()) {
-            premove = move;
-            premoveOn = true;
-            board.setArrow(move);
-        }
-        return false;
-    }
+    //   if (!game.userTurn()) {
+    //        //premove
+    //        if (board.getColorOn(move.square_1) == game.getUserColor()) {
+    //            premove = move;
+    //            premoveOn = true;
+    //            board.setArrow(move);
+    //        }
+    //        return false;
+    //    }
 
-    CompleteMove toCheck(game.getPosition(), move);
-    if (toCheck.isLegal()){
-        messages.triggerEvent(MoveMessage(toCheck));
-        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
-            client.makeMove(move);
-        return true;
-    }
-    return false;
+    //    CompleteMove toCheck(game.getPosition(), move);
+    //    if (toCheck.isLegal()){
+    //        messages.triggerEvent(MoveMessage(toCheck));
+    //        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
+    client.makeMove(move);
+    return true;
+    //    }
+    //    return false;
 }
 
 Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
@@ -154,19 +126,18 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
-    board(theWindow,resources),
+    board(theWindow),
     sideChoice(desktop),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
     player1(sfg::Label::Create()),
-    player2(sfg::Label::Create()),
-    toPromote({{0,0},{0,0}}), promotionChoice(Piece::None)
+    player2(sfg::Label::Create())
 {
     boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
 
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
-    client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3, _4));
+    client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
     client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
     //client.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
@@ -244,15 +215,15 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     messages.connect("moveMade", [this](const Message& message){
         const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-        if (received->move.getNewBoard().wasPromotion)
-            handlePromotion(received->move.getMove());
+//        if (received->move.getNewBoard().wasPromotion)
+//            handlePromotion(received->move.getMove());
 
-        if (premoveOn)
-        {
-            premoveOn = false;
-            board.clearArrows();
-            requestMove(premove);
-        }
+//        if (premoveOn)
+//        {
+//            premoveOn = false;
+//            board.clearArrows();
+//            requestMove(premove);
+//        }
     });
 
     messages.connect("newGame", [this](const Message& message){
@@ -270,10 +241,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
                                     static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
-//    messages.connect("endGame", [this](const Message& message){
-//        const ResizeMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+    //    messages.connect("endGame", [this](const Message& message){
+    //        const ResizeMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
 
-//    });
+    //    });
 
     client.connect();
 
@@ -283,7 +254,8 @@ void Controller::update()
 {
     client.update();
     board.display();
-    if (!game.ended()) updateClocks();
+    //if (!game.ended())
+        updateClocks();
 }
 
 void Controller::resign()

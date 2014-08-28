@@ -14,11 +14,7 @@ find_package(Thor REQUIRED)
 set(bw_HDRS
     controller/Controller.hpp
     views/components/PieceSprite.hpp
-    common/Position.hpp
     Application.hpp
-    common/PseudoMove.hpp
-    common/CompleteMove.hpp
-    Resources.hpp
     controller/components/Settings.hpp
     views/MoveList.hpp
     views/Canvas.hpp
@@ -29,7 +25,6 @@ set(bw_HDRS
     views/Status.hpp
     controller/components/ButtonBox.hpp
     controller/components/ColorChoices.hpp
-    views/components/Firework.hpp
     Client.hpp
     NetWidgets.hpp
     Entity.hpp
@@ -44,11 +39,7 @@ set(bw_HDRS
 set(bw_SRCS
     controller/Controller.cpp
     views/components/PieceSprite.cpp
-    common/Position.cpp
     Application.cpp
-    common/PseudoMove.cpp
-    common/CompleteMove.cpp
-    Resources.cpp
     controller/components/Settings.cpp
     views/MoveList.cpp
     views/Canvas.cpp
@@ -59,7 +50,6 @@ set(bw_SRCS
     views/Status.cpp
     controller/components/ButtonBox.cpp
     controller/components/ColorChoices.cpp
-    views/components/Firework.cpp
     Client.cpp
     NetWidgets.cpp
     Entity.cpp
@@ -78,7 +68,6 @@ target_link_libraries(core ${Boost_SYSTEM_LIBRARY})
 target_link_libraries(core ${SFML_LIBRARIES})
 target_link_libraries(core ${THOR_LIBRARY})
 target_link_libraries(core ${SFGUI_LIBRARY})
-
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} core)

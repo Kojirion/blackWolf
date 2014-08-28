@@ -3,7 +3,6 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include "common/Position.hpp"
 #include <boost/signals2.hpp>
 #include "BlackWolf.hpp"
 #include "Entity.hpp"
@@ -15,10 +14,8 @@ public:
 
     void connect();
     void update();
-    //bool positionReady() const;
-    Position getPosition();
 
-    boost::signals2::signal<void (const Move&, int, int, Piece)> positionReady;
+    boost::signals2::signal<void (const std::vector<std::vector<Unit>>&, int, int)> positionReady;
     boost::signals2::signal<void (Color, int, const std::string&,  const std::string&)> startGame;
     boost::signals2::signal<void (Color)> gameEnd;
     boost::signals2::signal<void (std::string)> textReady;

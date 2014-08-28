@@ -11,22 +11,50 @@ struct PromotionMap : symbols<char, Piece>
 {
     PromotionMap(){
         add
-            ("Q", Piece::Queen)
-            ("B", Piece::Bishop)
-            ("N", Piece::Knight)
-            ("R", Piece::Rook)
-        ;
+                ("Q", Piece::Queen)
+                ("B", Piece::Bishop)
+                ("N", Piece::Knight)
+                ("R", Piece::Rook)
+                ;
     }
 
 };
 
+
+
+struct PieceMap : symbols<char, Unit>
+{
+    PieceMap(){
+        add
+                ("r", Unit{Color::Black, Piece::Rook})
+                ("n", Unit{Color::Black, Piece::Knight})
+                ("b", Unit{Color::Black, Piece::Bishop})
+                ("q", Unit{Color::Black, Piece::Queen})
+                ("k", Unit{Color::Black, Piece::King})
+                ("p", Unit{Color::Black, Piece::Pawn})
+                ("R", Unit{Color::White, Piece::Rook})
+                ("N", Unit{Color::White, Piece::Knight})
+                ("B", Unit{Color::White, Piece::Bishop})
+                ("Q", Unit{Color::White, Piece::Queen})
+                ("K", Unit{Color::White, Piece::King})
+                ("P", Unit{Color::White, Piece::Pawn})
+                ("-", Unit{Color::None, Piece::None})
+                ;
+    }
+
+};
+
+
 PromotionMap promotionMap;
+PieceMap pieceMap;
+
 
 
 GameStateParser::GameStateParser() : base_type(start)
 {
-    piece = char_("rnbqkpRNBQKP") | '-';
-    row = repeat(8)[piece];
+
+
+    row = repeat(8)[pieceMap];
     color = lit('W') | lit('B');
     double_advance = "-1" | digit;
     castling_right = lit('0') | lit('1');
@@ -34,12 +62,12 @@ GameStateParser::GameStateParser() : base_type(start)
     game_id = uint_;
     name = +alnum;
     //verbose_move = );
-                   //| lit("o-o") | lit("o-o-o");
+    //| lit("o-o") | lit("o-o-o");
     time_taken = '(' >> uint_ >> ':' >> uint_ >> ')';
     relation = lit("-3") | lit("-2") | lit("2") | lit("-1") | lit("1") | lit("0");
-    pretty_move = +alnum;
-    start = "<12> " >> omit[repeat(8)[row >> ' '] >> color >> ' ' >> double_advance >> ' ' >> repeat(4)[castling_right >> ' '] >> irreversible_moves >> ' '
-                    >> game_id >> ' ' >> name >> ' ' >> name >> ' ' >> relation >> ' ' >> repeat(4)[uint_ >> ' ']] >> int_>>' '>>int_ >> omit[' ' >> uint_
-                    >> ' '] >> omit[alpha >> '/'] >> square >> omit['-'] >> square /*>> -(omit[alpha>>digit>>'='] >> promotionMap)*/
-                    >> omit[' ' >> time_taken >> ' ' >> pretty_move >> ' ' >> repeat(2)[uint_ >> ' '] >> uint_];
+    pretty_move = /*lit("none") |*/ (+(alnum | lit('=') | lit('+') | lit('-')));
+    start = omit["<12> "] >> repeat(8)[row >> ' '] >> omit[color >> ' ' >> double_advance >> ' ' >> repeat(4)[castling_right >> ' '] >> irreversible_moves >> ' '
+                          >> game_id >> ' ' >> name >> ' ' >> name >> ' ' >> relation >> ' ' >> repeat(4)[uint_ >> ' ']] >> int_>>' '>>int_ >> omit[' ' >> uint_
+                          >> ' ' >> ((char_("RNBQKP") >> '/' >> square >> '-' >> square >> -(lit('=') >> promotionMap)) | lit("none") | lit("o-o-o") | lit("o-o"))
+                          >> ' ' >> time_taken >> ' ' >> pretty_move >> ' ' >> repeat(2)[uint_ >> ' '] >> uint_];
 }

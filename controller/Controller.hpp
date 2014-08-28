@@ -1,8 +1,4 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
-#include "../common/Position.hpp"
-#include "../common/CompleteMove.hpp"
-#include "../Resources.hpp"
+#pragma once
 #include "../views/Canvas.hpp"
 #include "../model/GameData.hpp"
 #include "../views/Status.hpp"
@@ -44,8 +40,6 @@ public:
 
 private:
 
-    Resources resources;
-
     Canvas board;
 
     GameData game;
@@ -71,23 +65,15 @@ private:
     sfg::Label::Ptr player2;    
     Client client;
 
-    void handlePromotion(const Move &move);
-
-    Move toPromote;
-    Piece promotionChoice;
-
-
     void settingsClicked();
     void settingsDone(const std::string &whitePrefix, const std::string &blackPrefix, const std::string &boardSuffix);
 
 
     void flagDown(Color loser);
 
-    void moveMake(const Move& move, int whiteTime, int blackTime, Piece promotionChoice = Piece::None);
+    void moveMake(const std::vector<std::vector<Unit> > &position, int whiteTime, int blackTime);
     void newGame(Color player, int time, const std::string& player_1, const std::string& player_2);
 
     void enableWindow(const bool enable = true);
 
 };
-
-#endif // CONTROLLER_H
