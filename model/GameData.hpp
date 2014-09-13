@@ -1,5 +1,4 @@
-#ifndef GAMEDATA_H
-#define GAMEDATA_H
+#pragma once
 #include <Thor/Time/CallbackTimer.hpp>
 #include "../BlackWolf.hpp"
 #include "../Entity.hpp"
@@ -27,5 +26,3 @@ public:
 
     void startClock(); //starts the appropriate clock
 };
-
-#endif // GAMEDATA_H

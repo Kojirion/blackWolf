@@ -1,5 +1,4 @@
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#pragma once
 #include <Thor/Input.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "BlackWolf.hpp"
@@ -61,5 +60,3 @@ public:
 protected:
     static MessageSystem messages;
 };
-
-#endif // ENTITY_HPP

@@ -1,5 +1,4 @@
-#ifndef BLACKWOLF_H
-#define BLACKWOLF_H
+#pragma once
 #include <ostream>
 
 enum class Color{
@@ -61,6 +60,3 @@ struct Castle{
 };
 
 bool operator<(const Castle& lhs, const Castle& rhs);
-
-
-#endif // BLACKWOLF_H

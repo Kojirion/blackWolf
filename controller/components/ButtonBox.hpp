@@ -1,5 +1,4 @@
-#ifndef BUTTONBOX_H
-#define BUTTONBOX_H
+#pragma once
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Button.hpp>
 
@@ -26,5 +25,3 @@ public:
 
 
 };
-
-#endif // BUTTONBOX_H

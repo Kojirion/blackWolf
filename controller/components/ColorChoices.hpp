@@ -1,5 +1,4 @@
-#ifndef SIDECHOICEWINDOW_H
-#define SIDECHOICEWINDOW_H
+#pragma once
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Desktop.hpp>
@@ -27,5 +26,3 @@ public:
 
 
 };
-
-#endif // SIDECHOICEWINDOW_H

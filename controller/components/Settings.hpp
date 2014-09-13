@@ -1,5 +1,4 @@
-#ifndef SETTINGSSTATE_H
-#define SETTINGSSTATE_H
+#pragma once
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Button.hpp>
@@ -38,5 +37,3 @@ public:
 
     void setTree(const boost::property_tree::ptree pt);
 };
-
-#endif // SETTINGSSTATE_H

@@ -1,5 +1,4 @@
-#ifndef NETWIDGETS_H
-#define NETWIDGETS_H
+#pragma once
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
@@ -26,5 +25,3 @@ private:
 
     void sendData();    
 };
-
-#endif // NETWIDGETS_H

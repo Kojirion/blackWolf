@@ -1,5 +1,4 @@
-#ifndef GUIMANAGER_H
-#define GUIMANAGER_H
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include "controller/Controller.hpp"
@@ -21,5 +20,3 @@ public:
 
     void run();
 };
-
-#endif // GUIMANAGER_H
