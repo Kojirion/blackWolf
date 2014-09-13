@@ -6,7 +6,7 @@ project(blackWolf)
 include_directories( ${CMAKE_SOURCE_DIR}/include )
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g -pthread")
 
-find_package(Boost COMPONENTS system REQUIRED)
+find_package(Boost COMPONENTS system log REQUIRED)
 find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 find_package(SFGUI REQUIRED)
 find_package(Thor REQUIRED)
@@ -26,6 +26,7 @@ set(bw_HDRS
     controller/components/ButtonBox.hpp
     controller/components/ColorChoices.hpp
     Client.hpp
+    Timeseal.hpp
     NetWidgets.hpp
     Entity.hpp
     parsers/GameStateParser.hpp
@@ -51,6 +52,7 @@ set(bw_SRCS
     controller/components/ButtonBox.cpp
     controller/components/ColorChoices.cpp
     Client.cpp
+    Timeseal.cpp
     NetWidgets.cpp
     Entity.cpp
     parsers/GameStateParser.cpp
@@ -64,7 +66,7 @@ set(bw_ALL ${bw_HDRS} ${bw_SRCS})
 
 #Executable
 add_library(core ${bw_ALL})
-target_link_libraries(core ${Boost_SYSTEM_LIBRARY})
+target_link_libraries(core ${Boost_LIBRARIES})
 target_link_libraries(core ${SFML_LIBRARIES})
 target_link_libraries(core ${THOR_LIBRARY})
 target_link_libraries(core ${SFGUI_LIBRARY})
