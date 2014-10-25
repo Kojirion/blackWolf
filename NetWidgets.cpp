@@ -8,6 +8,8 @@ NetWidgets::NetWidgets():
     chatText(sfg::Label::Create()),
     chatWindow(sfg::ScrolledWindow::Create())
 {
+    chatText->SetId("chatText");
+
     chatWindow->SetRequisition(sf::Vector2f(600.f,600.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     chatWindow->AddWithViewport(chatText);

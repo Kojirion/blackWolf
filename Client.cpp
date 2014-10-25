@@ -74,6 +74,8 @@ void Client::handleData(boost::system::error_code ec)
                 int white_time = at_c<1>(gameState);
                 int black_time = at_c<2>(gameState);
                 positionReady(at_c<0>(gameState), white_time, black_time);
+                std::string pretty_move = at_c<3>(gameState);
+                messages.triggerEvent(MoveMessage(pretty_move));
             }else{
                 GameStartTuple gameStart;
                 

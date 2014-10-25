@@ -10,7 +10,7 @@ Application::Application():
     auto font = std::make_shared<sf::Font>(sf::Font());
     font->loadFromFile("DejaVuSansMono.ttf");
     desktop.GetEngine().GetResourceManager().SetDefaultFont(font);
-    desktop.SetProperty( "*", "FontName",  "DejaVuSansMono.ttf" );
+    desktop.SetProperty( "Label#chatText", "FontName",  "DejaVuSansMono.ttf" );
 
     actions["close"] = thor::Action(sf::Event::Closed);
     system.connect("close", std::bind(&sf::RenderWindow::close, &window));

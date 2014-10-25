@@ -14,8 +14,9 @@ struct Message{
 typedef thor::EventSystem<Message, std::string> MessageSystem;
 
 struct MoveMessage : public Message {
-    MoveMessage();
+    MoveMessage(const std::string& move);
 
+    std::string move;
 };
 
 struct NewGameMessage : public Message {

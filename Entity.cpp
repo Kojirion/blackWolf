@@ -11,8 +11,8 @@ Message::~Message()
 {
 }
 
-MoveMessage::MoveMessage():
-    Message("moveMade")
+MoveMessage::MoveMessage(const std::string &move):
+    Message("moveMade"), move(move)
 {
 
 }

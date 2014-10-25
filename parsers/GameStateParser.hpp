@@ -8,14 +8,15 @@
 
 using ParsedPosition = std::vector<std::vector<Unit>>;
 
-using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int>;
+using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int, std::string>;
 
 struct GameStateParser : grammar<Iterator, GameStateTuple()>
 {
     GameStateParser();
 
     rule<Iterator> color, double_advance, castling_right, irreversible_moves, game_id, name, relation,
-    time_taken, pretty_move, move;
+    time_taken, move;
+    rule<Iterator, std::string()> pretty_move;
     rule<Iterator, std::vector<Unit>()> row;
     rule<Iterator, GameStateTuple()> start;
     //rule<Iterator, boost::fusion::vector<Square, Square, boost::optional<Piece>>()> verbose_move;
