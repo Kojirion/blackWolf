@@ -4,23 +4,19 @@
 
 NetWidgets::NetWidgets():
     chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
-    chatAreaLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL)),
     chatEntry(sfg::Entry::Create()),
+    chatText(sfg::Label::Create()),
     chatWindow(sfg::ScrolledWindow::Create())
 {
     chatWindow->SetRequisition(sf::Vector2f(600.f,600.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
-    chatWindow->AddWithViewport(chatAreaLayout);
+    chatWindow->AddWithViewport(chatText);
 
     chatLayout->Pack(chatWindow);
     chatLayout->Pack(chatEntry);
 
     chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
     chatEntry->GrabFocus();
-
-    //chatWindow->GetSignal(sfg::Adjustment::OnChange).Connect(&netWidgets::autoscroll, this);
-
-    //chatEntry->GetSignal(sfg::Entry::OnKeyPress)
 }
 
 sfg::Widget::Ptr NetWidgets::getWidget()
@@ -28,16 +24,9 @@ sfg::Widget::Ptr NetWidgets::getWidget()
     return chatLayout;
 }
 
-void NetWidgets::addLine(std::string line)
+void NetWidgets::addLine(const std::string& line)
 {
-    sfg::Container::WidgetsList lines(chatAreaLayout->GetChildren());
-    if (lines.size()>120) //if more, pop front
-        chatAreaLayout->Remove(lines.front());
-
-
-    sfg::Label::Ptr toAdd(sfg::Label::Create(line));
-    toAdd->SetAlignment(sf::Vector2f(0.f,0.f));
-    chatAreaLayout->PackEnd(toAdd);
+    chatText->SetText(chatText->GetText() + line);
     autoscroll();
 }
 

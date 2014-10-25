@@ -30,7 +30,7 @@ void Client::connect()
     if (error)
     {
         textReady("Failed to connect.");
-        std::cerr << "Failed to connect." << std::endl;
+        std::cerr << "Failed to connect.\n";
         return;
     }
     
@@ -59,9 +59,7 @@ void Client::handleData(boost::system::error_code ec)
     {
         std::istream is(&data);
         std::string str;
-        while(std::getline(is, str)){          
-            
-            boost::erase_all(str,"\r");
+        while(std::getline(is, str, '\r')){
             
             using boost::spirit::qi::parse;
             

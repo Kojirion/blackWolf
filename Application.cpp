@@ -7,8 +7,10 @@ Application::Application():
 
     desktop.LoadThemeFromFile("gui.theme");
 
-    //icon.loadFromFile("Graphics/Boardbrown.jpg");
-    //window.setIcon(32,32,icon.getPixelsPtr());
+    auto font = std::make_shared<sf::Font>(sf::Font());
+    font->loadFromFile("DejaVuSansMono.ttf");
+    desktop.GetEngine().GetResourceManager().SetDefaultFont(font);
+    desktop.SetProperty( "*", "FontName",  "DejaVuSansMono.ttf" );
 
     actions["close"] = thor::Action(sf::Event::Closed);
     system.connect("close", std::bind(&sf::RenderWindow::close, &window));

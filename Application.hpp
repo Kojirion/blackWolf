@@ -11,7 +11,6 @@ private:
     sfg::SFGUI sfgui_;
     sf::RenderWindow window;
     sfg::Desktop desktop;    
-    //sf::Image icon;
     thor::ActionMap<std::string> actions;
     thor::ActionMap<std::string>::CallbackSystem system;
 
