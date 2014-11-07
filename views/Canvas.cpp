@@ -114,7 +114,7 @@ void Canvas::moveMake(const std::vector<std::vector<Unit>>& position)
 //    const Move& toMake(move.getMove());
 
 //    destroy(toMake.square_2);
-//    bimapMove(toMake);
+    //bimapMove(toMake);
 //    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
 
 //    Position currentPosition = move.getNewBoard();
@@ -197,6 +197,7 @@ void Canvas::slotMouseRelease()
         Square gridPos = toGridPos(centrePos);
 
         requestMove({currentPiece->get<squareId>(), gridPos});
+        currentPiece->get<pieceId>().setPosition(cellToPosition(gridPos));
         releasePiece();
     }
 }
