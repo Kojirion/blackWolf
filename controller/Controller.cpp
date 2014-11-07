@@ -137,7 +137,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
-    client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
+    //client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
     client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
     //client.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
@@ -213,8 +213,12 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
-    messages.connect("moveMade", [this](const Message& message){
-        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+    messages.connect("gameState", [this](const Message& message){
+        const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        game.setTime(received->white_time, received->black_time);
+        game.startClock();
+
+        board.setupBoard(received->position);
 //        if (received->move.getNewBoard().wasPromotion)
 //            handlePromotion(received->move.getMove());
 

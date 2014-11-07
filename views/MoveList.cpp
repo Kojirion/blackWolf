@@ -20,8 +20,8 @@ MoveList::MoveList():
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(moveList);
 
-    messages.connect("moveMade", [this](const Message& message){
-        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+    messages.connect("gameState", [this](const Message& message){
+        const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
         addMove(received->move);
     });
 

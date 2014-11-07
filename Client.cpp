@@ -71,11 +71,11 @@ void Client::handleData(boost::system::error_code ec)
             
             if (parse(str.begin(), str.end(), gameStateParser, gameState)){
                 using boost::fusion::at_c;
-                int white_time = at_c<1>(gameState);
-                int black_time = at_c<2>(gameState);
-                positionReady(at_c<0>(gameState), white_time, black_time);
-                std::string pretty_move = at_c<3>(gameState);
-                messages.triggerEvent(MoveMessage(pretty_move));
+//                int white_time = at_c<1>(gameState);
+//                int black_time = at_c<2>(gameState);
+//                positionReady(at_c<0>(gameState), white_time, black_time);
+                //std::string pretty_move = at_c<3>(gameState);
+                messages.triggerEvent(gameState);
             }else{
                 GameStartTuple gameStart;
                 
