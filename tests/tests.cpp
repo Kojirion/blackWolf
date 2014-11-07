@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(parsing_game_state)
 {
     GameStateParser my_grammar;
 
-    GameStateTuple gameState;
+    GameStateMessage gameState;
 
     std::string given("<12> rnbqk--r ppp--ppp -----n-- ---p--N- --P-p--- B-P---P- P--PPP-P R--QKB-R B -1 1 1 1 1 1 197 chessbadboy SevenChecks 0 60 0 36 36 3511 3086 7 B/c1-a3 (0:45) Ba3 0 1 0");
 

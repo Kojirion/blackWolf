@@ -2,6 +2,7 @@
 #include <Thor/Input.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "BlackWolf.hpp"
+#include <boost/fusion/include/adapt_struct.hpp>
 
 struct Message{
     Message(const std::string& id);
@@ -27,6 +28,25 @@ struct NewGameMessage : public Message {
     std::string p1;
     std::string p2;
 };
+
+using ParsedPosition = std::vector<std::vector<Unit>>;
+
+//using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int, std::string>;
+
+struct GameStateMessage : public Message {
+    GameStateMessage():Message("gameState") { }
+    ParsedPosition position;
+    int white_time, black_time;
+    std::string move;
+};
+
+BOOST_FUSION_ADAPT_STRUCT(
+        GameStateMessage,
+        (ParsedPosition, position)
+        (int, white_time)
+        (int, black_time)
+        (std::string, move)
+        )
 
 struct EndGameMessage : public Message {
     EndGameMessage(Color result);

@@ -98,7 +98,7 @@ void Canvas::display()
 
 }
 
-void Canvas::moveMake(const std::vector<std::vector<Unit>>& position)
+void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position)
 {
     pieces.clear();
 

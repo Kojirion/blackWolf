@@ -67,7 +67,7 @@ void Client::handleData(boost::system::error_code ec)
             static const GameStartParser gameStartParser;
             static const SessionStartParser sessionStartParser;
             static const GameStateParser gameStateParser;
-            GameStateTuple gameState;
+            GameStateMessage gameState;
             
             if (parse(str.begin(), str.end(), gameStateParser, gameState)){
                 using boost::fusion::at_c;
