@@ -8,11 +8,16 @@ class GameData : private Entity
 private:
     thor::CallbackTimer whiteClock;
     thor::CallbackTimer blackClock;
+    Color m_userColor;
+    Color m_turnColor;
 
 
 
 public:
     GameData();
+
+    bool userTurn() const;
+    Color getUserColor() const;
 
     void update();
 

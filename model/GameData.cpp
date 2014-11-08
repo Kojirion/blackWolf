@@ -19,14 +19,29 @@ GameData::GameData()
     });
 
     messages.connect("newGame", [this](const Message& message){
-        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
-        //newGame(received->user, received->time);
+        auto received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        m_userColor = received->user;
+    });
+
+    messages.connect("gameState", [this](const Message& message){
+        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        m_turnColor = received->turnColor;
     });
 
     messages.connect("endGame", [this](const Message& message){
         const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         //setResult(received->result);
     });
+}
+
+bool GameData::userTurn() const
+{
+    return m_userColor & m_turnColor;
+}
+
+Color GameData::getUserColor() const
+{
+    return m_userColor;
 }
 
 void GameData::setTime(int whiteTime, int blackTime)

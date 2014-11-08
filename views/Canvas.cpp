@@ -215,9 +215,12 @@ void Canvas::slotMouseRelease()
 
         Square gridPos = toGridPos(centrePos);
 
-        requestMove({currentPiece->get<squareId>(), gridPos});
-        currentPiece->get<pieceId>().setPosition(cellToPosition(gridPos));
-        releasePiece();
+        if (!(*requestMove({currentPiece->get<squareId>(), gridPos})))
+            sendBack();
+        else {
+            currentPiece->get<pieceId>().setPosition(cellToPosition(gridPos));
+            releasePiece();
+        }
     }
 }
 

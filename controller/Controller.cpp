@@ -69,47 +69,47 @@ void Controller::slotNewGame()
 
 void Controller::slotPromote()
 {
-//    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
-//    Piece whichPiece;
+    //    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
+    //    Piece whichPiece;
 
-//    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
-//    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
-//    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
-//    else{
-//        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
-//        whichPiece = Piece::Rook;
-//    }
+    //    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
+    //    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
+    //    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
+    //    else{
+    //        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
+    //        whichPiece = Piece::Rook;
+    //    }
 
 
 
-//    promotionChoice = whichPiece;
+    //    promotionChoice = whichPiece;
 
-//    //update view
-//    //board.setPromotion(toPromote.square_2, whichPiece);
+    //    //update view
+    //    //board.setPromotion(toPromote.square_2, whichPiece);
 
-//    //update model
-//    Color whichSide;
-//    if (game.turnColor()==Color::White) whichSide = Color::Black;
-//    else whichSide = Color::White;
-//    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
+    //    //update model
+    //    Color whichSide;
+    //    if (game.turnColor()==Color::White) whichSide = Color::Black;
+    //    else whichSide = Color::White;
+    //    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
 
-//    client.makeMove(toPromote, whichPiece);
+    //    client.makeMove(toPromote, whichPiece);
 
-//    promotionWindow->Show(false);
-//    enableWindow(true);
+    //    promotionWindow->Show(false);
+    //    enableWindow(true);
 }
 
 bool Controller::requestMove(const Move& move)
 {
-    //   if (!game.userTurn()) {
-    //        //premove
-    //        if (board.getColorOn(move.square_1) == game.getUserColor()) {
-    //            premove = move;
-    //            premoveOn = true;
-    //            board.setArrow(move);
-    //        }
-    //        return false;
-    //    }
+    if (!game.userTurn()) {
+        //premove
+        if (board.getColorOn(move.square_1) == game.getUserColor()) {
+            premove = move;
+            premoveOn = true;
+            board.setArrow(move);
+        }
+        return false;
+    }
 
     //    CompleteMove toCheck(game.getPosition(), move);
     //    if (toCheck.isLegal()){
@@ -219,15 +219,15 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         game.startClock();
 
         board.setupBoard(received->position, received->turnColor);
-//        if (received->move.getNewBoard().wasPromotion)
-//            handlePromotion(received->move.getMove());
+        //        if (received->move.getNewBoard().wasPromotion)
+        //            handlePromotion(received->move.getMove());
 
-//        if (premoveOn)
-//        {
-//            premoveOn = false;
-//            board.clearArrows();
-//            requestMove(premove);
-//        }
+        if (premoveOn)
+        {
+            premoveOn = false;
+            board.clearArrows();
+            requestMove(premove);
+        }
     });
 
     messages.connect("newGame", [this](const Message& message){
@@ -259,7 +259,7 @@ void Controller::update()
     client.update();
     board.display();
     //if (!game.ended())
-        updateClocks();
+    updateClocks();
 }
 
 void Controller::resign()
