@@ -11,8 +11,6 @@ private:
     Color m_userColor;
     Color m_turnColor;
 
-
-
 public:
     GameData();
 
@@ -25,9 +23,6 @@ public:
 
     sf::Time getWhiteTime() const;
     sf::Time getBlackTime() const;
-
-    thor::CallbackTimer &getWhiteTimer();
-    thor::CallbackTimer &getBlackTimer();
 
     void startClock(); //starts the appropriate clock
 };

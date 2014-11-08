@@ -5,19 +5,6 @@
 
 GameData::GameData()
 {
-    //whiteClock.connect(std::bind(&gameData::setResult, this, bw::Black));
-    //blackClock.connect(std::bind(&gameData::setResult, this, bw::White));
-
-    messages.connect("moveMade", [this](const Message& message){
-        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-//        if (received->move.fiftyMoveValid)
-//            ++fiftyMovePlyCounter;
-//        else fiftyMovePlyCounter = 0;
-        //messages.triggerEvent(CountMessage(std::count(m_positions.begin(), m_positions.end(), m_positions.back()), fiftyMovePlyCounter/2));
-//        if (!ended())
-//            switchTurn();
-    });
-
     messages.connect("newGame", [this](const Message& message){
         auto received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         m_userColor = received->user;
@@ -26,11 +13,6 @@ GameData::GameData()
     messages.connect("gameState", [this](const Message& message){
         auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
         m_turnColor = received->turnColor;
-    });
-
-    messages.connect("endGame", [this](const Message& message){
-        const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
-        //setResult(received->result);
     });
 }
 
@@ -66,24 +48,14 @@ sf::Time GameData::getBlackTime() const
     return blackClock.getRemainingTime();
 }
 
-thor::CallbackTimer& GameData::getWhiteTimer()
-{
-    return whiteClock;
-}
-
-thor::CallbackTimer& GameData::getBlackTimer()
-{
-    return blackClock;
-}
-
 void GameData::startClock()
 {
-    //if (turnColor() == Color::White){
+    if (m_turnColor == Color::White){
         blackClock.stop();
         whiteClock.start();
-//    }else{
-//        BOOST_ASSERT_MSG(turnColor()==Color::Black, "Turn color invalid");
-//        whiteClock.stop();
-//        blackClock.start();
-//    }
+    }else{
+        BOOST_ASSERT_MSG(m_turnColor==Color::Black, "Turn color invalid");
+        whiteClock.stop();
+        blackClock.start();
+    }
 }
