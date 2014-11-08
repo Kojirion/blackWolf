@@ -67,7 +67,7 @@ private:
 public:
     Canvas(sf::Window& theWindow);
     void display();
-    void setupBoard(const std::vector<std::vector<Unit> > &position);
+    void setupBoard(const std::vector<std::vector<Unit> > &position, Color turnColor);
 
     sfg::Widget::Ptr getBoardWidget() const;
 

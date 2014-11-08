@@ -23,7 +23,7 @@ void Controller::moveMake(const std::vector<std::vector<Unit>>& position, int wh
     game.setTime(whiteTime, blackTime);
     game.startClock();
 
-    board.setupBoard(position);
+    //board.setupBoard(position);
 
     //messages.triggerEvent(MoveMessage(completeMove));
     //promotion choice if player move
@@ -218,7 +218,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         game.setTime(received->white_time, received->black_time);
         game.startClock();
 
-        board.setupBoard(received->position);
+        board.setupBoard(received->position, received->turnColor);
 //        if (received->move.getNewBoard().wasPromotion)
 //            handlePromotion(received->move.getMove());
 

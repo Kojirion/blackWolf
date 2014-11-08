@@ -34,8 +34,9 @@ using ParsedPosition = std::vector<std::vector<Unit>>;
 //using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int, std::string>;
 
 struct GameStateMessage : public Message {
-    GameStateMessage():Message("gameState") { }
+    GameStateMessage();
     ParsedPosition position;
+    Color turnColor;
     int white_time, black_time;
     std::string move;
 };
@@ -43,6 +44,7 @@ struct GameStateMessage : public Message {
 BOOST_FUSION_ADAPT_STRUCT(
         GameStateMessage,
         (ParsedPosition, position)
+        (Color, turnColor)
         (int, white_time)
         (int, black_time)
         (std::string, move)

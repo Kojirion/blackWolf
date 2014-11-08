@@ -15,7 +15,7 @@ struct GameStateParser : grammar<Iterator, GameStateMessage()>
 {
     GameStateParser();
 
-    rule<Iterator> color, double_advance, castling_right, irreversible_moves, game_id, name, relation,
+    rule<Iterator> double_advance, castling_right, irreversible_moves, game_id, name, relation,
     time_taken, move;
     rule<Iterator, std::string()> pretty_move;
     rule<Iterator, std::vector<Unit>()> row;

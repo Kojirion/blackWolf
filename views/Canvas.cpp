@@ -98,8 +98,18 @@ void Canvas::display()
 
 }
 
-void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position)
+void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position, Color turnColor)
 {
+    Square square;
+    sf::Vector2f pos;
+    auto wasPieceHeld = pieceHeld();
+
+    if (wasPieceHeld){
+        square = currentPiece->get<squareId>();
+        pos = currentPiece->get<pieceId>().getPosition();
+        releasePiece();
+    }
+
     pieces.clear();
 
     for (int i=0; i<8; ++i){
@@ -111,15 +121,24 @@ void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position)
         }
     }
 
-//    const Move& toMake(move.getMove());
+    if (wasPieceHeld){
+        auto it = pieces.by<squareId>().find(square);
+        if (it->get<pieceId>().getColor() == turnColor){
+            currentPiece = pieces.project_up(it);
+            currentPiece->get<pieceId>().setPosition(pos);
+        }
+    }
 
-//    destroy(toMake.square_2);
+
+    //    const Move& toMake(move.getMove());
+
+    //    destroy(toMake.square_2);
     //bimapMove(toMake);
-//    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
+    //    pieces.by<squareId>().find(toMake.square_2)->get<pieceId>().setPosition(cellToPosition(toMake.square_2));
 
-//    Position currentPosition = move.getNewBoard();
-//    if (currentPosition.wasCastle) handleCastle(toMake.square_2);
-//    if (currentPosition.wasEnPassant) handleEnPassant(toMake.square_2);
+    //    Position currentPosition = move.getNewBoard();
+    //    if (currentPosition.wasCastle) handleCastle(toMake.square_2);
+    //    if (currentPosition.wasEnPassant) handleEnPassant(toMake.square_2);
 }
 
 sfg::Widget::Ptr Canvas::getBoardWidget() const

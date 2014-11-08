@@ -49,3 +49,6 @@ CountMessage::CountMessage(unsigned int repetitions, unsigned int fiftyMoves):
     Message("count"), repetitions(repetitions), fiftyMoves(fiftyMoves)
 {
 }
+
+
+GameStateMessage::GameStateMessage():Message("gameState") { }
