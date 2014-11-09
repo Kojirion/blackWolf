@@ -10,10 +10,10 @@ struct ResultMap : symbols<char, Color>
     ResultMap();
 };
 
-struct GameEndParser : grammar<Iterator, Color>
+struct GameEndParser : grammar<Iterator, Color()>
 {
     GameEndParser();
 
     rule<Iterator> name;
-    rule<Iterator, Color> start;
+    rule<Iterator, Color()> start;
 };
