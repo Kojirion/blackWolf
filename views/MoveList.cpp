@@ -21,7 +21,14 @@ MoveList::MoveList():
     moveListWindow->AddWithViewport(moveList);
 
     messages.connect("gameState", [this](const Message& message){
-        const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        if (plyCount%2==0){
+            if (received->turnColor==Color::White)
+                return;
+        } else{
+            if (received->turnColor==Color::Black)
+                return;
+        }
         addMove(received->move);
     });
 
