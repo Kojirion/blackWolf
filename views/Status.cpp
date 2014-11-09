@@ -4,9 +4,9 @@
 Status::Status():
     statusLabel(sfg::Label::Create())
 {
-    messages.connect("moveMade", [this](const Message& message){
-        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-        //setToPlay(received->move.getNewBoard().getTurnColor());
+    messages.connect("gameState", [this](const Message& message){
+        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        setToPlay(received->turnColor);
     });
 
     messages.connect("newGame", [this](const Message& message){
@@ -14,7 +14,7 @@ Status::Status():
     });
 
     messages.connect("endGame", [this](const Message& message){
-        const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         setResult(received->result);
     });
 }
