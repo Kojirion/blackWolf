@@ -81,9 +81,9 @@ void Client::handleData(boost::system::error_code ec)
                         gameStart.user = Color::Black;
                     messages.triggerEvent(gameStart);
                 }else{
-                    Color winner;
-                    if (parse(str.begin(), str.end(), gameEndParser, winner)){
-                        messages.triggerEvent(EndGameMessage(winner));
+                    EndGameMessage endGame;
+                    if (parse(str.begin(), str.end(), gameEndParser, endGame)){
+                        messages.triggerEvent(endGame);
                     }else{
                         if(parse(str.begin(), str.end(), sessionStartParser, nickname)){
                             toClient("set style 12");

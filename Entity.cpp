@@ -33,8 +33,8 @@ NewGameMessage::NewGameMessage():
 }
 
 
-EndGameMessage::EndGameMessage(Color result):
-    Message("endGame"), result(result)
+EndGameMessage::EndGameMessage():
+    Message("endGame")
 {
 }
 

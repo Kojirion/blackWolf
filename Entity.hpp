@@ -59,10 +59,15 @@ BOOST_FUSION_ADAPT_STRUCT(
         )
 
 struct EndGameMessage : public Message {
-    EndGameMessage(Color result);
+    EndGameMessage();
 
     Color result;
 };
+
+BOOST_FUSION_ADAPT_STRUCT(
+        EndGameMessage,
+        (Color, result)
+        )
 
 struct ResizeMessage : public Message {
     ResizeMessage(const sf::RenderWindow& window);
