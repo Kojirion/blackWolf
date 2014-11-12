@@ -243,10 +243,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
                                     static_cast<sf::Vector2f>(received->window.getSize())});
     });
 
-    //    messages.connect("endGame", [this](const Message& message){
-    //        const ResizeMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
-
-    //    });
+    messages.connect("endGame", [this](const Message& message){
+        auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        premoveOn = false;
+        board.clearArrows();
+    });
 
     client.connect();
 
