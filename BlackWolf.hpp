@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include <SFML/System/Vector2.hpp>
 
 enum class Color{
     None = 0,
@@ -60,3 +61,7 @@ struct Castle{
 };
 
 bool operator<(const Castle& lhs, const Castle& rhs);
+
+//namespace sf { class Vector2f; }
+
+sf::Vector2f typeToTexPos(const Unit& type);

@@ -77,6 +77,6 @@ GameStateParser::GameStateParser() : base_type(start)
     pretty_move = /*lit("none") |*/ (+(alnum | char_('=') | char_('+') | char_('-')));
     start = omit["<12> "] >> repeat(8)[row >> ' '] >> colorMap >> omit[' ' >> double_advance >> ' ' >> repeat(4)[castling_right >> ' '] >> irreversible_moves >> ' '
                           >> game_id >> ' ' >> name >> ' ' >> name >> ' ' >> relation >> ' ' >> repeat(4)[uint_ >> ' ']] >> int_>>' '>>int_ >> omit[' ' >> uint_
-                          >> ' ' >> ((char_("RNBQKP") >> '/' >> square >> '-' >> square >> -(lit('=') >> promotionMap)) | lit("none") | lit("o-o-o") | lit("o-o"))
-                          >> ' ' >> time_taken >> ' '] >> pretty_move >> omit[' ' >> repeat(2)[uint_ >> ' '] >> uint_];
+                          >> ' '] >> ((omit[char_("RNBQKP") >> '/' >> square >> '-'] >> square >> omit[-(lit('=') >> promotionMap)]) | lit("none") | lit("o-o-o") | lit("o-o"))
+                          >> omit[' ' >> time_taken >> ' '] >> pretty_move >> omit[' ' >> repeat(2)[uint_ >> ' '] >> uint_];
 }

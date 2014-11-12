@@ -14,6 +14,7 @@ find_package(Thor REQUIRED)
 set(bw_HDRS
     controller/Controller.hpp
     views/components/PieceSprite.hpp
+    views/components/Emitter.hpp
     Application.hpp
     controller/components/Settings.hpp
     views/MoveList.hpp
@@ -40,6 +41,7 @@ set(bw_HDRS
 set(bw_SRCS
     controller/Controller.cpp
     views/components/PieceSprite.cpp
+    views/components/Emitter.cpp
     Application.cpp
     controller/components/Settings.cpp
     views/MoveList.cpp

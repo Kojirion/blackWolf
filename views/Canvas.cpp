@@ -3,6 +3,8 @@
 #include <boost/assert.hpp>
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
+#include "components/Emitter.hpp"
+
 //#include <boost/range/adaptor/filtered.hpp>
 
 const sf::Vector2f Canvas::offToCenter(25.f,25.f);
@@ -12,13 +14,28 @@ Canvas::Canvas(sf::Window& theWindow):
     window(sfg::Canvas::Create()),
     bigWindow(theWindow),
     currentPiece(pieces.end()),
-    idCount(1)
+    idCount(1),
+    previousTurnColor(Color::Black)
 {
     boardTexture.loadFromFile("Graphics/BoardBlack.jpg");
 
     boardSprite_.setTexture(boardTexture);
 
     piecesTexture.loadFromFile("Graphics/Pieces/ArrayBlack.png");
+    m_particleSystem.setTexture(piecesTexture);
+    m_particleSystem.addAffector( thor::TorqueAffector(100.f) );
+
+    int l = 50/nr_fragments_side;
+    for (int i=0; i<12; ++i){
+        auto unitTexPos = static_cast<sf::Vector2i>(typeToTexPos(IntToUnit[i]));
+        for (int j=0; j<nr_fragments_side; ++j){
+            for (int k=0; k<nr_fragments_side; ++k){
+                auto fragmentTexPos = unitTexPos + sf::Vector2i(l*j, k*l);
+                sf::IntRect rect(fragmentTexPos, sf::Vector2i(l, l));
+                m_particleSystem.addTextureRect(rect);
+            }
+        }
+    }
 
     window->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(std::bind(&Canvas::slotLeftClick, this));
@@ -32,12 +49,22 @@ Canvas::Canvas(sf::Window& theWindow):
     //    });
 
     messages.connect("newGame", [this](const Message& message){
-        const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         resetFor(received->user);
     });
 
+    messages.connect("gameState", [this](const Message& message){
+        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+        if (previousTurnColor != received->turnColor){
+            previousTurnColor = received->turnColor;
+            if (received->target_square)
+                destroy(*received->target_square);
+        }
+        setupBoard(received->position, received->turnColor);
+    });
+
     messages.connect("endGame", [this](const Message& message){
-        const EndGameMessage* received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         //setResult(received->result);
     });
 }
@@ -80,9 +107,11 @@ Color Canvas::getColorOn(const Square &square) const
 
 void Canvas::display()
 {
+    m_particleSystem.update(frameClock.restart());
     window->Clear();
 
     window->Draw(boardSprite_);
+    window->Draw(m_particleSystem);
 
     vertexArray.clear();
     for (const auto& piece : pieces)
@@ -246,4 +275,13 @@ void Canvas::resetFor(Color whoFaceUp)
 boost::signals2::signal<bool (const Move&)>& Canvas::getSignal()
 {
     return requestMove;
+}
+
+void Canvas::destroy(const Square& square)
+{
+    auto it = pieces.by<squareId>().find(square);
+    if (it != pieces.by<squareId>().end()){
+        auto unit = it->second.getUnit();
+        m_particleSystem.addEmitter(Emitter(cellToPosition(square) + offToCenter, unit), sf::seconds(0.000001f));
+    }
 }

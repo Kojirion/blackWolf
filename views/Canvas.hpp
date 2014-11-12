@@ -5,6 +5,7 @@
 #include "../views/components/PieceSprite.hpp"
 #include "../BlackWolf.hpp"
 #include <Thor/Shapes/Arrow.hpp>
+#include <Thor/Particles/ParticleSystem.hpp>
 #include "../Entity.hpp"
 
 class Canvas : private Entity
@@ -21,6 +22,7 @@ private:
     static const sf::Vector2f offToCenter;
 
     sfg::Canvas::Ptr window;
+    thor::ParticleSystem m_particleSystem;
 
     sf::Sprite boardSprite_;
     sf::Window& bigWindow;
@@ -42,6 +44,8 @@ private:
     sf::Vector2f pieceOffset;
 
     int idCount;
+
+    Color previousTurnColor;
 
     void destroy(const Square &square);
 

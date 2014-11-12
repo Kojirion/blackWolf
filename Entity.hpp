@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/optional.hpp>
 
 struct Message{
     Message(const std::string& id);
@@ -38,6 +39,7 @@ struct GameStateMessage : public Message {
     ParsedPosition position;
     Color turnColor;
     int white_time, black_time;
+    boost::optional<Square> target_square;
     std::string move;
 };
 
@@ -47,6 +49,7 @@ BOOST_FUSION_ADAPT_STRUCT(
         (Color, turnColor)
         (int, white_time)
         (int, black_time)
+        (boost::optional<Square>, target_square)
         (std::string, move)
         )
 

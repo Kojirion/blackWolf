@@ -11,14 +11,14 @@ private:
     Unit m_type;
     int m_id;
 
-    mutable std::array<sf::Vertex, 4> m_quad;
-
-    sf::Vector2f typeToTexPos(const Unit& type) const;
+    mutable std::array<sf::Vertex, 4> m_quad;    
 
 public:    
     PieceSprite(const sf::Vector2f &position, Unit type, int id);
 
     bool operator<(const PieceSprite &that) const;
+
+    const Unit& getUnit() const;
 
     void appendQuadTo(std::vector<sf::Vertex>& toAppendTo) const;
 

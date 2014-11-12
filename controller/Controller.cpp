@@ -217,8 +217,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
         game.setTime(received->white_time, received->black_time);
         game.startClock();
-
-        board.setupBoard(received->position, received->turnColor);
         //        if (received->move.getNewBoard().wasPromotion)
         //            handlePromotion(received->move.getMove());
 

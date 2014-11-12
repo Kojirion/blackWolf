@@ -70,3 +70,24 @@ bool operator==(const Move &lhs, const Move &rhs)
 {
     return (lhs.square_1 == rhs.square_1) && (lhs.square_2 == rhs.square_2);
 }
+
+sf::Vector2f typeToTexPos(const Unit &type)
+{
+    BOOST_ASSERT_MSG((type.color==Color::Black)||(type.color==Color::White), "Invalid piece color");
+    BOOST_ASSERT_MSG((type.piece!=Piece::None)&&(type.piece!=Piece::Shadow), "Invalid piece type");
+
+
+    const sf::Vector2f offset(20.f, 20.f);
+    const int side = 50;
+
+    if (type.piece == Piece::Pawn){
+        if (type.color == Color::White)
+            return (offset + sf::Vector2f(0, 6*side));
+        else return (offset + sf::Vector2f(0, side));
+    }
+
+    if (type.color == Color::White)
+        return (offset + sf::Vector2f(static_cast<int>(type.piece)*side, 7*side));
+    else
+        return (offset + sf::Vector2f(static_cast<int>(type.piece)*side, 0));
+}
