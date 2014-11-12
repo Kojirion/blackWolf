@@ -32,12 +32,6 @@ void GameData::setTime(int whiteTime, int blackTime)
     blackClock.reset(sf::seconds(blackTime));
 }
 
-void GameData::update()
-{
-    whiteClock.update();
-    blackClock.update();
-}
-
 sf::Time GameData::getWhiteTime() const
 {
     return whiteClock.getRemainingTime();

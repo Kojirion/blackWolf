@@ -1,13 +1,12 @@
 #pragma once
-#include <Thor/Time/CallbackTimer.hpp>
+#include <Thor/Time/Timer.hpp>
 #include "../BlackWolf.hpp"
 #include "../Entity.hpp"
 
 class GameData : private Entity
 {
 private:
-    thor::CallbackTimer whiteClock;
-    thor::CallbackTimer blackClock;
+    thor::Timer whiteClock, blackClock;
     Color m_userColor;
     Color m_turnColor;
 
@@ -16,8 +15,6 @@ public:
 
     bool userTurn() const;
     Color getUserColor() const;
-
-    void update();
 
     void setTime(int whiteTime, int blackTime);
 

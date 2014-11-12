@@ -280,6 +280,5 @@ void Controller::requestNewGame()
 
 void Controller::updateClocks()
 {
-    game.update(); //update model
-    clocks.update(game.getWhiteTime(), game.getBlackTime()); //update view
+    clocks.update(game.getWhiteTime(), game.getBlackTime());
 }
