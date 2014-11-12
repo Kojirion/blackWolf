@@ -31,7 +31,7 @@ void Controller::moveMake(const std::vector<std::vector<Unit>>& position, int wh
 
 void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
 {
-    messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
+    //messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
 }
 
 void Controller::settingsClicked()
@@ -64,7 +64,7 @@ void Controller::slotNewGame()
         toSet = Color::Both;
     }
 
-    messages.triggerEvent(NewGameMessage(toSet, 300, "White", "Black"));
+    //messages.triggerEvent(NewGameMessage(toSet, 300, "White", "Black"));
 }
 
 void Controller::slotPromote()
@@ -138,7 +138,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
     //client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
-    client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
+    //client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
     //client.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));

@@ -27,8 +27,8 @@ Entity::Entity()
 }
 
 
-NewGameMessage::NewGameMessage(Color whoUser, int time, std::string p1, std::string p2):
-    Message("newGame"), user(whoUser), time(time), p1(p1), p2(p2)
+NewGameMessage::NewGameMessage():
+    Message("newGame")
 {
 }
 

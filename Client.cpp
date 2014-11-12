@@ -70,26 +70,16 @@ void Client::handleData(boost::system::error_code ec)
             GameStateMessage gameState;
             
             if (parse(str.begin(), str.end(), gameStateParser, gameState)){
-                using boost::fusion::at_c;
-                //                int white_time = at_c<1>(gameState);
-                //                int black_time = at_c<2>(gameState);
-                //                positionReady(at_c<0>(gameState), white_time, black_time);
-                //std::string pretty_move = at_c<3>(gameState);
-
                 messages.triggerEvent(gameState);
-
             }else{
-                GameStartTuple gameStart;
+                NewGameMessage gameStart;
                 
                 if (parse(str.begin(), str.end(), gameStartParser, gameStart)){
-                    using boost::fusion::at_c;
-                    int time = 60*at_c<2>(gameStart);
-                    auto& name_1 = at_c<0>(gameStart);
-                    auto& name_2 = at_c<1>(gameStart);
-                    if (name_1 == nickname)
-                        startGame(Color::White, time, name_1, name_2);
+                    if (gameStart.p1 == nickname)
+                        gameStart.user = Color::White;
                     else
-                        startGame(Color::Black, time, name_1, name_2);
+                        gameStart.user = Color::Black;
+                    messages.triggerEvent(gameStart);
                 }else{
                     Color winner;
                     if (parse(str.begin(), str.end(), gameEndParser, winner)){

@@ -22,17 +22,22 @@ struct MoveMessage : public Message {
 };
 
 struct NewGameMessage : public Message {
-    NewGameMessage(Color whoUser, int time, std::string p1, std::string p2);
+    NewGameMessage();
 
-    Color user;
-    int time;
     std::string p1;
     std::string p2;
+    int time;
+    Color user;
 };
 
-using ParsedPosition = std::vector<std::vector<Unit>>;
+BOOST_FUSION_ADAPT_STRUCT(
+        NewGameMessage,
+        (std::string, p1)
+        (std::string, p2)
+        (int, time)
+        )
 
-//using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int, std::string>;
+using ParsedPosition = std::vector<std::vector<Unit>>;
 
 struct GameStateMessage : public Message {
     GameStateMessage();
