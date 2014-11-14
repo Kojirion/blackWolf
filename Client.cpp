@@ -107,9 +107,17 @@ void Client::handleData(boost::system::error_code ec)
 
 void Client::toClient(std::string toWrite)
 {
-    toWrite += "\n";
-    Timeseal::crypt(toWrite);
-    socket.write_some(boost::asio::buffer(toWrite));
+    //toWrite += "\r\n";
+    //Timeseal::crypt(toWrite);
+    char message[100];
+    strcpy(message, toWrite.c_str());
+    Timeseal::crypt(message, strlen(message));
+    try{
+    socket.write_some(boost::asio::buffer(message));
+    }catch(std::exception& e){
+        std::cout << e.what() << '\n';
+    }
+
     //outputStream << toWrite;
 }
 
