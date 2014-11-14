@@ -39,6 +39,10 @@ void Client::connect()
 
     //    int n=crypt(hello);
     //    toClient(hello);
+
+    char hello[100]="TIMESTAMP|openseal|Running on an operating system|";
+    int n = Timeseal::crypt(hello, strlen(hello));
+    socket.write_some(boost::asio::buffer(hello, n));
     
     boost::asio::async_read_until(socket, data, "\n\r",
                                   boost::bind(&Client::handleData, this, _1));
@@ -101,9 +105,12 @@ void Client::handleData(boost::system::error_code ec)
     }
 }
 
-void Client::toClient(const std::string& toWrite)
+void Client::toClient(std::string toWrite)
 {
-    outputStream << toWrite << "\r\n";
+    toWrite += "\n";
+    Timeseal::crypt(toWrite);
+    socket.write_some(boost::asio::buffer(toWrite));
+    //outputStream << toWrite;
 }
 
 int Client::stringToCol(const std::string& stringedCol) const
