@@ -1,5 +1,5 @@
 #pragma once
-#include <Thor/Vectors/PolarVector.hpp>
+#include <Thor/Vectors/PolarVector2.hpp>
 #include <Thor/Particles/Affectors.hpp>
 #include <Thor/Math.hpp>
 #include "../../BlackWolf.hpp"

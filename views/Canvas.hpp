@@ -1,12 +1,19 @@
 #pragma once
+
+#include <SFML/Graphics/Texture.hpp>
+
 #include <SFGUI/Canvas.hpp>
-#include <boost/signals2.hpp>
-#include <boost/bimap.hpp>
-#include "../views/components/PieceSprite.hpp"
-#include "../BlackWolf.hpp"
+
 #include <Thor/Shapes/Arrow.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
+
+#include <boost/signals2.hpp>
+#include <boost/bimap.hpp>
+
+#include "../views/components/PieceSprite.hpp"
+#include "../BlackWolf.hpp"
 #include "../Entity.hpp"
+
 
 class Canvas : private Entity
 {

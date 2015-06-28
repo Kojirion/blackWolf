@@ -2,7 +2,8 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Frame.hpp>
-//#include <SFGUI/RadioButtonGroup.hpp>
+#include <SFGUI/RadioButton.hpp>
+#include <SFGUI/RadioButtonGroup.hpp>
 
 void Settings::requestClose()
 {
@@ -35,7 +36,7 @@ void Settings::requestClose()
     settingsDone(toSetWhite,toSetBlack,toSetBoard);
 }
 
-namespace sfg {typedef RadioButton::RadioButtonGroup RadioButtonGroup; }
+//namespace sfg {typedef RadioButton::RadioButtonGroup RadioButtonGroup; }
 
 Settings::Settings(sfg::Desktop &theDesktop):
     window(sfg::Window::Create()),
