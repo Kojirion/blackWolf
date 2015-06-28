@@ -42,7 +42,7 @@ void Client::connect()
 
     char hello[100]="TIMESTAMP|openseal|Running on an operating system|";
     int n = Timeseal::crypt(hello, strlen(hello));
-    socket.write_some(boost::asio::buffer(hello, n));
+    socket.write_some(boost::asio::buffer(hello));
     
     boost::asio::async_read_until(socket, data, "\n\r",
                                   boost::bind(&Client::handleData, this, _1));
@@ -51,7 +51,7 @@ void Client::connect()
 
 void Client::update()
 {
-    boost::asio::write(socket, output);
+    //boost::asio::write(socket, output);
     
     if (!io_service.poll())
         io_service.reset();
@@ -107,16 +107,23 @@ void Client::handleData(boost::system::error_code ec)
 
 void Client::toClient(std::string toWrite)
 {
-    //toWrite += "\r\n";
+    //toWrite += "\n";
     //Timeseal::crypt(toWrite);
+    //auto n = toWrite.size();
+    //auto message = new char[n+1];
+
     char message[100];
+    //assert(n==strlen(toWrite.c_str()));
+    //std::cout << n << ' ' << strlen(toWrite.c_str()) << '\n';
     strcpy(message, toWrite.c_str());
-    Timeseal::crypt(message, strlen(message));
+    auto n = strlen(message);
+    Timeseal::crypt(message, n);
     try{
-    socket.write_some(boost::asio::buffer(message));
+    socket.write_some(boost::asio::buffer(message, n));
     }catch(std::exception& e){
         std::cout << e.what() << '\n';
     }
+    //delete[] message;
 
     //outputStream << toWrite;
 }
