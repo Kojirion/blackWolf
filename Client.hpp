@@ -14,9 +14,6 @@ public:
     void connect();
     void update();
 
-    boost::signals2::signal<void (const std::vector<std::vector<Unit>>&, int, int)> positionReady;
-    boost::signals2::signal<void (Color, int, const std::string&,  const std::string&)> startGame;
-    boost::signals2::signal<void (Color)> gameEnd;
     boost::signals2::signal<void (std::string)> textReady;
 
     void makeMove(const Move& move, Piece promotionChoice = Piece::None);
@@ -31,15 +28,10 @@ private:
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::socket socket;
 
-    bool ready; //is a position ready?
-
     void handleData(boost::system::error_code ec);    
 
     int stringToCol(const std::string &stringedCol) const;
     std::string moveString(const Move& move, Piece promotionChoice) const;
     std::string colToString(const int col) const;
     std::string pieceToSymbol(Piece piece) const;
-    Piece symbolToPiece(std::string symbol) const;
-
-
 };

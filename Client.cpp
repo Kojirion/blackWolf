@@ -160,16 +160,6 @@ std::string Client::pieceToSymbol(Piece piece) const
     return "-"; //appease compiler
 }
 
-Piece Client::symbolToPiece(std::string symbol) const
-{
-    if (symbol == "Q") return Piece::Queen;
-    if (symbol == "B") return Piece::Bishop;
-    if (symbol == "N") return Piece::Knight;
-    if (symbol == "R") return Piece::Rook;
-    return Piece::None; //appease compiler
-}
-
-
 void Client::makeMove(const Move &move, Piece promotionChoice)
 {
     toClient(moveString(move,promotionChoice));
