@@ -11,6 +11,11 @@ find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 find_package(SFGUI REQUIRED)
 find_package(Thor REQUIRED)
 
+include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${SFML_INCLUDE_DIR})
+include_directories(${SFGUI_INCLUDE_DIR})
+include_directories(${THOR_INCLUDE_DIR})
+
 set(bw_HDRS
     controller/Controller.hpp
     views/components/PieceSprite.hpp
