@@ -14,45 +14,75 @@
 #include "../BlackWolf.hpp"
 #include "../Entity.hpp"
 
+/*
+ * A class aggregating a canvas widget and a bimap where the pieces are stored and mapped 1-1 to squares on the board.
+ * The class is designed around the dimensions of Peter Wong's chess board, which is 440x440 - 50x50 squares,
+ * with border width of 20.
+ */
+
 
 class Canvas : private Entity
 {
+public:
+    Canvas(sf::Window& theWindow);
+    void display();
+    void setupBoard(const std::vector<std::vector<Unit> > &position, Color turnColor);
+
+    sfg::Widget::Ptr getBoardWidget() const;
+
+    void flipBoard();
+
+    void setPremove(const Move& move);
+    void clearArrows();
+
+    void releasePiece();
+
+    Color getColorOn(const Square& square) const;
+
+    boost::signals2::signal<bool (const Move&)> requestMove;
+
 private:
 
+    //bimap
     struct squareId  {};
     struct pieceId {};
+    using SquaresToPieces = boost::bimap<boost::bimaps::tagged<Square, squareId>, boost::bimaps::tagged<PieceSprite, pieceId>>;
+    SquaresToPieces m_pieces;
+    SquaresToPieces::const_iterator m_currentPiece;
 
-    typedef boost::bimap<boost::bimaps::tagged<Square, squareId>, boost::bimaps::tagged<PieceSprite, pieceId> > SquaresToPieces;
+    int m_flipOffset; //set to 0 for white on bottom, 50 for black
+    static const sf::Vector2f m_offToCenter; //offset to center of square
 
-    int flipOffset;
+    sfg::Canvas::Ptr m_canvas;
+    sf::Sprite m_boardSprite;
+    sf::Window& m_applicationWindow;
 
-    static const sf::Vector2f offToCenter;
+    thor::ParticleSystem m_particleSystem; //for capture animations
 
-    sfg::Canvas::Ptr window;
-    thor::ParticleSystem m_particleSystem;
+    std::vector<sf::Vertex> m_pieceVertices;
+    sf::Texture m_piecesTexture, m_boardTexture;
 
-    sf::Sprite boardSprite_;
-    sf::Window& bigWindow;
+    sf::Clock m_frameClock;
 
-    SquaresToPieces pieces;
+    sf::Vector2f m_pieceOffset; //offset from mouse tip to piece
 
-    std::vector<sf::Vertex> vertexArray;
-    sf::Texture piecesTexture, boardTexture;
+    Color m_previousTurnColor;
+
+    int m_idCount; //unique id for each piece
+
+    std::vector<thor::Arrow> m_arrows;
+
+    //slots
+    void slotMouseMove();
+    void slotMouseRelease();
+    void slotLeftClick();
+    void slotEnterCanvas();
+
 
     bool flipped() const;
+    bool pieceHeld() const;
 
-    sf::Clock frameClock; //redundant?
-
-    SquaresToPieces::const_iterator currentPiece;
-
-    bool pieceHeld();
-    sf::Vector2f pieceOffset;
-
-    int idCount;
-
-    Color previousTurnColor;
-
-    void destroy(const Square &square);
+    void animateCaptureOn(const Square &square);
 
     Square positionToSquare(const sf::Vector2f& Position) const;
     sf::Vector2f squareToPosition(const Square& square) const;
@@ -61,34 +91,6 @@ private:
 
     void sendBack();
 
-    //signals
-    boost::signals2::signal<bool (const Move&)> requestMove;
-
-    //slots
-    void slotMouseMove();
-    void slotMouseRelease();
-    void slotLeftClick();
-    void slotEnterCanvas();    
-
-    std::vector<thor::Arrow> arrows;
-
     void resetFor(Color whoFaceUp);
 
-public:
-    Canvas(sf::Window& theWindow);
-    void display();
-    void setupBoard(const std::vector<std::vector<Unit> > &position, Color turnColor);
-
-    sfg::Widget::Ptr getBoardWidget() const;
-
-    boost::signals2::signal<bool (const Move &)> &getSignal();
-
-    void flipBoard();
-
-    void setArrow(const Move& move);
-    void clearArrows();
-
-    void releasePiece();
-
-    Color getColorOn(const Square& square) const;
 };

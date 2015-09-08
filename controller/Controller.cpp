@@ -106,7 +106,7 @@ bool Controller::requestMove(const Move& move)
         if (board.getColorOn(move.square_1) == game.getUserColor()) {
             premove = move;
             premoveOn = true;
-            board.setArrow(move);
+            board.setPremove(move);
         }
         return false;
     }
@@ -135,7 +135,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
 {
     boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
 
-    board.getSignal().connect(boost::bind(&Controller::requestMove, this,_1));
+    board.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
     //client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
     //client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
