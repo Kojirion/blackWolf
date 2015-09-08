@@ -43,8 +43,6 @@ private:
 
     sf::Clock frameClock; //redundant?
 
-    Square toGridPos(const sf::Vector2f& Position) const;
-
     SquaresToPieces::const_iterator currentPiece;
 
     bool pieceHeld();
@@ -56,7 +54,8 @@ private:
 
     void destroy(const Square &square);
 
-    sf::Vector2f cellToPosition(const Square& square) const;
+    Square positionToSquare(const sf::Vector2f& Position) const;
+    sf::Vector2f squareToPosition(const Square& square) const;
 
     sf::Vector2f getMousePosition() const;
 

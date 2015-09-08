@@ -22,6 +22,8 @@ Canvas::Canvas(sf::Window& theWindow):
     boardSprite_.setTexture(boardTexture);
 
     piecesTexture.loadFromFile("Graphics/Pieces/ArrayBlack.png");
+
+    //prepare fragments for capture animations
     m_particleSystem.setTexture(piecesTexture);
     m_particleSystem.addAffector( thor::TorqueAffector(100.f) );
 
@@ -37,16 +39,12 @@ Canvas::Canvas(sf::Window& theWindow):
         }
     }
 
+    //connect signals and messages to slots
     window->SetRequisition(sf::Vector2f( 440.f, 440.f ));
     window->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(std::bind(&Canvas::slotLeftClick, this));
     window->GetSignal(sfg::Widget::OnMouseMove).Connect(std::bind(&Canvas::slotMouseMove, this));
     window->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(std::bind(&Canvas::slotMouseRelease, this));
     window->GetSignal(sfg::Widget::OnMouseEnter).Connect(std::bind(&Canvas::slotEnterCanvas, this));
-
-    //    messages.connect("moveMade", [this](const Message& message){
-    //        const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
-    //        moveMake(received->move);
-    //    });
 
     messages.connect("newGame", [this](const Message& message){
         auto received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
@@ -62,11 +60,6 @@ Canvas::Canvas(sf::Window& theWindow):
         }
         setupBoard(received->position, received->turnColor);
     });
-
-    messages.connect("endGame", [this](const Message& message){
-        auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
-        //setResult(received->result);
-    });
 }
 
 bool Canvas::flipped() const
@@ -74,7 +67,7 @@ bool Canvas::flipped() const
     return (flipOffset!=0);
 }
 
-Square Canvas::toGridPos(const sf::Vector2f &position) const
+Square Canvas::positionToSquare(const sf::Vector2f &position) const
 {
     if (!flipped())
         return {static_cast<int>(std::ceil((position.y+7*flipOffset-370)/(2*flipOffset-50))),
@@ -89,7 +82,7 @@ bool Canvas::pieceHeld()
     return currentPiece != pieces.end();
 }
 
-sf::Vector2f Canvas::cellToPosition(const Square &square) const
+sf::Vector2f Canvas::squareToPosition(const Square &square) const
 {
     return sf::Vector2f(flipOffset * (7 - 2*square.col) + 20 + 50 * square.col,
                         -flipOffset * (7 - 2*square.row) + 420 - 50 * (square.row+1));
@@ -145,7 +138,7 @@ void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position, Color tu
         for (int j=0; j<8; ++j){
             const Unit& unit = position[i][j];
             if (unit.piece == Piece::None) continue;
-            PieceSprite toAdd(cellToPosition({7-i,j}),unit, idCount++);
+            PieceSprite toAdd(squareToPosition({7-i,j}),unit, idCount++);
             pieces.insert(SquaresToPieces::value_type({7-i,j}, toAdd));
         }
     }
@@ -184,7 +177,7 @@ void Canvas::sendBack()
 {
     BOOST_ASSERT_MSG(pieceHeld(), "No current piece to send back");
 
-    currentPiece->get<pieceId>().setPosition(cellToPosition(currentPiece->get<squareId>()));
+    currentPiece->get<pieceId>().setPosition(squareToPosition(currentPiece->get<squareId>()));
 
     releasePiece();
 }
@@ -195,13 +188,13 @@ void Canvas::flipBoard()
     else flipOffset = 50;
 
     for (const auto &piece : pieces)
-        piece.get<pieceId>().setPosition(cellToPosition(piece.get<squareId>()));
+        piece.get<pieceId>().setPosition(squareToPosition(piece.get<squareId>()));
 }
 
 void Canvas::setArrow(const Move &move)
 {
-    sf::Vector2f point1 = cellToPosition(move.square_1) + offToCenter;
-    sf::Vector2f point2 = cellToPosition(move.square_2) + offToCenter;
+    sf::Vector2f point1 = squareToPosition(move.square_1) + offToCenter;
+    sf::Vector2f point2 = squareToPosition(move.square_2) + offToCenter;
 
     arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0,125), 5.f);
 }
@@ -242,12 +235,12 @@ void Canvas::slotMouseRelease()
     if (pieceHeld()){
         sf::Vector2f centrePos = currentPiece->get<pieceId>().getPosition() + offToCenter;
 
-        Square gridPos = toGridPos(centrePos);
+        Square gridPos = positionToSquare(centrePos);
 
         if (!(*requestMove({currentPiece->get<squareId>(), gridPos})))
             sendBack();
         else {
-            currentPiece->get<pieceId>().setPosition(cellToPosition(gridPos));
+            currentPiece->get<pieceId>().setPosition(squareToPosition(gridPos));
             releasePiece();
         }
     }
@@ -282,6 +275,6 @@ void Canvas::destroy(const Square& square)
     auto it = pieces.by<squareId>().find(square);
     if (it != pieces.by<squareId>().end()){
         auto unit = it->second.getUnit();
-        m_particleSystem.addEmitter(Emitter(cellToPosition(square) + offToCenter, unit), sf::seconds(0.000001f));
+        m_particleSystem.addEmitter(Emitter(squareToPosition(square) + offToCenter, unit), sf::seconds(0.000001f));
     }
 }
