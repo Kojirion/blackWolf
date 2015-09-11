@@ -23,11 +23,6 @@ sfg::Widget::Ptr Clocks::getBlackClock()
     return blackClockLabel;
 }
 
-void Clocks::setFlagDown(Color loser)
-{
-    if (loser == Color::White) return;
-}
-
 std::string Clocks::timeToString(const sf::Time& value) const
 {
     const int totalSeconds = static_cast<int>(std::ceil(value.asSeconds()));

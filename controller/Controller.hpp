@@ -67,13 +67,6 @@ private:
 
     void settingsClicked();
     void settingsDone(const std::string &whitePrefix, const std::string &blackPrefix, const std::string &boardSuffix);
-
-
-    void flagDown(Color loser);
-
-    void moveMake(const std::vector<std::vector<Unit> > &position, int whiteTime, int blackTime);
-    void newGame(Color player, int time, const std::string& player_1, const std::string& player_2);
-
     void enableWindow(const bool enable = true);
 
 };

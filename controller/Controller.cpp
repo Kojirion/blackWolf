@@ -12,28 +12,6 @@ void Controller::enableWindow(const bool enable)
     else boardWindow->SetState(sfg::Widget::State::INSENSITIVE);
 }
 
-void Controller::flagDown(Color loser)
-{
-    clocks.setFlagDown(loser);
-    //messages.triggerEvent(EndGameMessage(!loser));
-}
-
-void Controller::moveMake(const std::vector<std::vector<Unit>>& position, int whiteTime, int blackTime)
-{
-    game.setTime(whiteTime, blackTime);
-    game.startClock();
-
-    //board.setupBoard(position);
-
-    //messages.triggerEvent(MoveMessage(completeMove));
-    //promotion choice if player move
-}
-
-void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
-{
-    //messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
-}
-
 void Controller::settingsClicked()
 {
     //enableWindow(false);
@@ -143,37 +121,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
-    //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
-    //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
-
-    sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
-    sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
-    sfg::Button::Ptr knightButton(sfg::Button::Create("Knight"));
-    sfg::Button::Ptr rookButton(sfg::Button::Create("Rook"));
-
-    queenButton->SetId("promoteQueen");
-    bishopButton->SetId("promoteBishop");
-    knightButton->SetId("promoteKnight");
-    rookButton->SetId("promoteRook");
-
-    sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 3.f));
-
-    promotionBox->PackEnd(queenButton);
-    promotionBox->PackEnd(bishopButton);
-    promotionBox->PackEnd(knightButton);
-    promotionBox->PackEnd(rookButton);
-
-    promotionWindow->Add(promotionBox);
-    promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));
-    promotionWindow->SetTitle("Choose piece");
-
-    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-
-    promotionWindow->Show(false);
-
     ButtonBox buttons;
     //buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
     //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
@@ -217,8 +164,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
         game.setTime(received->white_time, received->black_time);
         game.startClock();
-        //        if (received->move.getNewBoard().wasPromotion)
-        //            handlePromotion(received->move.getMove());
 
         if (premoveOn)
         {
@@ -257,7 +202,6 @@ void Controller::update()
 {
     client.update();
     board.display();
-    //if (!game.ended())
     updateClocks();
 }
 
