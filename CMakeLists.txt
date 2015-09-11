@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 project(blackWolf)
 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pthread")
 
 find_package(Boost COMPONENTS system log REQUIRED)
 find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
