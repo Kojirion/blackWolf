@@ -86,5 +86,5 @@ target_link_libraries(${PROJECT_NAME} core)
 set(test_SRCS
     tests/tests.cpp
 )
-add_executable(test ${test_SRCS})
-target_link_libraries(test core)
+add_executable(unit_tests ${test_SRCS})
+target_link_libraries(unit_tests core)
