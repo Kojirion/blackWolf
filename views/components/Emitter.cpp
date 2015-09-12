@@ -24,6 +24,7 @@ int UnitToInt(const Unit &unit)
         if (IntToUnit[i]==unit)
             return i*nr_fragments;
     }
+    return 0;
 }
 
 Emitter::Emitter(const sf::Vector2f &position, const Unit &unit):

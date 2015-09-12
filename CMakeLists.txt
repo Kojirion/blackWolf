@@ -5,6 +5,7 @@ project(blackWolf)
 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs") #suppress warning in Aurora in Thor
 
 find_package(Boost COMPONENTS system log REQUIRED)
 find_package(SFML 2 COMPONENTS graphics window system REQUIRED)

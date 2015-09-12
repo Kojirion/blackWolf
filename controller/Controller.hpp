@@ -30,9 +30,7 @@ public:
     //slots
     void resign();
     void offerDraw();
-    void requestNewGame();
 
-    void slotNewGame();
     void slotPromote();
 
     //boost slots
@@ -51,8 +49,6 @@ private:
     MoveList moveList;
 
     Counters counters;
-
-    ColorChoices sideChoice;
 
     Settings settingsWindow;
 
