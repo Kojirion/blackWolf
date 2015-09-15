@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs") #suppress w
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-find_package(Boost COMPONENTS system log REQUIRED)
+find_package(Boost COMPONENTS system REQUIRED)
 find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 find_package(SFGUI REQUIRED)
 find_package(Thor REQUIRED)
