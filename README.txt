@@ -9,3 +9,4 @@ SFGUI - http://sfgui.sfml-dev.de/
 SFML - http://www.sfml-dev.org/
 Thor - http://www.bromeon.ch/libraries/thor/index.html
 Boost libraries - http://www.boost.org
+Join the chat at https://gitter.im/Kojirion/blackWolf
