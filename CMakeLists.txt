@@ -3,13 +3,17 @@ cmake_minimum_required(VERSION 2.8)
 #project name
 project(blackWolf)
 
-include_directories( ${CMAKE_SOURCE_DIR}/include )
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs") #suppress warning in Aurora in Thor
 
-find_package(Boost COMPONENTS system log REQUIRED)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+find_package(Boost COMPONENTS system REQUIRED)
 find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 find_package(SFGUI REQUIRED)
 find_package(Thor REQUIRED)
+
+
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${SFML_INCLUDE_DIR})
@@ -85,5 +89,5 @@ target_link_libraries(${PROJECT_NAME} core)
 set(test_SRCS
     tests/tests.cpp
 )
-add_executable(test ${test_SRCS})
-target_link_libraries(test core)
+add_executable(unit_tests ${test_SRCS})
+target_link_libraries(unit_tests core)

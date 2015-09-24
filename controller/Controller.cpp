@@ -12,28 +12,6 @@ void Controller::enableWindow(const bool enable)
     else boardWindow->SetState(sfg::Widget::State::INSENSITIVE);
 }
 
-void Controller::flagDown(Color loser)
-{
-    clocks.setFlagDown(loser);
-    //messages.triggerEvent(EndGameMessage(!loser));
-}
-
-void Controller::moveMake(const std::vector<std::vector<Unit>>& position, int whiteTime, int blackTime)
-{
-    game.setTime(whiteTime, blackTime);
-    game.startClock();
-
-    //board.setupBoard(position);
-
-    //messages.triggerEvent(MoveMessage(completeMove));
-    //promotion choice if player move
-}
-
-void Controller::newGame(Color player, int time, const std::string &player_1, const std::string &player_2)
-{
-    //messages.triggerEvent(NewGameMessage(player, time, player_1, player_2));
-}
-
 void Controller::settingsClicked()
 {
     //enableWindow(false);
@@ -47,24 +25,6 @@ void Controller::settingsDone(const std::string& whitePrefix, const std::string&
     enableWindow(true);
     //resources.reload(whitePrefix, blackPrefix, boardSuffix);
     //board.reload(game.getPosition());
-}
-
-void Controller::slotNewGame()
-{
-    sideChoice.enable(false);
-    enableWindow(true);
-
-    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
-    Color toSet;
-
-    if      (toCheck == "whiteNewGame") toSet = Color::White;
-    else if (toCheck == "blackNewGame") toSet = Color::Black;
-    else {
-        BOOST_ASSERT_MSG(toCheck == "bothNewGame", "Invalid widget requests new game");
-        toSet = Color::Both;
-    }
-
-    //messages.triggerEvent(NewGameMessage(toSet, 300, "White", "Black"));
 }
 
 void Controller::slotPromote()
@@ -127,7 +87,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow),
-    sideChoice(desktop),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
     player1(sfg::Label::Create()),
@@ -143,41 +102,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
-    //game.getWhiteTimer().connect(std::bind(&boardMaster::flagDown, this, bw::White));
-    //game.getBlackTimer().connect(std::bind(&boardMaster::flagDown, this, bw::Black));
-
-    sfg::Button::Ptr queenButton(sfg::Button::Create("Queen"));
-    sfg::Button::Ptr bishopButton(sfg::Button::Create("Bishop"));
-    sfg::Button::Ptr knightButton(sfg::Button::Create("Knight"));
-    sfg::Button::Ptr rookButton(sfg::Button::Create("Rook"));
-
-    queenButton->SetId("promoteQueen");
-    bishopButton->SetId("promoteBishop");
-    knightButton->SetId("promoteKnight");
-    rookButton->SetId("promoteRook");
-
-    sfg::Box::Ptr promotionBox(sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 3.f));
-
-    promotionBox->PackEnd(queenButton);
-    promotionBox->PackEnd(bishopButton);
-    promotionBox->PackEnd(knightButton);
-    promotionBox->PackEnd(rookButton);
-
-    promotionWindow->Add(promotionBox);
-    promotionWindow->SetPosition(sf::Vector2f(200.f,200.f));
-    promotionWindow->SetTitle("Choose piece");
-
-    queenButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    bishopButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    knightButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-    rookButton->GetSignal(sfg::Widget::OnLeftClick).Connect(std::bind(&Controller::slotPromote,this));
-
-    promotionWindow->Show(false);
-
     ButtonBox buttons;
-    //buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::resign, this);
-    //buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect(&boardMaster::offerDraw, this);
-    buttons.newGame()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::requestNewGame, this));
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
     buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
 
@@ -193,22 +118,13 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     mainLayout->Attach(moveList.getView(),{1, 5, 1, 4});
     mainLayout->Attach(buttons.getWidget(),{0,12,2,2});
 
-    //when making new game
-    sideChoice.getWhiteSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
-    sideChoice.getBlackSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
-    sideChoice.getBothSide()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::slotNewGame, this));
-
-    desktop.Add(sideChoice.getWidget());
     desktop.Add(settingsWindow.getWidget());
-
-
 
     sfg::Notebook::Ptr notebook(sfg::Notebook::Create());
     notebook->AppendPage(mainLayout,sfg::Label::Create("Board"));
     notebook->AppendPage(netWindow.getWidget(),sfg::Label::Create("Server"));
 
     boardWindow->Add(notebook);
-
 
     desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
@@ -217,8 +133,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
         game.setTime(received->white_time, received->black_time);
         game.startClock();
-        //        if (received->move.getNewBoard().wasPromotion)
-        //            handlePromotion(received->move.getMove());
 
         if (premoveOn)
         {
@@ -244,7 +158,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
     });
 
     messages.connect("endGame", [this](const Message& message){
-        auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
+        //auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         premoveOn = false;
         board.clearArrows();
     });
@@ -257,7 +171,6 @@ void Controller::update()
 {
     client.update();
     board.display();
-    //if (!game.ended())
     updateClocks();
 }
 
@@ -271,12 +184,6 @@ void Controller::offerDraw()
     return; //TODO: forward this to the client
 }
 
-
-void Controller::requestNewGame()
-{
-    sideChoice.enable(true);
-    enableWindow(false);
-}
 
 void Controller::updateClocks()
 {
