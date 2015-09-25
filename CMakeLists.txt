@@ -91,3 +91,8 @@ set(test_SRCS
 )
 add_executable(unit_tests ${test_SRCS})
 target_link_libraries(unit_tests core)
+
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES resources/DejaVuSansMono.ttf DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES resources/BoardBlack.jpg DESTINATION ${CMAKE_INSTALL_PREFIX}/Graphics)
+install(FILES resources/ArrayBlack.png DESTINATION ${CMAKE_INSTALL_PREFIX}/Graphics/Pieces)
