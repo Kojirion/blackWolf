@@ -18,6 +18,7 @@ A simple way to build (after dependencies have been obtained)
 
 ```
 mkdir build
+cd build
 cmake ..
 make
 ```
