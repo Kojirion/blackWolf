@@ -1,0 +1,25 @@
+* {
+	Color: #000000FF;
+}
+
+Window {
+
+	BackgroundColor: #FFE0BDFF;
+}
+
+Button {
+
+	BackgroundColor: #FFE0BDFF;
+}
+
+Notebook {
+
+	BackgroundColor: #FFE0BDFF;
+	BackgroundColorDark: #DBBD9AFF;
+	BackgroundColorPrelight: #FAE7D2FF;
+}
+
+Entry {
+    BackgroundColor: #FFE0BDFF;
+    Color: #000000FF;
+}
