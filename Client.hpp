@@ -18,7 +18,7 @@ public:
 
     void makeMove(const Move& move, Piece promotionChoice = Piece::None);
 
-    void toClient(const std::string &toWrite);
+    void toClient(std::string toWrite);
 
 private:
     std::string nickname;

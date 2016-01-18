@@ -34,11 +34,12 @@ void Client::connect()
         return;
     }
     
-    //std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
-    //toClient(hello);
+   std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
+//    toClient(hello);
 
-    //    int n=crypt(hello);
-    //    toClient(hello);
+        int n=crypt(hello);
+        outputStream << hello;
+        //toClient(hello);
     
     boost::asio::async_read_until(socket, data, "\n\r",
                                   boost::bind(&Client::handleData, this, _1));
@@ -60,6 +61,9 @@ void Client::handleData(boost::system::error_code ec)
         std::istream is(&data);
         std::string str;
         while(std::getline(is, str, '\r')){
+            if (str == "[G]\n")
+                toClient("\x2""9");
+
             
             using boost::spirit::qi::parse;
             
@@ -101,9 +105,10 @@ void Client::handleData(boost::system::error_code ec)
     }
 }
 
-void Client::toClient(const std::string& toWrite)
+void Client::toClient(std::string toWrite)
 {
-    outputStream << toWrite << "\r\n";
+    crypt(toWrite);
+    outputStream << toWrite;
 }
 
 int Client::stringToCol(const std::string& stringedCol) const

@@ -37,7 +37,7 @@ int crypt(std::string& s){
     gettimeofday(&tv,NULL);
     auto toAdd = (tv.tv_sec%10000)*1000+tv.tv_usec/1000;
     s += std::to_string(toAdd);
-    s += "x19";
+    s += '\x19';
     while(s.size()%12)
         s += '1';
     for(n=0;n<s.size();n+=12)
