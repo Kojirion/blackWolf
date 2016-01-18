@@ -124,11 +124,11 @@ int Client::stringToCol(const std::string& stringedCol) const
     return -1; //appease compiler
 }
 
-std::string Client::moveString(const Move &move, Piece promotionChoice) const
+std::string Client::moveString(const Move &move, Piece::Type promotionChoice) const
 {
     std::string toReturn(colToString(move.square_1.col) + std::to_string(move.square_1.row+1)
                          + colToString(move.square_2.col) + std::to_string(move.square_2.row+1));
-    if (promotionChoice != Piece::None) toReturn += "=" + pieceToSymbol(promotionChoice);
+    if (promotionChoice != Piece::Type::None) toReturn += "=" + pieceToSymbol(promotionChoice);
     return toReturn;
 }
 
@@ -156,16 +156,16 @@ std::string Client::colToString(const int col) const
     }
 }
 
-std::string Client::pieceToSymbol(Piece piece) const
+std::string Client::pieceToSymbol(Piece::Type piece) const
 {
-    if (piece == Piece::Queen) return "Q";
-    if (piece == Piece::Bishop) return "B";
-    if (piece == Piece::Knight) return "N";
-    if (piece == Piece::Rook) return "R";
+    if (piece == Piece::Type::Queen) return "Q";
+    if (piece == Piece::Type::Bishop) return "B";
+    if (piece == Piece::Type::Knight) return "N";
+    if (piece == Piece::Type::Rook) return "R";
     return "-"; //appease compiler
 }
 
-void Client::makeMove(const Move &move, Piece promotionChoice)
+void Client::makeMove(const Move &move, Piece::Type promotionChoice)
 {
     toClient(moveString(move,promotionChoice));
 }

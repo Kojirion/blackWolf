@@ -37,7 +37,7 @@ BOOST_FUSION_ADAPT_STRUCT(
         (int, time)
         )
 
-using ParsedPosition = std::vector<std::vector<Unit>>;
+using ParsedPosition = std::vector<std::vector<Piece>>;
 
 struct GameStateMessage : public Message {
     GameStateMessage();

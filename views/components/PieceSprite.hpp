@@ -8,17 +8,17 @@
 class PieceSprite
 {
 private:
-    Unit m_type;
+    Piece m_type;
     int m_id;
 
     mutable std::array<sf::Vertex, 4> m_quad;    
 
 public:    
-    PieceSprite(const sf::Vector2f &position, Unit type, int id);
+    PieceSprite(const sf::Vector2f &position, Piece type, int id);
 
     bool operator<(const PieceSprite &that) const;
 
-    const Unit& getUnit() const;
+    const Piece& getPiece() const;
 
     void appendQuadTo(std::vector<sf::Vertex>& toAppendTo) const;
 

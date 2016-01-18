@@ -32,12 +32,12 @@ void Controller::slotPromote()
     //    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
     //    Piece whichPiece;
 
-    //    if      (toCheck == "promoteQueen") whichPiece = Piece::Queen;
-    //    else if (toCheck == "promoteBishop") whichPiece = Piece::Bishop;
-    //    else if (toCheck == "promoteKnight") whichPiece = Piece::Knight;
+    //    if      (toCheck == "promoteQueen") whichPiece = Piece::Type::Queen;
+    //    else if (toCheck == "promoteBishop") whichPiece = Piece::Type::Bishop;
+    //    else if (toCheck == "promoteKnight") whichPiece = Piece::Type::Knight;
     //    else{
     //        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
-    //        whichPiece = Piece::Rook;
+    //        whichPiece = Piece::Type::Rook;
     //    }
 
 

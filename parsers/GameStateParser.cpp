@@ -7,14 +7,14 @@
 
 using namespace boost::spirit::qi;
 
-struct PromotionMap : symbols<char, Piece>
+struct PromotionMap : symbols<char, Piece::Type>
 {
     PromotionMap(){
         add
-                ("Q", Piece::Queen)
-                ("B", Piece::Bishop)
-                ("N", Piece::Knight)
-                ("R", Piece::Rook)
+                ("Q", Piece::Type::Queen)
+                ("B", Piece::Type::Bishop)
+                ("N", Piece::Type::Knight)
+                ("R", Piece::Type::Rook)
                 ;
     }
 
@@ -32,23 +32,23 @@ struct ColorMap : symbols<char, Color>
 
 
 
-struct PieceMap : symbols<char, Unit>
+struct PieceMap : symbols<char, Piece>
 {
     PieceMap(){
         add
-                ("r", Unit{Color::Black, Piece::Rook})
-                ("n", Unit{Color::Black, Piece::Knight})
-                ("b", Unit{Color::Black, Piece::Bishop})
-                ("q", Unit{Color::Black, Piece::Queen})
-                ("k", Unit{Color::Black, Piece::King})
-                ("p", Unit{Color::Black, Piece::Pawn})
-                ("R", Unit{Color::White, Piece::Rook})
-                ("N", Unit{Color::White, Piece::Knight})
-                ("B", Unit{Color::White, Piece::Bishop})
-                ("Q", Unit{Color::White, Piece::Queen})
-                ("K", Unit{Color::White, Piece::King})
-                ("P", Unit{Color::White, Piece::Pawn})
-                ("-", Unit{Color::None, Piece::None})
+                ("r", Piece{Color::Black, Piece::Type::Rook})
+                ("n", Piece{Color::Black, Piece::Type::Knight})
+                ("b", Piece{Color::Black, Piece::Type::Bishop})
+                ("q", Piece{Color::Black, Piece::Type::Queen})
+                ("k", Piece{Color::Black, Piece::Type::King})
+                ("p", Piece{Color::Black, Piece::Type::Pawn})
+                ("R", Piece{Color::White, Piece::Type::Rook})
+                ("N", Piece{Color::White, Piece::Type::Knight})
+                ("B", Piece{Color::White, Piece::Type::Bishop})
+                ("Q", Piece{Color::White, Piece::Type::Queen})
+                ("K", Piece{Color::White, Piece::Type::King})
+                ("P", Piece{Color::White, Piece::Type::Pawn})
+                ("-", Piece{Color::None, Piece::Type::None})
                 ;
     }
 

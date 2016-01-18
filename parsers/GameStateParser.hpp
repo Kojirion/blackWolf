@@ -18,7 +18,7 @@ struct GameStateParser : grammar<Iterator, GameStateMessage()>
     rule<Iterator> double_advance, castling_right, irreversible_moves, game_id, name, relation,
     time_taken, move;
     rule<Iterator, std::string()> pretty_move;
-    rule<Iterator, std::vector<Unit>()> row;
+    rule<Iterator, std::vector<Piece>()> row;
     rule<Iterator, GameStateMessage()> start;
     //rule<Iterator, boost::fusion::vector<Square, Square, boost::optional<Piece>>()> verbose_move;
     SquareParser square; //can this be moved into source?

@@ -26,7 +26,7 @@ class Canvas : private Entity
 public:
     Canvas(sf::Window& theWindow);
     void display();
-    void setupBoard(const std::vector<std::vector<Unit> > &position, Color turnColor);
+    void setupBoard(const std::vector<std::vector<Piece> > &position, Color turnColor);
 
     sfg::Widget::Ptr getBoardWidget() const;
 

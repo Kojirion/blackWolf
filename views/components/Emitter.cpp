@@ -4,31 +4,31 @@
 
 const int nr_fragments_side = 2;
 const int nr_fragments = nr_fragments_side*nr_fragments_side;
-const Unit IntToUnit[12]  = {Unit{Color::White, Piece::Pawn},
-                         {Color::White, Piece::Rook},
-                         {Color::White, Piece::Knight},
-                         {Color::White, Piece::Bishop},
-                         {Color::White, Piece::King},
-                         {Color::White, Piece::Queen},
-                         {Color::Black, Piece::Pawn},
-                         {Color::Black, Piece::Rook},
-                         {Color::Black, Piece::Knight},
-                         {Color::Black, Piece::Bishop},
-                         {Color::Black, Piece::King},
-                         {Color::Black, Piece::Queen}
+const Piece IntToPiece[12]  = {Piece{Color::White, Piece::Type::Pawn},
+                         {Color::White, Piece::Type::Rook},
+                         {Color::White, Piece::Type::Knight},
+                         {Color::White, Piece::Type::Bishop},
+                         {Color::White, Piece::Type::King},
+                         {Color::White, Piece::Type::Queen},
+                         {Color::Black, Piece::Type::Pawn},
+                         {Color::Black, Piece::Type::Rook},
+                         {Color::Black, Piece::Type::Knight},
+                         {Color::Black, Piece::Type::Bishop},
+                         {Color::Black, Piece::Type::King},
+                         {Color::Black, Piece::Type::Queen}
                         };
 
-int UnitToInt(const Unit &unit)
+int PieceToInt(const Piece &piece)
 {
     for (int i=0; i<12; ++i){
-        if (IntToUnit[i]==unit)
+        if (IntToPiece[i]==piece)
             return i*nr_fragments;
     }
     return 0;
 }
 
-Emitter::Emitter(const sf::Vector2f &position, const Unit &unit):
-    m_position(position), m_index(UnitToInt(unit))
+Emitter::Emitter(const sf::Vector2f &position, const Piece &piece):
+    m_position(position), m_index(PieceToInt(piece))
 {
 
 }

@@ -27,10 +27,10 @@ Canvas::Canvas(sf::Window& theWindow):
 
     int l = 50/nr_fragments_side;
     for (int i=0; i<12; ++i){
-        auto unitTexPos = static_cast<sf::Vector2i>(typeToTexPos(IntToUnit[i]));
+        auto pieceTexPos = static_cast<sf::Vector2i>(typeToTexPos(IntToPiece[i]));
         for (int j=0; j<nr_fragments_side; ++j){
             for (int k=0; k<nr_fragments_side; ++k){
-                auto fragmentTexPos = unitTexPos + sf::Vector2i(l*j, k*l);
+                auto fragmentTexPos = pieceTexPos + sf::Vector2i(l*j, k*l);
                 sf::IntRect rect(fragmentTexPos, sf::Vector2i(l, l));
                 m_particleSystem.addTextureRect(rect);
             }
@@ -118,7 +118,7 @@ void Canvas::display()
 
 }
 
-void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position, Color turnColor)
+void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color turnColor)
 {
     Square square;
     sf::Vector2f pos;
@@ -134,9 +134,9 @@ void Canvas::setupBoard(const std::vector<std::vector<Unit>>& position, Color tu
 
     for (int i=0; i<8; ++i){
         for (int j=0; j<8; ++j){
-            const Unit& unit = position[i][j];
-            if (unit.piece == Piece::None) continue;
-            PieceSprite toAdd(squareToPosition({7-i,j}),unit, m_idCount++);
+            const Piece& piece = position[i][j];
+            if (piece.type == Piece::Type::None) continue;
+            PieceSprite toAdd(squareToPosition({7-i,j}),piece, m_idCount++);
             m_pieces.insert(SquaresToPieces::value_type({7-i,j}, toAdd));
         }
     }
@@ -252,7 +252,7 @@ void Canvas::animateCaptureOn(const Square& square)
 {
     auto it = m_pieces.by<squareId>().find(square);
     if (it != m_pieces.by<squareId>().end()){
-        auto unit = it->second.getUnit();
-        m_particleSystem.addEmitter(Emitter(squareToPosition(square) + m_offToCenter, unit), sf::seconds(0.000001f));
+        auto piece = it->second.getPiece();
+        m_particleSystem.addEmitter(Emitter(squareToPosition(square) + m_offToCenter, piece), sf::seconds(0.000001f));
     }
 }

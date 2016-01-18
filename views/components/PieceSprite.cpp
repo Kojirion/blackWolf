@@ -2,7 +2,7 @@
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/assert.hpp>
 
-PieceSprite::PieceSprite(const sf::Vector2f &position, Unit type, int id):
+PieceSprite::PieceSprite(const sf::Vector2f &position, Piece type, int id):
     m_type(type), m_id(id)
 {
     setPosition(position);
@@ -18,7 +18,7 @@ bool PieceSprite::operator <(const PieceSprite &that) const
     return (m_id<that.m_id);
 }
 
-const Unit &PieceSprite::getUnit() const
+const Piece &PieceSprite::getPiece() const
 {
     return m_type;
 }

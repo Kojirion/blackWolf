@@ -16,7 +16,7 @@ public:
 
     boost::signals2::signal<void (std::string)> textReady;
 
-    void makeMove(const Move& move, Piece promotionChoice = Piece::None);
+    void makeMove(const Move& move, Piece::Type promotionChoice = Piece::Type::None);
 
     void toClient(std::string toWrite);
 
@@ -31,7 +31,7 @@ private:
     void handleData(boost::system::error_code ec);    
 
     int stringToCol(const std::string &stringedCol) const;
-    std::string moveString(const Move& move, Piece promotionChoice) const;
+    std::string moveString(const Move& move, Piece::Type promotionChoice) const;
     std::string colToString(const int col) const;
-    std::string pieceToSymbol(Piece piece) const;
+    std::string pieceToSymbol(Piece::Type piece) const;
 };

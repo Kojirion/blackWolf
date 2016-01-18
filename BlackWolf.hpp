@@ -13,24 +13,24 @@ bool operator &(const Color& lhs, const Color& rhs);
 Color operator!(Color rhs);
 int sign(Color color);
 
-enum class Piece{    
-    Rook = 0,
-    Knight = 1,
-    Bishop = 2,
-    Queen = 3,
-    King = 4,
-    Pawn = 5,
-    Shadow = 6,
-    None = 7
-};
+struct Piece{
+    enum class Type{
+        Rook = 0,
+        Knight,
+        Bishop,
+        Queen,
+        King,
+        Pawn,
+        Shadow,
+        None
+    };
 
-struct Unit{
     Color color;
-    Piece piece;
+    Type type;
 };
 
-const Unit noPiece = {Color::None, Piece::None};
-bool operator==(const Unit& lhs, const Unit& rhs);
+const Piece noPiece = {Color::None, Piece::Type::None};
+bool operator==(const Piece& lhs, const Piece& rhs);
 
 struct Square{
     int row;
@@ -64,4 +64,4 @@ bool operator<(const Castle& lhs, const Castle& rhs);
 
 //namespace sf { class Vector2f; }
 
-sf::Vector2f typeToTexPos(const Unit& type);
+sf::Vector2f typeToTexPos(const Piece& type);

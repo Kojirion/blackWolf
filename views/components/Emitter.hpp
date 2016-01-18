@@ -7,15 +7,15 @@
 extern const int nr_fragments_side;
 extern const int nr_fragments;
 
-extern const Unit IntToUnit[12];
+extern const Piece IntToPiece[12];
 
-int UnitToInt(const Unit& unit);
+int UnitToInt(const Piece& unit);
 
 namespace thor { class EmissionInterface; }
 
 class Emitter {
 public:
-    Emitter(const sf::Vector2f& position, const Unit& unit);
+    Emitter(const sf::Vector2f& position, const Piece& unit);
 
 
     void operator()(thor::EmissionInterface& system, sf::Time dt);
