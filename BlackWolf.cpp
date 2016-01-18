@@ -71,23 +71,23 @@ bool operator==(const Move &lhs, const Move &rhs)
     return (lhs.square_1 == rhs.square_1) && (lhs.square_2 == rhs.square_2);
 }
 
-sf::Vector2f typeToTexPos(const Piece &type)
+sf::Vector2f typeToTexPos(const Piece &piece)
 {
-    assert((type.color==Color::Black)||(type.color==Color::White));
-    assert((type.type!=Piece::Type::None)&&(type.type!=Piece::Type::Shadow));
+    assert((piece.color==Color::Black)||(piece.color==Color::White));
+    assert((piece.type!=Piece::Type::None)&&(piece.type!=Piece::Type::Shadow));
 
 
     const sf::Vector2f offset(20.f, 20.f);
     const int side = 50;
 
-    if (type.type == Piece::Type::Pawn){
-        if (type.color == Color::White)
+    if (piece.type == Piece::Type::Pawn){
+        if (piece.color == Color::White)
             return (offset + sf::Vector2f(0, 6*side));
         else return (offset + sf::Vector2f(0, side));
     }
 
-    if (type.color == Color::White)
-        return (offset + sf::Vector2f(static_cast<int>(type.type)*side, 7*side));
+    if (piece.color == Color::White)
+        return (offset + sf::Vector2f(static_cast<int>(piece.type)*side, 7*side));
     else
-        return (offset + sf::Vector2f(static_cast<int>(type.type)*side, 0));
+        return (offset + sf::Vector2f(static_cast<int>(piece.type)*side, 0));
 }

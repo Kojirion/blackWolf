@@ -64,4 +64,4 @@ bool operator<(const Castle& lhs, const Castle& rhs);
 
 //namespace sf { class Vector2f; }
 
-sf::Vector2f typeToTexPos(const Piece& type);
+sf::Vector2f typeToTexPos(const Piece& piece);
