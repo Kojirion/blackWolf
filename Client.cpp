@@ -34,16 +34,11 @@ void Client::connect()
         return;
     }
     
-   std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
-//    toClient(hello);
-
-        int n=crypt(hello);
-        outputStream << hello;
-        //toClient(hello);
+    std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
+    toClient(hello);
     
     boost::asio::async_read_until(socket, data, "\n\r",
                                   boost::bind(&Client::handleData, this, _1));
-
 }
 
 void Client::update()
