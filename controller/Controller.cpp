@@ -1,5 +1,5 @@
 #include "Controller.hpp"
-#include <boost/assert.hpp>
+#include <cassert>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 #include "components/ButtonBox.hpp"

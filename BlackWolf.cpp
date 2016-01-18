@@ -1,10 +1,10 @@
 #include "BlackWolf.hpp"
-#include <boost/assert.hpp>
+#include <cassert>
 
 int sign(Color color)
 {
     if (color == Color::White) return 1;
-    BOOST_ASSERT_MSG(color == Color::Black, "Invalid color sign request");
+    assert(color == Color::Black);
     return -1;
 }
 
@@ -13,7 +13,7 @@ Color operator !(Color rhs)
 {
     if (rhs==Color::White) return Color::Black;
     if (rhs==Color::Black) return Color::White;
-    BOOST_ASSERT_MSG(true, "Requesting to flip none or both");
+    assert(true);
     return rhs;
 }
 
@@ -73,8 +73,8 @@ bool operator==(const Move &lhs, const Move &rhs)
 
 sf::Vector2f typeToTexPos(const Piece &type)
 {
-    BOOST_ASSERT_MSG((type.color==Color::Black)||(type.color==Color::White), "Invalid piece color");
-    BOOST_ASSERT_MSG((type.type!=Piece::Type::None)&&(type.type!=Piece::Type::Shadow), "Invalid piece type");
+    assert((type.color==Color::Black)||(type.color==Color::White));
+    assert((type.type!=Piece::Type::None)&&(type.type!=Piece::Type::Shadow));
 
 
     const sf::Vector2f offset(20.f, 20.f);

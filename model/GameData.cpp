@@ -1,5 +1,5 @@
 #include "GameData.hpp"
-#include <boost/assert.hpp>
+#include <cassert>
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
 
@@ -48,7 +48,7 @@ void GameData::startClock()
         blackClock.stop();
         whiteClock.start();
     }else{
-        BOOST_ASSERT_MSG(m_turnColor==Color::Black, "Turn color invalid");
+        assert(m_turnColor==Color::Black);
         whiteClock.stop();
         blackClock.start();
     }

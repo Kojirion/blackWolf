@@ -1,6 +1,6 @@
 #include "PieceSprite.hpp"
 #include <boost/math/special_functions/sign.hpp>
-#include <boost/assert.hpp>
+#include <cassert>
 
 PieceSprite::PieceSprite(const sf::Vector2f &position, Piece type, int id):
     m_type(type), m_id(id)
