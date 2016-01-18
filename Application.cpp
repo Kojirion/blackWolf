@@ -1,49 +1,48 @@
 #include "Application.hpp"
 
 Application::Application():
-    window(sf::VideoMode(800, 800), "Black Wolf")
+    m_window(sf::VideoMode(800, 800), "Black Wolf")
 {
-    window.setFramerateLimit(60);
-
-    desktop.LoadThemeFromFile("gui.theme");
+    m_window.setFramerateLimit(60);
+    m_desktop.LoadThemeFromFile("gui.theme");
 
     auto font = std::make_shared<sf::Font>(sf::Font());
     font->loadFromFile("DejaVuSansMono.ttf");
-    desktop.GetEngine().GetResourceManager().SetDefaultFont(font);
-    desktop.SetProperty( "Label#chatText", "FontName",  "DejaVuSansMono.ttf" );
+    m_desktop.GetEngine().GetResourceManager().SetDefaultFont(font);
+    m_desktop.SetProperty( "Label#chatText", "FontName",  "DejaVuSansMono.ttf" );
 
-    actions["close"] = thor::Action(sf::Event::Closed);
-    system.connect("close", std::bind(&sf::RenderWindow::close, &window));
+    m_actions[Action::Close] = thor::Action(sf::Event::Closed);
+    m_system.connect(Action::Close, std::bind(&sf::RenderWindow::close, &m_window));
 
-    actions["resized"] = thor::Action(sf::Event::Resized);
-    system.connect("resized", std::bind(&MessageSystem::triggerEvent, &messages, ResizeMessage(window)));
+    m_actions[Action::Resize] = thor::Action(sf::Event::Resized);
+    m_system.connect(Action::Resize, std::bind(&MessageSystem::triggerEvent, &messages, ResizeMessage(m_window)));
 }
 
 void Application::run()
 {
-    Controller boss(window, desktop);
+    Controller boss(m_window, m_desktop);
 
-    window.resetGLStates();
+    m_window.resetGLStates();
     sf::Clock clock;
 
-    while (window.isOpen())
+    while (m_window.isOpen())
     {
-        actions.clearEvents();
+        m_actions.clearEvents();
 
         sf::Event event;
-        while (window.pollEvent(event)){
-          actions.pushEvent(event);
-          desktop.HandleEvent(event);
+        while (m_window.pollEvent(event)){
+          m_actions.pushEvent(event);
+          m_desktop.HandleEvent(event);
         }
 
-        actions.invokeCallbacks(system, &(window));
+        m_actions.invokeCallbacks(m_system, &(m_window));
 
-        desktop.Update(clock.restart().asSeconds());
+        m_desktop.Update(clock.restart().asSeconds());
 
-        window.clear();
+        m_window.clear();
         boss.update();
-        sfgui_.Display(window);
-        window.display();
+        m_sfgui.Display(m_window);
+        m_window.display();
     }
 
 }

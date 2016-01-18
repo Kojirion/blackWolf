@@ -7,15 +7,21 @@
 
 class Application : private Entity
 {
-private:
-    sfg::SFGUI sfgui_;
-    sf::RenderWindow window;
-    sfg::Desktop desktop;    
-    thor::ActionMap<std::string> actions;
-    thor::ActionMap<std::string>::CallbackSystem system;
-
 public:
     Application();
-
     void run();
+
+private:    
+    enum class Action{
+        Close,
+        Resize
+    };
+
+    sfg::SFGUI m_sfgui;
+    sf::RenderWindow m_window;
+    sfg::Desktop m_desktop;
+
+    using Actions = thor::ActionMap<Action>;
+    Actions m_actions;
+    Actions::CallbackSystem m_system;
 };
