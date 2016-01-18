@@ -7,15 +7,14 @@ Black Wolf is a chess graphical interface, currently designed to play at the [Fr
 
 #Building
 
-Black Wolf depends on master branch of the following libraries:
+Black Wolf depends on the following libraries:
 
-SFGUI - http://sfgui.sfml-dev.de/  
-SFML - http://www.sfml-dev.org/  
-Thor - http://www.bromeon.ch/libraries/thor/index.html  
+- [SFGUI](https://github.com/TankOs/SFGUI)
+- [SFML](https://github.com/SFML/SFML)
+- [Thor](https://github.com/Bromeon/Thor)
+- [Boost 1.55](http://www.boost.org)
 
-Furthermore, it makes use of several Boost libraries(http://www.boost.org). It is being developed with version 1.55.
-
-A simple way to build (after dependencies have been obtained)
+After dependencies have been obtained, Black Wolf may be built by:
 
 ```
 mkdir build
@@ -25,6 +24,6 @@ make
 ```
 #Credit
 
-Board and piece art by Peter Wong - http://www.virtualpieces.net/
+Board and piece art by [Peter Wong](http://www.virtualpieces.net).
 
 
