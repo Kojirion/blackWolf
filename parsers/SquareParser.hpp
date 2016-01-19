@@ -2,7 +2,7 @@
 #include "Grammars.hpp"
 #include <boost/spirit/include/qi_symbols.hpp>
 
-class Square;
+struct Square;
 
 using boost::spirit::qi::symbols;
 

@@ -86,6 +86,11 @@ target_link_libraries(${PROJECT_NAME} core)
 #tests
 set(test_SRCS
     tests/tests.cpp
+    tests/SessionStart.cpp
+    tests/GameEnd.cpp
+    tests/GameStart.cpp
+    tests/GameState.cpp
+    tests/Square.cpp
 )
 add_executable(unit_tests ${test_SRCS})
 target_link_libraries(unit_tests core)
