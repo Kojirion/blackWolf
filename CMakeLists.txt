@@ -91,6 +91,7 @@ set(test_SRCS
     tests/GameStart.cpp
     tests/GameState.cpp
     tests/Square.cpp
+    tests/MoveString.cpp
 )
 add_executable(unit_tests ${test_SRCS})
 target_link_libraries(unit_tests core)
