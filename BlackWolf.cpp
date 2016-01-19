@@ -55,7 +55,7 @@ std::ostream &operator<<(std::ostream &stream, const Square &square)
 
 std::ostream &operator<<(std::ostream &stream, const Move &move)
 {
-    stream << move.square_1 << "-" << move.square_2;
+    stream << move.square_1 << move.square_2;
     return stream;
 }
 

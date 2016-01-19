@@ -43,6 +43,7 @@ set(bw_HDRS
     parsers/GameEndParser.hpp
     parsers/SessionStartParser.hpp
     parsers/Grammars.hpp
+    generators/MoveStringGrammar.hpp
 )
 
 set(bw_SRCS
