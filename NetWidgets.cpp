@@ -18,7 +18,6 @@ NetWidgets::NetWidgets():
     m_chatLayout->Pack(m_chatEntry);
 
     m_chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
-    m_chatEntry->GrabFocus();
 
     auto adjustment = m_chatWindow->GetVerticalAdjustment();
     adjustment->GetSignal(sfg::Adjustment::OnChange).Connect(
@@ -49,6 +48,11 @@ void NetWidgets::scroll(int delta)
         adjustment->Decrement();
         m_clock.restart();
     }
+}
+
+void NetWidgets::grabEntryFocus()
+{
+    m_chatEntry->GrabFocus();
 }
 
 void NetWidgets::autoscroll()

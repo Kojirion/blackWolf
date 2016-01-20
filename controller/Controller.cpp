@@ -81,6 +81,26 @@ bool Controller::requestMove(const Move& move)
     //    return false;
 }
 
+struct GrabFocusOnTabChange{
+    GrabFocusOnTabChange(const sfg::Notebook::Ptr& notebook, NetWidgets& netWidgets):
+        notebook(notebook),
+        previousPage(notebook->GetCurrentPage()),
+        netWidgets(netWidgets)
+    {
+
+    }
+
+    void operator()(){
+        if (notebook->GetCurrentPage() != previousPage)
+            netWidgets.grabEntryFocus();
+    }
+
+private:
+    sfg::Notebook::Ptr notebook;
+    sfg::Notebook::IndexType previousPage;
+    NetWidgets& netWidgets;
+};
+
 Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, CallbackSystem &callbackSystem):
     desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
@@ -123,6 +143,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     sfg::Notebook::Ptr notebook(sfg::Notebook::Create());
     notebook->AppendPage(mainLayout,sfg::Label::Create("Board"));
     notebook->AppendPage(netWindow.getWidget(),sfg::Label::Create("Server"));
+    GrabFocusOnTabChange grabFocusOnTabChange(notebook, netWindow);
+    notebook->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(grabFocusOnTabChange);
 
     boardWindow->Add(notebook);
 

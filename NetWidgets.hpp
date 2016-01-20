@@ -17,6 +17,8 @@ public:
 
     void scroll(int delta);
 
+    void grabEntryFocus();
+
     boost::signals2::signal<void (std::string)> sendText;
 
 private:
