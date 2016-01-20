@@ -38,6 +38,8 @@ void NetWidgets::addLine(const std::string& line)
 
 void NetWidgets::scroll(int delta)
 {
+    if (!m_chatWindow->IsGloballyVisible())
+        return;
     auto adjustment = m_chatWindow->GetVerticalAdjustment();
     adjustment->SetMinorStep(25.f);
     if (delta<0){
