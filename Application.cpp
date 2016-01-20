@@ -4,7 +4,7 @@ Application::Application():
     m_window(sf::VideoMode(800, 800), "Black Wolf")
 {
     m_window.setFramerateLimit(60);
-    m_desktop.LoadThemeFromFile("gui.theme");
+    m_desktop.LoadThemeFromFile("blackwolf.theme");
 
     auto font = std::make_shared<sf::Font>(sf::Font());
     font->loadFromFile("DejaVuSansMono.ttf");
