@@ -4,6 +4,7 @@
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Label.hpp>
 #include <boost/signals2.hpp>
+#include <SFML/System/Clock.hpp>
 
 class NetWidgets
 {
@@ -23,6 +24,7 @@ private:
     sfg::Entry::Ptr m_chatEntry;
     sfg::Label::Ptr m_chatText;
     sfg::ScrolledWindow::Ptr m_chatWindow;
+    sf::Clock m_clock;
 
     void autoscroll();
 
