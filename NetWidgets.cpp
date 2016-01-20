@@ -1,8 +1,10 @@
 #include "NetWidgets.hpp"
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Adjustment.hpp>
+#include <SFML/Window/Event.hpp>
+#include <cassert>
 
-NetWidgets::NetWidgets():
+NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent):
     m_chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
     m_chatEntry(sfg::Entry::Create()),
     m_chatText(sfg::Label::Create()),
@@ -17,7 +19,8 @@ NetWidgets::NetWidgets():
     m_chatLayout->Pack(m_chatWindow);
     m_chatLayout->Pack(m_chatEntry);
 
-    m_chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
+    m_chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(
+                std::bind(&NetWidgets::entryKeyPressed, this, currentEvent));
 
     auto adjustment = m_chatWindow->GetVerticalAdjustment();
     adjustment->GetSignal(sfg::Adjustment::OnChange).Connect(
@@ -64,10 +67,18 @@ void NetWidgets::autoscroll()
     }
 }
 
-void NetWidgets::sendData()
+void NetWidgets::entryKeyPressed(const sf::Event& event)
 {
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) return;
-    std::string toWrite = m_chatEntry->GetText();
-    m_chatEntry->SetText("");
-    sendText(toWrite);
+    assert(event.type == sf::Event::KeyPressed);
+
+    switch (event.key.code) {
+    case sf::Keyboard::Return:{
+        std::string toWrite = m_chatEntry->GetText();
+        m_chatEntry->SetText("");
+        sendText(toWrite);
+        break;
+    }
+    default:
+        break;
+    }
 }

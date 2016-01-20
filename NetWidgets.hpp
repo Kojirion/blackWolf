@@ -9,7 +9,7 @@
 class NetWidgets
 {
 public:
-    NetWidgets();
+    NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent);
 
     sfg::Widget::Ptr getWidget();
 
@@ -30,5 +30,5 @@ private:
 
     void autoscroll();
 
-    void sendData();    
+    void entryKeyPressed(const sf::Event &event);
 };

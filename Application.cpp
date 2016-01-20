@@ -22,7 +22,7 @@ Application::Application():
 
 void Application::run()
 {
-    Controller boss(m_window, m_desktop, m_system);
+    Controller controller(m_window, m_desktop, m_system);
 
     m_window.resetGLStates();
     sf::Clock clock;
@@ -33,8 +33,9 @@ void Application::run()
 
         sf::Event event;
         while (m_window.pollEvent(event)){
-          m_actions.pushEvent(event);
-          m_desktop.HandleEvent(event);
+            controller.setEvent(event);
+            m_actions.pushEvent(event);
+            m_desktop.HandleEvent(event);
         }
 
         m_actions.invokeCallbacks(m_system, &(m_window));
@@ -42,11 +43,10 @@ void Application::run()
         m_desktop.Update(clock.restart().asSeconds());
 
         m_window.clear();
-        boss.update();
+        controller.update();
         m_sfgui.Display(m_window);
         m_window.display();
     }
-
 }
 
 

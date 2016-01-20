@@ -68,6 +68,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     board(theWindow),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
+    netWindow(m_currentEvent),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create())
 {
@@ -161,6 +162,11 @@ void Controller::update()
     client.update();
     board.display();
     updateClocks();
+}
+
+void Controller::setEvent(const sf::Event &event)
+{
+    m_currentEvent = event;
 }
 
 void Controller::updateClocks()

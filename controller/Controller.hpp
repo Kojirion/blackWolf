@@ -25,6 +25,7 @@ public:
     sfg::Button::Ptr settingsButton;
 
     void update();
+    void setEvent(const sf::Event& event);
 
     void updateClocks();
 
@@ -49,6 +50,8 @@ private:
 
     Move premove;
     bool premoveOn;
+
+    sf::Event m_currentEvent;
 
     NetWidgets netWindow;
 
