@@ -10,12 +10,14 @@
 #include "../NetWidgets.hpp"
 #include "../views/Counters.hpp"
 #include "../Entity.hpp"
+#include "../Actions.hpp"
 
 
 class Controller : private Entity
 {
 public:
-    Controller(sf::Window& theWindow, sfg::Desktop& theDesktop);
+    Controller(sf::Window& theWindow, sfg::Desktop& theDesktop,
+               CallbackSystem& callbackSystem);
 
     sfg::Desktop& desktop;
     sfg::Window::Ptr promotionWindow;

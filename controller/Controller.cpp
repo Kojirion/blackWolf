@@ -81,7 +81,7 @@ bool Controller::requestMove(const Move& move)
     //    return false;
 }
 
-Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
+Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, CallbackSystem &callbackSystem):
     desktop(theDesktop),
     promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
@@ -161,6 +161,11 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop):
         //auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         premoveOn = false;
         board.clearArrows();
+    });
+
+    callbackSystem.connect(Action::Scroll, [this](thor::ActionContext<Action> context){
+        int delta = context.event->mouseWheelScroll.delta;
+        netWindow.scroll(delta);
     });
 
     client.connect();

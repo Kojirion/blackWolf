@@ -14,13 +14,15 @@ Application::Application():
     m_actions[Action::Close] = thor::Action(sf::Event::Closed);
     m_system.connect(Action::Close, std::bind(&sf::RenderWindow::close, &m_window));
 
+    m_actions[Action::Scroll] = thor::Action(sf::Event::MouseWheelScrolled);
+
     m_actions[Action::Resize] = thor::Action(sf::Event::Resized);
     m_system.connect(Action::Resize, std::bind(&MessageSystem::triggerEvent, &messages, ResizeMessage(m_window)));
 }
 
 void Application::run()
 {
-    Controller boss(m_window, m_desktop);
+    Controller boss(m_window, m_desktop, m_system);
 
     m_window.resetGLStates();
     sf::Clock clock;

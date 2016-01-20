@@ -44,6 +44,7 @@ set(bw_HDRS
     parsers/SessionStartParser.hpp
     parsers/Grammars.hpp
     generators/MoveStringGrammar.hpp
+    Actions.hpp
 )
 
 set(bw_SRCS

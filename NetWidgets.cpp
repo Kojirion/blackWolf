@@ -3,45 +3,56 @@
 #include <SFGUI/Adjustment.hpp>
 
 NetWidgets::NetWidgets():
-    chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
-    chatEntry(sfg::Entry::Create()),
-    chatText(sfg::Label::Create()),
-    chatWindow(sfg::ScrolledWindow::Create())
+    m_chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
+    m_chatEntry(sfg::Entry::Create()),
+    m_chatText(sfg::Label::Create()),
+    m_chatWindow(sfg::ScrolledWindow::Create())
 {
-    chatText->SetId("chatText");
+    m_chatText->SetId("chatText");
 
-    chatWindow->SetRequisition(sf::Vector2f(600.f,700.f));
-    chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
-    chatWindow->AddWithViewport(chatText);
+    m_chatWindow->SetRequisition(sf::Vector2f(600.f,700.f));
+    m_chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
+    m_chatWindow->AddWithViewport(m_chatText);
 
-    chatLayout->Pack(chatWindow);
-    chatLayout->Pack(chatEntry);
+    m_chatLayout->Pack(m_chatWindow);
+    m_chatLayout->Pack(m_chatEntry);
 
-    chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
-    chatEntry->GrabFocus();
+    m_chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(std::bind(&NetWidgets::sendData, this));
+    m_chatEntry->GrabFocus();
 }
 
 sfg::Widget::Ptr NetWidgets::getWidget()
 {
-    return chatLayout;
+    return m_chatLayout;
 }
 
 void NetWidgets::addLine(const std::string& line)
 {
-    chatText->SetText(chatText->GetText() + line);
+    m_chatText->SetText(m_chatText->GetText() + line);
     autoscroll();
+}
+
+void NetWidgets::scroll(int delta)
+{
+    auto adjustment = m_chatWindow->GetVerticalAdjustment();
+    adjustment->SetMinorStep(25.f);
+    if (delta<0){
+        adjustment->Increment();
+    }else{
+        adjustment->Decrement();
+    }
 }
 
 void NetWidgets::autoscroll()
 {
-    sfg::Adjustment::Ptr toAdjust(chatWindow->GetVerticalAdjustment());
+    sfg::Adjustment::Ptr toAdjust(m_chatWindow->GetVerticalAdjustment());
     toAdjust->SetValue(toAdjust->GetUpper());
 }
 
 void NetWidgets::sendData()
 {
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) return;
-    std::string toWrite = chatEntry->GetText();
-    chatEntry->SetText("");
+    std::string toWrite = m_chatEntry->GetText();
+    m_chatEntry->SetText("");
     sendText(toWrite);
 }

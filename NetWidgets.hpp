@@ -14,13 +14,15 @@ public:
 
     void addLine(const std::string &line);
 
+    void scroll(int delta);
+
     boost::signals2::signal<void (std::string)> sendText;
 
 private:
-    sfg::Box::Ptr chatLayout;
-    sfg::Entry::Ptr chatEntry;
-    sfg::Label::Ptr chatText;
-    sfg::ScrolledWindow::Ptr chatWindow;
+    sfg::Box::Ptr m_chatLayout;
+    sfg::Entry::Ptr m_chatEntry;
+    sfg::Label::Ptr m_chatText;
+    sfg::ScrolledWindow::Ptr m_chatWindow;
 
     void autoscroll();
 
