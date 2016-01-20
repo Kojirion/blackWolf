@@ -1,6 +1,9 @@
 #include "Emitter.hpp"
 #include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Particles/Particle.hpp>
+#include <boost/range/irange.hpp>
+
+using boost::irange;
 
 const int nr_fragments_side = 2;
 const int nr_fragments = nr_fragments_side*nr_fragments_side;
@@ -20,7 +23,7 @@ const Piece IntToPiece[12]  = {Piece{Color::White, Piece::Type::Pawn},
 
 int PieceToInt(const Piece &piece)
 {
-    for (int i=0; i<12; ++i){
+    for (auto i : irange(0, 12)){
         if (IntToPiece[i]==piece)
             return i*nr_fragments;
     }
@@ -39,7 +42,7 @@ void Emitter::operator()(thor::EmissionInterface &system, sf::Time dt)
     particle.position = m_position;
     particle.textureIndex = m_index;
 
-    for (int i=0; i<nr_fragments; ++i){
+    for (auto i : irange(0, nr_fragments)){
         using thor::random;
 
         thor::PolarVector2f velocity(random(100.f, 200.f), random(0.f, 360.f));

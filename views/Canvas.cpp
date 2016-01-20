@@ -4,6 +4,9 @@
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
 #include "components/Emitter.hpp"
+#include <boost/range/irange.hpp>
+
+using boost::irange;
 
 const sf::Vector2f Canvas::m_offToCenter(25.f,25.f);
 
@@ -26,10 +29,10 @@ Canvas::Canvas(sf::Window& theWindow):
     m_particleSystem.addAffector( thor::TorqueAffector(100.f) );
 
     int l = 50/nr_fragments_side;
-    for (int i=0; i<12; ++i){
+    for (auto i : irange(0,12)){
         auto pieceTexPos = static_cast<sf::Vector2i>(typeToTexPos(IntToPiece[i]));
-        for (int j=0; j<nr_fragments_side; ++j){
-            for (int k=0; k<nr_fragments_side; ++k){
+        for (auto j : irange(0, nr_fragments_side)){
+            for (auto k : irange(0,nr_fragments_side)){
                 auto fragmentTexPos = pieceTexPos + sf::Vector2i(l*j, k*l);
                 sf::IntRect rect(fragmentTexPos, sf::Vector2i(l, l));
                 m_particleSystem.addTextureRect(rect);
@@ -132,8 +135,8 @@ void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color t
 
     m_pieces.clear();
 
-    for (int i=0; i<8; ++i){
-        for (int j=0; j<8; ++j){
+    for (auto i : irange(0,8)){
+        for (auto j : irange(0,8)){
             const Piece& piece = position[i][j];
             if (piece.type == Piece::Type::None) continue;
             PieceSprite toAdd(squareToPosition({7-i,j}),piece, m_idCount++);
