@@ -5,6 +5,7 @@
 #include "parsers/GameEndParser.hpp"
 #include <boost/fusion/container/vector.hpp>
 #include "Timeseal.hpp"
+#include "generators/MoveStringGrammar.hpp"
 
 Client::Client():
     outputStream(&output),
@@ -106,61 +107,14 @@ void Client::toClient(std::string toWrite)
     outputStream << toWrite;
 }
 
-int Client::stringToCol(const std::string& stringedCol) const
+void Client::makeMove(const Move &move)
 {
-    if (stringedCol=="a") return 0;
-    else if (stringedCol=="b") return 1;
-    else if (stringedCol=="c") return 2;
-    else if (stringedCol=="d") return 3;
-    else if (stringedCol=="e") return 4;
-    else if (stringedCol=="f") return 5;
-    else if (stringedCol=="g") return 6;
-    else if (stringedCol=="h") return 7;
-    return -1; //appease compiler
-}
+    using Iterator = std::back_insert_iterator<std::string>;
 
-std::string Client::moveString(const Move &move, Piece::Type promotionChoice) const
-{
-    std::string toReturn(colToString(move.square_1.col) + std::to_string(move.square_1.row+1)
-                         + colToString(move.square_2.col) + std::to_string(move.square_2.row+1));
-    if (promotionChoice != Piece::Type::None) toReturn += "=" + pieceToSymbol(promotionChoice);
-    return toReturn;
-}
+    static const MoveStringGrammar<Iterator> moveStringGrammar;
 
-std::string Client::colToString(const int col) const
-{
-    switch (col) {
-    case 0:
-        return "a";
-    case 1:
-        return "b";
-    case 2:
-        return "c";
-    case 3:
-        return "d";
-    case 4:
-        return "e";
-    case 5:
-        return "f";
-    case 6:
-        return "g";
-    case 7:
-        return "h";
-    default:
-        return "-"; //appease compiler
-    }
-}
+    std::string moveString;
+    boost::spirit::karma::generate(Iterator(moveString), moveStringGrammar, move);
 
-std::string Client::pieceToSymbol(Piece::Type piece) const
-{
-    if (piece == Piece::Type::Queen) return "Q";
-    if (piece == Piece::Type::Bishop) return "B";
-    if (piece == Piece::Type::Knight) return "N";
-    if (piece == Piece::Type::Rook) return "R";
-    return "-"; //appease compiler
-}
-
-void Client::makeMove(const Move &move, Piece::Type promotionChoice)
-{
-    toClient(moveString(move,promotionChoice));
+    toClient(std::move(moveString));
 }
