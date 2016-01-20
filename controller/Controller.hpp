@@ -20,7 +20,6 @@ public:
                CallbackSystem& callbackSystem);
 
     sfg::Desktop& desktop;
-    sfg::Window::Ptr promotionWindow;
 
     sfg::Window::Ptr boardWindow;
     sfg::Button::Ptr settingsButton;
@@ -32,8 +31,6 @@ public:
     //slots
     void resign();
     void offerDraw();
-
-    void slotPromote();
 
     //boost slots
     bool requestMove(const Move& move);

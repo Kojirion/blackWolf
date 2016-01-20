@@ -23,40 +23,6 @@ void Controller::settingsDone(const std::string& whitePrefix, const std::string&
 {
     settingsWindow.enable(false);
     enableWindow(true);
-    //resources.reload(whitePrefix, blackPrefix, boardSuffix);
-    //board.reload(game.getPosition());
-}
-
-void Controller::slotPromote()
-{
-    //    std::string toCheck = sfg::Context::Get().GetActiveWidget()->GetId();
-    //    Piece whichPiece;
-
-    //    if      (toCheck == "promoteQueen") whichPiece = Piece::Type::Queen;
-    //    else if (toCheck == "promoteBishop") whichPiece = Piece::Type::Bishop;
-    //    else if (toCheck == "promoteKnight") whichPiece = Piece::Type::Knight;
-    //    else{
-    //        BOOST_ASSERT_MSG(toCheck == "promoteRook", "Invalid widget requests promotion");
-    //        whichPiece = Piece::Type::Rook;
-    //    }
-
-
-
-    //    promotionChoice = whichPiece;
-
-    //    //update view
-    //    //board.setPromotion(toPromote.square_2, whichPiece);
-
-    //    //update model
-    //    Color whichSide;
-    //    if (game.turnColor()==Color::White) whichSide = Color::Black;
-    //    else whichSide = Color::White;
-    //    game.setPromotion(toPromote.square_2, {whichSide, whichPiece});
-
-    //    client.makeMove(toPromote, whichPiece);
-
-    //    promotionWindow->Show(false);
-    //    enableWindow(true);
 }
 
 bool Controller::requestMove(const Move& move)
@@ -71,14 +37,8 @@ bool Controller::requestMove(const Move& move)
         return false;
     }
 
-    //    CompleteMove toCheck(game.getPosition(), move);
-    //    if (toCheck.isLegal()){
-    //        messages.triggerEvent(MoveMessage(toCheck));
-    //        if (!toCheck.getNewBoard().wasPromotion) //pass to client only if it wasn't promotion
     client.makeMove(move);
     return true;
-    //    }
-    //    return false;
 }
 
 struct GrabFocusOnTabChange{
@@ -103,7 +63,6 @@ private:
 
 Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, CallbackSystem &callbackSystem):
     desktop(theDesktop),
-    promotionWindow(sfg::Window::Create()),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
     board(theWindow),
@@ -116,9 +75,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 
     board.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
-    //client.positionReady.connect(boost::bind(&Controller::moveMake, this, _1, _2, _3));
-    //client.startGame.connect(boost::bind(&Controller::newGame, this, _1, _2, _3, _4));
-    //client.gameEnd.connect(boost::bind(&Controller::setGameEnded, this, _1));
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
@@ -148,7 +104,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 
     boardWindow->Add(notebook);
 
-    desktop.Add(promotionWindow);
     desktop.Add(boardWindow);
 
     messages.connect("gameState", [this](const Message& message){
