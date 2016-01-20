@@ -28,10 +28,6 @@ public:
 
     void updateClocks();
 
-    //slots
-    void resign();
-    void offerDraw();
-
     //boost slots
     bool requestMove(const Move& move);
 

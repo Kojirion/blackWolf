@@ -81,6 +81,13 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     ButtonBox buttons;
     buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
     buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
+    buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+        client.toClient("resign");
+    });
+    buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+        client.toClient("draw");
+    });
+
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
@@ -155,17 +162,6 @@ void Controller::update()
     board.display();
     updateClocks();
 }
-
-void Controller::resign()
-{
-    //messages.triggerEvent(EndGameMessage(game.turnColor()));
-}
-
-void Controller::offerDraw()
-{
-    return; //TODO: forward this to the client
-}
-
 
 void Controller::updateClocks()
 {
