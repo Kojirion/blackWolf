@@ -2,26 +2,11 @@
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Button.hpp>
 
-class ButtonBox
+struct ButtonBox
 {
-private:
-    sfg::Table::Ptr buttonLayout;
-
-    sfg::Button::Ptr resignButton;
-    sfg::Button::Ptr drawButton;
-    sfg::Button::Ptr newGameButton;
-    sfg::Button::Ptr flipButton;
-    sfg::Button::Ptr settingsButton;
-public:
     ButtonBox();
 
-    sfg::Widget::Ptr getWidget();
-
-    sfg::Widget::Ptr resign();
-    sfg::Widget::Ptr draw();
-    sfg::Widget::Ptr newGame();
-    sfg::Widget::Ptr flip();
-    sfg::Widget::Ptr settings();
-
+    sfg::Table::Ptr layout;
+    sfg::Button::Ptr resign, draw, newGame, flip, settings, connect;
 
 };

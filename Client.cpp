@@ -44,6 +44,9 @@ void Client::connect()
 
 void Client::update()
 {
+    if (!socket.is_open())
+        return;
+
     boost::asio::write(socket, output);
     
     if (!io_service.poll())

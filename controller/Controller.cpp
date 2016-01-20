@@ -79,13 +79,16 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
     ButtonBox buttons;
-    buttons.flip()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
-    buttons.settings()->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
-    buttons.resign()->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+    buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
+    buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
+    buttons.resign->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         client.toClient("resign");
     });
-    buttons.draw()->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+    buttons.draw->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         client.toClient("draw");
+    });
+    buttons.connect->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+        client.connect();
     });
 
 
@@ -99,7 +102,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     mainLayout->Attach(clocks.getBlackClock(),{1, 3, 1, 1});
     mainLayout->Attach(status.getView(),{1, 4, 1, 1});
     mainLayout->Attach(moveList.getView(),{1, 5, 1, 4});
-    mainLayout->Attach(buttons.getWidget(),{0,12,2,2});
+    mainLayout->Attach(buttons.layout,{0,12,2,2});
 
     desktop.Add(settingsWindow.getWidget());
 
@@ -151,9 +154,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         int delta = context.event->mouseWheelScroll.delta;
         netWindow.scroll(delta);
     });
-
-    client.connect();
-
 }
 
 void Controller::update()
