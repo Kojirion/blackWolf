@@ -42,7 +42,8 @@ void Emitter::operator()(thor::EmissionInterface &system, sf::Time dt)
     particle.position = m_position;
     particle.textureIndex = m_index;
 
-    for (auto i : irange(0, nr_fragments)){
+    auto i = nr_fragments;
+    while (i--){
         using thor::random;
 
         thor::PolarVector2f velocity(random(100.f, 200.f), random(0.f, 360.f));
