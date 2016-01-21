@@ -9,7 +9,8 @@ NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEven
     m_chatEntry(sfg::Entry::Create()),
     m_chatText(sfg::Label::Create()),
     m_chatWindow(sfg::ScrolledWindow::Create()),
-    m_backHistory(m_history.crend())
+    m_backHistory(m_history.crend()),
+    m_forwardHistory(m_history.end())
 {
     m_chatText->SetId("chatText");
 
@@ -78,18 +79,27 @@ void NetWidgets::entryKeyPressed(const sf::Event& event)
         if (!toWrite.empty()){
             m_history.push_back(toWrite);
             m_backHistory = m_history.crbegin();
+            m_forwardHistory = m_history.end();
         }
         m_chatEntry->SetText("");
         sendText(toWrite);
         break;
     }
     case sf::Keyboard::Up:{
-        if (m_backHistory != m_history.crend())
+        if (m_backHistory != m_history.crend()){
             m_chatEntry->SetText(*m_backHistory++);
+            --m_forwardHistory;
+        }
         break;
     }
     case sf::Keyboard::Down:{
-
+        if (m_forwardHistory != m_history.end()){
+            if (++m_forwardHistory == m_history.end())
+                m_chatEntry->SetText("");
+            else
+                m_chatEntry->SetText(*m_forwardHistory);
+            --m_backHistory;
+        }
         break;
     }
     default:
