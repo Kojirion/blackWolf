@@ -89,10 +89,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     buttons.draw->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         client.toClient("draw");
     });
-    buttons.connect->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
-        client.connect();
-    });
-
 
     auto promotionLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
     auto promotionGroup = sfg::RadioButtonGroup::Create();
@@ -151,6 +147,12 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     boardWindow->Add(notebook);
 
     desktop.Add(boardWindow);
+
+    buttons.connect->GetSignal(sfg::Button::OnLeftClick).Connect([this, notebook]{
+        client.connect();
+        notebook->SetCurrentPage(1);
+        netWindow.grabEntryFocus();
+    });
 
     messages.connect("gameState", [this](const Message& message){
         const GameStateMessage* received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
