@@ -1,25 +1,37 @@
 * {
-	Color: #ffffffff;
+    Color: #ffffffff;
 }
 
 Window {
-
-	BackgroundColor: #303030FF;
+    BackgroundColor: #303030FF;
 }
 
 Button {
-
-	BackgroundColor: #303030FF;	
+    BackgroundColor: #303030FF;	
 }
 
-Notebook {
+Button:PRELIGHT {
+    BackgroundColor: #172629FF;
+}
 
-	BackgroundColor: #232629FF;
-	BackgroundColorDark: #151515FF;
-	BackgroundColorPrelight: #172629FF;
+Button:ACTIVE {
+    BackgroundColor: #000000FF;
+    Color: #ffffffff;
+}        
+
+Notebook {
+    BackgroundColor: #232629FF;
+    BackgroundColorDark: #151515FF;
+    BackgroundColorPrelight: #172629FF;
 }
 
 Entry {
     BackgroundColor: #232629FF;
     Color: #ffffffff;
+}
+
+Scrollabar {
+    SliderColor: #121212ff
+    TroughColor: #212121ff
+    StepperBackgroundColor: #121212ff    
 }
