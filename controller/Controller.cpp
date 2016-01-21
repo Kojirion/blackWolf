@@ -6,6 +6,7 @@
 #include <SFGUI/Notebook.hpp>
 #include <boost/cast.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
+#include <SFGUI/Frame.hpp>
 
 void Controller::enableWindow(const bool enable)
 {
@@ -120,6 +121,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
             client.toClient("promote r");
     });
 
+    auto promotionFrame = sfg::Frame::Create("Promotion");
+    promotionFrame->Add(promotionLayout);
+
     auto sideLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
 
     sideLayout->Pack(player1);
@@ -130,11 +134,12 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
-    mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 2},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
-    mainLayout->Attach(promotionLayout, {0, 2, 1, 1});
-    mainLayout->Attach(sideLayout, {1,0, 1, 1});
-    mainLayout->Attach(moveList.getView(),{1, 1, 1, 3});
-    mainLayout->Attach(buttons.layout,{0,4,2,1});
+    mainLayout->SetColumnSpacings(2.f);
+    mainLayout->Attach(board.getBoardWidget(),{0, 0, 3, 2},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(promotionFrame, {0, 2, 1, 1});
+    mainLayout->Attach(sideLayout, {3,0, 3, 1});
+    mainLayout->Attach(moveList.getView(),{3, 1, 3, 3});
+    mainLayout->Attach(buttons.layout,{0,4,6,1});
 
     desktop.Add(settingsWindow.getWidget());
 
