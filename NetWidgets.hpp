@@ -28,6 +28,13 @@ private:
     sfg::ScrolledWindow::Ptr m_chatWindow;
     sf::Clock m_clock;
 
+    using History = std::vector<std::string>;
+
+    History m_history;
+    History::const_reverse_iterator m_backHistory;
+    History::const_iterator m_forwardHistory;
+
+
     void autoscroll();
 
     void entryKeyPressed(const sf::Event &event);

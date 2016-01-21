@@ -8,7 +8,8 @@ NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEven
     m_chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
     m_chatEntry(sfg::Entry::Create()),
     m_chatText(sfg::Label::Create()),
-    m_chatWindow(sfg::ScrolledWindow::Create())
+    m_chatWindow(sfg::ScrolledWindow::Create()),
+    m_backHistory(m_history.crend())
 {
     m_chatText->SetId("chatText");
 
@@ -24,7 +25,7 @@ NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEven
 
     auto adjustment = m_chatWindow->GetVerticalAdjustment();
     adjustment->GetSignal(sfg::Adjustment::OnChange).Connect(
-                               std::bind(&sf::Clock::restart, m_clock));
+                std::bind(&sf::Clock::restart, m_clock));
 }
 
 sfg::Widget::Ptr NetWidgets::getWidget()
@@ -74,8 +75,21 @@ void NetWidgets::entryKeyPressed(const sf::Event& event)
     switch (event.key.code) {
     case sf::Keyboard::Return:{
         std::string toWrite = m_chatEntry->GetText();
+        if (!toWrite.empty()){
+            m_history.push_back(toWrite);
+            m_backHistory = m_history.crbegin();
+        }
         m_chatEntry->SetText("");
         sendText(toWrite);
+        break;
+    }
+    case sf::Keyboard::Up:{
+        if (m_backHistory != m_history.crend())
+            m_chatEntry->SetText(*m_backHistory++);
+        break;
+    }
+    case sf::Keyboard::Down:{
+
         break;
     }
     default:
