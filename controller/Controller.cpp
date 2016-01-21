@@ -5,6 +5,7 @@
 #include "components/ButtonBox.hpp"
 #include <SFGUI/Notebook.hpp>
 #include <boost/cast.hpp>
+#include <SFGUI/RadioButtonGroup.hpp>
 
 void Controller::enableWindow(const bool enable)
 {
@@ -93,17 +94,34 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     });
 
 
+    auto promotionLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    auto promotionGroup = sfg::RadioButtonGroup::Create();
+
+    auto promotionQueen = sfg::RadioButton::Create("Queen", promotionGroup);
+    auto promotionBishop = sfg::RadioButton::Create("Bishop", promotionGroup);
+    auto promotionKnight = sfg::RadioButton::Create("Knight", promotionGroup);
+    auto promotionRook = sfg::RadioButton::Create("Rook", promotionGroup);
+
+    promotionLayout->Pack(promotionQueen);
+    promotionLayout->Pack(promotionBishop);
+    promotionLayout->Pack(promotionKnight);
+    promotionLayout->Pack(promotionRook);
+
+    auto sideLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+
+    sideLayout->Pack(player1);
+    sideLayout->Pack(clocks.getWhiteClock());
+    sideLayout->Pack(player2);
+    sideLayout->Pack(clocks.getBlackClock());
+    sideLayout->Pack(status.getView());
+
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
-    mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 12},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
-    mainLayout->Attach(counters.getView(), {0, 10, 1, 2});
-    mainLayout->Attach(player1, {1,0,1,1});
-    mainLayout->Attach(clocks.getWhiteClock(),{1, 1, 1, 1});
-    mainLayout->Attach(player2, {1,2,1,1});
-    mainLayout->Attach(clocks.getBlackClock(),{1, 3, 1, 1});
-    mainLayout->Attach(status.getView(),{1, 4, 1, 1});
-    mainLayout->Attach(moveList.getView(),{1, 5, 1, 4});
-    mainLayout->Attach(buttons.layout,{0,12,2,2});
+    mainLayout->Attach(board.getBoardWidget(),{0, 0, 1, 2},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(promotionLayout, {0, 2, 1, 1});
+    mainLayout->Attach(sideLayout, {1,0, 1, 1});
+    mainLayout->Attach(moveList.getView(),{1, 1, 1, 3});
+    mainLayout->Attach(buttons.layout,{0,4,2,1});
 
     desktop.Add(settingsWindow.getWidget());
 

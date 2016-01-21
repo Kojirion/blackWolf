@@ -16,7 +16,7 @@ MoveList::MoveList():
     moveList->SetColumnSpacing(0,10.f);
     moveList->Remove(dummyLabel);
 
-    moveListWindow->SetRequisition(sf::Vector2f(110.f,0.f));
+    moveListWindow->SetRequisition(sf::Vector2f(110.f,250.f));
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(moveList);
 
