@@ -4,6 +4,7 @@
 
 Window {
     BackgroundColor: #303030FF;
+    BorderColor: #000000FF;
 }
 
 Button {
@@ -31,7 +32,11 @@ Entry {
 }
 
 Scrollbar {
-    SliderColor: #121212ff
-    TroughColor: #212121ff
-    StepperBackgroundColor: #121212ff    
+    SliderColor: #121212ff;
+    TroughColor: #212121ff;
+    StepperBackgroundColor: #121212ff;
+}
+
+RadioButton {
+    BackgroundColor: #303030FF;
 }
