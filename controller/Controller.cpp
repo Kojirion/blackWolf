@@ -107,6 +107,23 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     promotionLayout->Pack(promotionKnight);
     promotionLayout->Pack(promotionRook);
 
+    promotionQueen->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionQueen]{
+        if (promotionQueen->IsActive())
+            client.toClient("promote q");
+    });
+    promotionBishop->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionBishop]{
+        if (promotionBishop->IsActive())
+            client.toClient("promote b");
+    });
+    promotionKnight->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionKnight]{
+        if (promotionKnight->IsActive())
+            client.toClient("promote n");
+    });
+    promotionRook->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionRook]{
+        if (promotionRook->IsActive())
+            client.toClient("promote r");
+    });
+
     auto sideLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
 
     sideLayout->Pack(player1);
@@ -148,12 +165,12 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         }
     });
 
-    messages.connect("newGame", [this](const Message& message){
+    messages.connect("newGame", [this, promotionQueen](const Message& message){
         const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         player1->SetText(received->p1);
         player2->SetText(received->p2);
         premoveOn = false;
-
+        promotionQueen->SetActive(true);
         updateClocks();
     });
 

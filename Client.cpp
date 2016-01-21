@@ -15,6 +15,9 @@ Client::Client():
 
 void Client::connect()
 {
+    outputStream.flush();
+    output.consume(output.size());
+
     boost::asio::ip::tcp::resolver resolver(io_service);
     boost::asio::ip::tcp::resolver::query query("freechess.org","5000");
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
