@@ -30,7 +30,7 @@ Entry {
     Color: #ffffffff;
 }
 
-Scrollabar {
+Scrollbar {
     SliderColor: #121212ff
     TroughColor: #212121ff
     StepperBackgroundColor: #121212ff    
