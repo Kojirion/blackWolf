@@ -1,11 +1,11 @@
-#Black Wolf
+# Black Wolf
 
 [![Join the chat at https://gitter.im/Kojirion/blackWolf](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Kojirion/blackWolf)  
 [![Build Status](https://drone.io/github.com/Kojirion/blackWolf/status.png)](https://drone.io/github.com/Kojirion/blackWolf/latest)
 
 Black Wolf is a chess graphical interface, currently designed to play at the [Free Internet Chess Server](http://www.freechess.org).
 
-#Building
+## Building
 
 Black Wolf depends on the following libraries:
 
@@ -22,7 +22,7 @@ cd build
 cmake ..
 make
 ```
-#Credit
+## Credit
 
 Board and piece art by [Peter Wong](http://www.virtualpieces.net).
 
