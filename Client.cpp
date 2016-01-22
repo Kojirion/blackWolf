@@ -6,6 +6,7 @@
 #include <boost/fusion/container/vector.hpp>
 #include "Timeseal.hpp"
 #include "generators/MoveStringGrammar.hpp"
+#include <boost/spirit/include/qi.hpp>
 
 Client::Client():
     outputStream(&output),
@@ -74,17 +75,19 @@ void Client::handleData(boost::system::error_code ec)
             static const SessionStartParser sessionStartParser;
             static const GameStateParser gameStateParser;
             GameStateMessage gameState;
+
+            auto onGameStart = [this](NewGameMessage& gameStart){
+                gameStart.user = gameStart.p1 == nickname ? Color::White : Color::Black;
+            };
+
+            auto gameStartGrammar = gameStartParser[onGameStart];
             
             if (parse(str.begin(), str.end(), gameStateParser, gameState)){
                 messages.triggerEvent(gameState);
             }else{
                 NewGameMessage gameStart;
                 
-                if (parse(str.begin(), str.end(), gameStartParser, gameStart)){
-                    if (gameStart.p1 == nickname)
-                        gameStart.user = Color::White;
-                    else
-                        gameStart.user = Color::Black;
+                if (parse(str.begin(), str.end(), gameStartGrammar, gameStart)){
                     messages.triggerEvent(gameStart);
                 }else{
                     EndGameMessage endGame;

@@ -60,7 +60,7 @@ PieceMap pieceMap;
 
 
 
-GameStateParser::GameStateParser() : base_type(start)
+GameStateParser::GameStateParser() : GameStateParser::base_type(start, "GameStartParser")
 {
 
 
