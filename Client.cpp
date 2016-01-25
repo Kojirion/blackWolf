@@ -7,6 +7,7 @@
 #include "Timeseal.hpp"
 #include "generators/MoveStringGrammar.hpp"
 #include <boost/spirit/include/qi.hpp>
+#include <boost/variant.hpp>
 
 Client::Client():
     outputStream(&output),
@@ -57,6 +58,19 @@ void Client::update()
         io_service.reset();
 }
 
+struct TriggerMessage
+        : public boost::static_visitor<>
+{
+    TriggerMessage(MessageSystem& messages):messages(messages){}
+
+    void operator()(Message& message) const
+    {
+        messages.triggerEvent(message);
+    }
+
+    MessageSystem& messages;
+};
+
 void Client::handleData(boost::system::error_code ec)
 {
     if (!ec)
@@ -70,41 +84,37 @@ void Client::handleData(boost::system::error_code ec)
             
             using boost::spirit::qi::parse;
             
-            static const GameEndParser gameEndParser;
-            static const GameStartParser gameStartParser;
-            static const SessionStartParser sessionStartParser;
-            static const GameStateParser gameStateParser;
-            GameStateMessage gameState;
+            static GameEndParser gameEndParser;
+            static GameStartParser gameStartParser;
+            static SessionStartParser sessionStartParser;
+            static GameStateParser gameStateParser;
 
-            auto onGameStart = [this](NewGameMessage& gameStart){
+            static auto onGameStart = [this](NewGameMessage& gameStart){
                 gameStart.user = gameStart.p1 == nickname ? Color::White : Color::Black;
             };
 
-            auto gameStartGrammar = gameStartParser[onGameStart];
-            
-            if (parse(str.begin(), str.end(), gameStateParser, gameState)){
-                messages.triggerEvent(gameState);
-            }else{
-                NewGameMessage gameStart;
-                
-                if (parse(str.begin(), str.end(), gameStartGrammar, gameStart)){
-                    messages.triggerEvent(gameStart);
+            static boost::spirit::qi::rule<Iterator, NewGameMessage()> gameStartGrammar;
+            gameStartGrammar %= gameStartParser[onGameStart];
+
+            using ParsedMessage = boost::variant<GameStateMessage, NewGameMessage, EndGameMessage>;
+
+            static boost::spirit::qi::rule<Iterator, ParsedMessage()> lineGrammar = gameStateParser | gameStartGrammar | gameEndParser;
+
+            static auto onMeaningfulLine = [this](ParsedMessage& message){
+                boost::apply_visitor(TriggerMessage(messages), message);
+            };
+
+            static boost::spirit::qi::rule<Iterator, ParsedMessage()> lineGrammarMessage = lineGrammar[onMeaningfulLine];
+
+            if (!parse(str.begin(), str.end(), lineGrammarMessage)){
+                if(parse(str.begin(), str.end(), sessionStartParser, nickname)){
+                    toClient("set style 12");
                 }else{
-                    EndGameMessage endGame;
-                    if (parse(str.begin(), str.end(), gameEndParser, endGame)){
-                        messages.triggerEvent(endGame);
-                    }else{
-                        if(parse(str.begin(), str.end(), sessionStartParser, nickname)){
-                            toClient("set style 12");
-                        }else{
-                            //not processed, so let's print it
-                            textReady(str);
-                        }
-                    }
+                    //not processed, so let's print it
+                    textReady(str);
                 }
             }
         }
-        
         boost::asio::async_read_until(socket, data, "\n\r",
                                       boost::bind(&Client::handleData, this, _1));
     }
