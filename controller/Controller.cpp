@@ -172,13 +172,14 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         }
     });
 
-    messages.connect("newGame", [this, promotionQueen](const Message& message){
+    messages.connect("newGame", [this, promotionQueen, notebook](const Message& message){
         const NewGameMessage* received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
         player1->SetText(received->p1);
         player2->SetText(received->p2);
         premoveOn = false;
         promotionQueen->SetActive(true);
         updateClocks();
+        notebook->SetCurrentPage(0);
     });
 
     messages.connect("resized", [this](const Message& message){
