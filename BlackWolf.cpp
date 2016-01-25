@@ -76,18 +76,10 @@ sf::Vector2f typeToTexPos(const Piece &piece)
     assert((piece.color==Color::Black)||(piece.color==Color::White));
     assert((piece.type!=Piece::Type::None)&&(piece.type!=Piece::Type::Shadow));
 
-
-    const sf::Vector2f offset(20.f, 20.f);
     const int side = 50;
 
-    if (piece.type == Piece::Type::Pawn){
-        if (piece.color == Color::White)
-            return (offset + sf::Vector2f(0, 6*side));
-        else return (offset + sf::Vector2f(0, side));
-    }
-
     if (piece.color == Color::White)
-        return (offset + sf::Vector2f(static_cast<int>(piece.type)*side, 7*side));
+        return sf::Vector2f(static_cast<int>(piece.type)*side, side);
     else
-        return (offset + sf::Vector2f(static_cast<int>(piece.type)*side, 0));
+        return sf::Vector2f(static_cast<int>(piece.type)*side, 0);
 }

@@ -22,7 +22,7 @@ Canvas::Canvas(sf::Window& theWindow):
 
     m_boardSprite.setTexture(m_boardTexture);
 
-    m_piecesTexture.loadFromFile("Graphics/Pieces/ArrayBlack.png");
+    m_piecesTexture.loadFromFile("Graphics/Pieces.png");
 
     //prepare fragments for capture animations
     m_particleSystem.setTexture(m_piecesTexture);
