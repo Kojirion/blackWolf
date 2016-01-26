@@ -72,6 +72,8 @@ private:
 
     std::vector<thor::Arrow> m_arrows;
 
+    PieceToTexPos pieceToTexPos;
+
     //slots
     void slotMouseMove();
     void slotMouseRelease();

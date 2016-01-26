@@ -71,7 +71,7 @@ bool operator==(const Move &lhs, const Move &rhs)
     return (lhs.square_1 == rhs.square_1) && (lhs.square_2 == rhs.square_2);
 }
 
-sf::Vector2f typeToTexPos(const Piece &piece)
+sf::Vector2f PieceToTexPos::operator()(const Piece &piece) const
 {
     assert((piece.color==Color::Black)||(piece.color==Color::White));
     assert((piece.type!=Piece::Type::None)&&(piece.type!=Piece::Type::Shadow));
@@ -79,7 +79,7 @@ sf::Vector2f typeToTexPos(const Piece &piece)
     const int side = 50;
 
     if (piece.color == Color::White)
-        return sf::Vector2f(static_cast<int>(piece.type)*side, side);
+        return sf::Vector2f(static_cast<int>(piece.type)*side, whiteIndex*side);
     else
-        return sf::Vector2f(static_cast<int>(piece.type)*side, 0);
+        return sf::Vector2f(static_cast<int>(piece.type)*side, blackIndex*side);
 }

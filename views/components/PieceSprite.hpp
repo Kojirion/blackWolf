@@ -7,14 +7,8 @@
 
 class PieceSprite
 {
-private:
-    Piece m_type;
-    int m_id;
-
-    mutable std::array<sf::Vertex, 4> m_quad;    
-
 public:    
-    PieceSprite(const sf::Vector2f &position, Piece type, int id);
+    PieceSprite(const sf::Vector2f& position, const Piece& piece, const PieceToTexPos& pieceToTexPos, int id);
 
     bool operator<(const PieceSprite &that) const;
 
@@ -27,7 +21,13 @@ public:
 
     void setPosition(const sf::Vector2f& position) const;
 
-    const sf::Vector2f& getPosition() const;
+    const sf::Vector2f& getPosition() const;    
+
+private:
+    Piece m_piece;
+    int m_id;
+
+    mutable std::array<sf::Vertex, 4> m_quad;
 };
 
 #endif // PIECESPRITE_H

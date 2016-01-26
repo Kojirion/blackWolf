@@ -62,6 +62,8 @@ struct Castle{
 
 bool operator<(const Castle& lhs, const Castle& rhs);
 
-//namespace sf { class Vector2f; }
+struct PieceToTexPos {
+    sf::Vector2f operator()(const Piece& piece) const;
 
-sf::Vector2f typeToTexPos(const Piece& piece);
+    int whiteIndex, blackIndex;
+};
