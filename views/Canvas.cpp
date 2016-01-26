@@ -17,7 +17,7 @@ Canvas::Canvas(sf::Window& theWindow):
     m_applicationWindow(theWindow),
     m_previousTurnColor(Color::Black),
     m_idCount(1),
-    pieceToTexPos{1,0}
+    m_pieceToTexPos{1,0}
 {
     m_boardTexture.loadFromFile("Graphics/BoardBlack.jpg");
 
@@ -31,7 +31,7 @@ Canvas::Canvas(sf::Window& theWindow):
 
     int l = 50/nr_fragments_side;
     for (auto i : irange(0,12)){
-        auto pieceTexPos = static_cast<sf::Vector2i>(pieceToTexPos(IntToPiece[i]));
+        auto pieceTexPos = static_cast<sf::Vector2i>(m_pieceToTexPos(IntToPiece[i]));
         for (auto j : irange(0, nr_fragments_side)){
             for (auto k : irange(0,nr_fragments_side)){
                 auto fragmentTexPos = pieceTexPos + sf::Vector2i(l*j, k*l);
@@ -95,6 +95,13 @@ void Canvas::releasePiece()
     m_currentPiece = m_pieces.end();
 }
 
+void Canvas::setPieceColors(const PieceToTexPos& pieceToTexPos)
+{
+    m_pieceToTexPos = pieceToTexPos;
+    for (const auto& piece : m_pieces)
+        piece.get<pieceId>().setTexPos(m_pieceToTexPos);
+}
+
 Color Canvas::getColorOn(const Square &square) const
 {
     return m_pieces.by<squareId>().find(square)->get<pieceId>().getColor();
@@ -140,7 +147,7 @@ void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color t
         for (auto j : irange(0,8)){
             const Piece& piece = position[i][j];
             if (piece.type == Piece::Type::None) continue;
-            PieceSprite toAdd(squareToPosition({7-i,j}),piece, pieceToTexPos, m_idCount++);
+            PieceSprite toAdd(squareToPosition({7-i,j}),piece, m_pieceToTexPos, m_idCount++);
             m_pieces.insert(SquaresToPieces::value_type({7-i,j}, toAdd));
         }
     }

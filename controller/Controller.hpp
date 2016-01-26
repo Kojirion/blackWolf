@@ -57,7 +57,7 @@ private:
     Client client;
 
     void settingsClicked();
-    void settingsDone(const std::string &whitePrefix, const std::string &blackPrefix, const std::string &boardSuffix);
+    void settingsDone(const PieceToTexPos& pieceToTexPos);
     void enableWindow(const bool enable = true);
 
 };

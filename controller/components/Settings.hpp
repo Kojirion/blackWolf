@@ -7,6 +7,7 @@
 #include <array>
 #include <boost/signals2.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include "../../BlackWolf.hpp"
 
 class Settings : private sf::NonCopyable
 {
@@ -33,7 +34,7 @@ public:
     void enable(bool doEnable = true);
     sfg::Widget::Ptr getWidget();
 
-    boost::signals2::signal<void (std::string, std::string, std::string)> settingsDone;
+    boost::signals2::signal<void (const PieceToTexPos& pieceToTexPos)> settingsDone;
 
     void setTree(const boost::property_tree::ptree pt);
 };

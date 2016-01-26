@@ -18,13 +18,15 @@ void Controller::settingsClicked()
 {
     //enableWindow(false);
     //settingsWindow.setTree(resources.getTree());
-    //settingsWindow.enable(true);
+    settingsWindow.enable(true);
 }
 
-void Controller::settingsDone(const std::string& whitePrefix, const std::string& blackPrefix, const std::string& boardSuffix)
+void Controller::settingsDone(const PieceToTexPos& pieceToTexPos)
 {
     settingsWindow.enable(false);
     enableWindow(true);
+
+    board.setPieceColors(pieceToTexPos);
 }
 
 bool Controller::requestMove(const Move& move)
@@ -77,7 +79,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
 
     board.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
-    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1,_2,_3));
+    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1));
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 

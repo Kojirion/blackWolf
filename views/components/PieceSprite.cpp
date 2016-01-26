@@ -6,11 +6,7 @@ PieceSprite::PieceSprite(const sf::Vector2f& position, const Piece& piece, const
     m_piece(piece), m_id(id)
 {
     setPosition(position);
-
-    m_quad[0].texCoords = pieceToTexPos(m_piece);
-    m_quad[1].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 0);
-    m_quad[2].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 50.f);
-    m_quad[3].texCoords = m_quad[0].texCoords + sf::Vector2f(0, 50.f);
+    setTexPos(pieceToTexPos);
 }
 
 bool PieceSprite::operator <(const PieceSprite &that) const
@@ -26,6 +22,14 @@ const Piece &PieceSprite::getPiece() const
 void PieceSprite::appendQuadTo(std::vector<sf::Vertex> &toAppendTo) const
 {
     toAppendTo.insert(toAppendTo.end(), m_quad.begin(), m_quad.end());
+}
+
+void PieceSprite::setTexPos(const PieceToTexPos&  pieceToTexPos) const
+{
+    m_quad[0].texCoords = pieceToTexPos(m_piece);
+    m_quad[1].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 0);
+    m_quad[2].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 50.f);
+    m_quad[3].texCoords = m_quad[0].texCoords + sf::Vector2f(0, 50.f);
 }
 
 Color PieceSprite::getColor() const

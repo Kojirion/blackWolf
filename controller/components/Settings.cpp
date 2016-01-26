@@ -4,25 +4,20 @@
 #include <SFGUI/Frame.hpp>
 #include <SFGUI/RadioButton.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
+#include <boost/range/irange.hpp>
 
 void Settings::requestClose()
 {
-    int iMax(colors.size());
-    for (int i=0; i<iMax; ++i)
-    {
-        if (whiteButtons[i]->IsActive())
-        {
-            toSetWhite = colors[i];            
-        }
+    int whiteIndex, blackIndex;
 
+    for (auto i : boost::irange(0ul,colors.size())){
+        if (whiteButtons[i]->IsActive())
+            whiteIndex = i;
         if (blackButtons[i]->IsActive())
-        {
-            toSetBlack = colors[i];
-        }
+            blackIndex = i;
     }
 
-    iMax = boardColors.size();
-    for (int i=0; i<iMax; ++i)
+    for (std::size_t i=0; i<boardColors.size(); ++i)
     {
         if (boardButtons[i]->IsActive())
         {
@@ -33,7 +28,7 @@ void Settings::requestClose()
 
     //if (toSetWhite == toSetBlack)
 
-    settingsDone(toSetWhite,toSetBlack,toSetBoard);
+    settingsDone(PieceToTexPos{whiteIndex, blackIndex});
 }
 
 //namespace sfg {typedef RadioButton::RadioButtonGroup RadioButtonGroup; }

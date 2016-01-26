@@ -37,6 +37,8 @@ public:
 
     void releasePiece();
 
+    void setPieceColors(const PieceToTexPos& m_pieceToTexPos);
+
     Color getColorOn(const Square& square) const;
 
     boost::signals2::signal<bool (const Move&)> requestMove;
@@ -72,7 +74,7 @@ private:
 
     std::vector<thor::Arrow> m_arrows;
 
-    PieceToTexPos pieceToTexPos;
+    PieceToTexPos m_pieceToTexPos;
 
     //slots
     void slotMouseMove();

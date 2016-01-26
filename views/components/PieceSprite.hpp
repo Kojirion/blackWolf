@@ -1,5 +1,4 @@
-#ifndef PIECESPRITE_H
-#define PIECESPRITE_H
+#pragma once
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include "../../BlackWolf.hpp"
@@ -16,6 +15,8 @@ public:
 
     void appendQuadTo(std::vector<sf::Vertex>& toAppendTo) const;
 
+    void setTexPos(const PieceToTexPos& pieceToTexPos) const;
+
     Color getColor() const;
     bool contains(const sf::Vector2f &point) const;
 
@@ -29,5 +30,3 @@ private:
 
     mutable std::array<sf::Vertex, 4> m_quad;
 };
-
-#endif // PIECESPRITE_H
