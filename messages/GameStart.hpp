@@ -5,8 +5,8 @@
 
 namespace Messages{
 
-struct NewGameMessage : public Message {
-    NewGameMessage();
+struct GameStart : public Message {
+    GameStart();
 
     std::string p1, p2;
     int time;
@@ -16,7 +16,7 @@ struct NewGameMessage : public Message {
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
-        Messages::NewGameMessage,
+        Messages::GameStart,
         (std::string, p1)
         (std::string, p2)
         (int, time)

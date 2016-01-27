@@ -4,7 +4,7 @@
 #include "../BlackWolf.hpp"
 #include "../messages/Entity.hpp"
 
-class Status : private Messages::Entity
+class Status : private Messages::Registrant
 {
 private:
     sfg::Label::Ptr statusLabel;

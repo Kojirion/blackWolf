@@ -2,7 +2,7 @@
 
 namespace Messages{
 
-EndGameMessage::EndGameMessage():
+GameEnd::GameEnd():
     Message("endGame")
 {
 }

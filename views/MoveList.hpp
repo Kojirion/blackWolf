@@ -3,7 +3,7 @@
 #include <SFGUI/Table.hpp>
 #include "../messages/Entity.hpp"
 
-class MoveList : private Messages::Entity
+class MoveList : private Messages::Registrant
 {
 private:
     sfg::ScrolledWindow::Ptr moveListWindow;

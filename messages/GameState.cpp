@@ -2,6 +2,6 @@
 
 namespace Messages{
 
-GameStateMessage::GameStateMessage():Message("gameState") { }
+GameState::GameState():Message("gameState") { }
 
 }

@@ -5,8 +5,8 @@
 
 namespace Messages{
 
-struct EndGameMessage : public Message {
-    EndGameMessage();
+struct GameEnd : public Message {
+    GameEnd();
 
     Color result;
 };
@@ -14,6 +14,6 @@ struct EndGameMessage : public Message {
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
-        Messages::EndGameMessage,
+        Messages::GameEnd,
         (Color, result)
         )

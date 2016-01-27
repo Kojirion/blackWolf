@@ -5,13 +5,13 @@
 
 namespace Messages{
 
-using MessageSystem = thor::EventSystem<Message, std::string>;
+using System = thor::EventSystem<Message, std::string>;
 
-class Entity
+class Registrant
 {
 
 protected:
-    static MessageSystem messages;
+    static System messages;
 };
 
 }

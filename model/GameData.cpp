@@ -9,12 +9,12 @@
 GameData::GameData()
 {
     messages.connect("newGame", [this](const Messages::Message& message){
-        auto received = boost::polymorphic_downcast<const Messages::NewGameMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const Messages::GameStart*>(&message);
         m_userColor = received->user;
     });
 
     messages.connect("gameState", [this](const Messages::Message& message){
-        auto received = boost::polymorphic_downcast<const Messages::GameStateMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const Messages::GameState*>(&message);
         m_turnColor = received->turnColor;
     });
 }

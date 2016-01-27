@@ -24,7 +24,7 @@ MoveList::MoveList():
     moveListWindow->AddWithViewport(moveList);
 
     messages.connect("gameState", [this](const Messages::Message& message){
-        auto received = boost::polymorphic_downcast<const Messages::GameStateMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const Messages::GameState*>(&message);
         if (plyCount%2==0){
             if (received->turnColor==Color::White)
                 return;

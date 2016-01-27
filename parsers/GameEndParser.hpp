@@ -11,10 +11,10 @@ struct ResultMap : symbols<char, Color>
     ResultMap();
 };
 
-struct GameEndParser : grammar<Iterator, Messages::EndGameMessage()>
+struct GameEndParser : grammar<Iterator, Messages::GameEnd()>
 {
     GameEndParser();
 
     rule<Iterator> name;
-    rule<Iterator, Messages::EndGameMessage()> start;
+    rule<Iterator, Messages::GameEnd()> start;
 };

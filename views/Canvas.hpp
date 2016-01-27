@@ -21,7 +21,7 @@
  */
 
 
-class Canvas : private Messages::Entity
+class Canvas : private Messages::Registrant
 {
 public:
     Canvas(sf::Window& theWindow);

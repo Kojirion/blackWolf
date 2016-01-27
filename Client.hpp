@@ -6,7 +6,7 @@
 #include "BlackWolf.hpp"
 #include "messages/Entity.hpp"
 
-class Client : private Messages::Entity
+class Client : private Messages::Registrant
 {
 public:
     Client();

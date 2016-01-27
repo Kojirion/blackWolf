@@ -166,7 +166,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     });
 
     messages.connect("gameState", [this](const Messages::Message& message){
-        auto received = boost::polymorphic_downcast<const Messages::GameStateMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const Messages::GameState*>(&message);
         game.setTime(received->white_time, received->black_time);
         game.startClock();
 
@@ -179,7 +179,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     });
 
     messages.connect("newGame", [this, promotionQueen, notebook](const Messages::Message& message){
-        auto received = boost::polymorphic_downcast<const Messages::NewGameMessage*>(&message);
+        auto received = boost::polymorphic_downcast<const Messages::GameStart*>(&message);
         player1->SetText(received->p1);
         player2->SetText(received->p2);
         premoveOn = false;

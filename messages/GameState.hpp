@@ -8,8 +8,8 @@ using ParsedPosition = std::vector<std::vector<Piece>>;
 
 namespace Messages{
 
-struct GameStateMessage : public Message {
-    GameStateMessage();
+struct GameState : public Message {
+    GameState();
     ParsedPosition position;
     Color turnColor;
     int white_time, black_time;
@@ -20,7 +20,7 @@ struct GameStateMessage : public Message {
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
-        Messages::GameStateMessage,
+        Messages::GameState,
         (ParsedPosition, position)
         (Color, turnColor)
         (int, white_time)

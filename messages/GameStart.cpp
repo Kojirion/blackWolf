@@ -2,7 +2,7 @@
 
 namespace Messages{
 
-NewGameMessage::NewGameMessage():
+GameStart::GameStart():
     Message("newGame")
 {
 }
