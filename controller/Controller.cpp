@@ -7,6 +7,10 @@
 #include <boost/cast.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 #include <SFGUI/Frame.hpp>
+#include "../messages/GameEnd.hpp"
+#include "../messages/GameState.hpp"
+#include "../messages/GameStart.hpp"
+
 
 void Controller::enableWindow(const bool enable)
 {

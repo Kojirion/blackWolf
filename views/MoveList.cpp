@@ -4,6 +4,9 @@
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
 #include <SFGUI/Adjustment.hpp>
+#include "../messages/GameState.hpp"
+#include "../messages/GameStart.hpp"
+
 
 MoveList::MoveList():
     moveListWindow(sfg::ScrolledWindow::Create()),

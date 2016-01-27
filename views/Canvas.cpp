@@ -5,6 +5,9 @@
 #include "../controller/Controller.hpp"
 #include "components/Emitter.hpp"
 #include <boost/range/irange.hpp>
+#include "../messages/GameState.hpp"
+#include "../messages/GameStart.hpp"
+
 
 using boost::irange;
 

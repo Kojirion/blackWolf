@@ -2,6 +2,9 @@
 #include <cassert>
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
+#include "../messages/GameState.hpp"
+#include "../messages/GameStart.hpp"
+
 
 GameData::GameData()
 {

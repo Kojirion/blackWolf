@@ -35,7 +35,11 @@ set(bw_HDRS
     Client.hpp
     Timeseal.hpp
     NetWidgets.hpp
-    messages/Entity.hpp
+    messages/Entity.cpp
+    messages/Message.cpp
+    messages/GameStart.cpp
+    messages/GameState.cpp
+    messages/GameEnd.cpp
     parsers/GameStateParser.hpp
     parsers/SquareParser.hpp
     parsers/GameStartParser.hpp
@@ -64,6 +68,10 @@ set(bw_SRCS
     Timeseal.cpp
     NetWidgets.cpp
     messages/Entity.cpp
+    messages/Message.cpp
+    messages/GameStart.cpp
+    messages/GameState.cpp
+    messages/GameEnd.cpp
     parsers/GameStateParser.cpp
     parsers/GameStartParser.cpp
     parsers/SquareParser.cpp

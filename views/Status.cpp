@@ -1,5 +1,8 @@
 #include "Status.hpp"
 #include <boost/cast.hpp>
+#include "../messages/GameEnd.hpp"
+#include "../messages/GameState.hpp"
+#include "../messages/GameStart.hpp"
 
 Status::Status():
     statusLabel(sfg::Label::Create())
