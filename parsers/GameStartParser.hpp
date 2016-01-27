@@ -1,7 +1,7 @@
 #pragma once
 #include "Grammars.hpp"
 #include <boost/fusion/include/vector.hpp>
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 struct GameStartParser : grammar<Iterator, NewGameMessage()>
 {

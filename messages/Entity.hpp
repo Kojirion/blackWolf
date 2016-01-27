@@ -1,7 +1,7 @@
 #pragma once
 #include <Thor/Input.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "BlackWolf.hpp"
+#include "../BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/optional.hpp>
 
@@ -14,12 +14,6 @@ struct Message{
 };
 
 typedef thor::EventSystem<Message, std::string> MessageSystem;
-
-struct MoveMessage : public Message {
-    MoveMessage(const std::string& move);
-
-    std::string move;
-};
 
 struct NewGameMessage : public Message {
     NewGameMessage();
@@ -69,24 +63,7 @@ BOOST_FUSION_ADAPT_STRUCT(
         (Color, result)
         )
 
-struct ResizeMessage : public Message {
-    ResizeMessage(const sf::RenderWindow& window);
-
-    const sf::RenderWindow& window;
-};
-
-struct CountMessage : public Message {
-    CountMessage(unsigned int repetitions, unsigned int fiftyMoves);
-
-    unsigned int repetitions;
-    unsigned int fiftyMoves;
-};
-
-
-
 std::string getEventId(const Message &message);
-
-
 
 class Entity
 {

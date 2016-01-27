@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 Application::Application():
-    m_window(sf::VideoMode(800, 800), "Black Wolf")
+    m_window(sf::VideoMode(800, 800), "Black Wolf", sf::Style::Close)
 {
     m_window.setFramerateLimit(60);
     m_desktop.LoadThemeFromFile("blackwolf.theme");
@@ -15,9 +15,6 @@ Application::Application():
     m_system.connect(Action::Close, std::bind(&sf::RenderWindow::close, &m_window));
 
     m_actions[Action::Scroll] = thor::Action(sf::Event::MouseWheelScrolled);
-
-    m_actions[Action::Resize] = thor::Action(sf::Event::Resized);
-    m_system.connect(Action::Resize, std::bind(&MessageSystem::triggerEvent, &messages, ResizeMessage(m_window)));
 }
 
 void Application::run()

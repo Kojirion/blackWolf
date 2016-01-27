@@ -8,7 +8,7 @@
 #include "../controller/components/Settings.hpp"
 #include "../Client.hpp"
 #include "../NetWidgets.hpp"
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 #include "../Actions.hpp"
 
 

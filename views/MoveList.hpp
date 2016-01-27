@@ -1,7 +1,7 @@
 #pragma once
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Table.hpp>
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 class MoveList : private Entity
 {

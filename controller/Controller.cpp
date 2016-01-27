@@ -184,12 +184,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         notebook->SetCurrentPage(0);
     });
 
-    messages.connect("resized", [this](const Message& message){
-        const ResizeMessage* received = boost::polymorphic_downcast<const ResizeMessage*>(&message);
-        boardWindow->SetAllocation({boardWindow->GetAbsolutePosition(),
-                                    static_cast<sf::Vector2f>(received->window.getSize())});
-    });
-
     messages.connect("endGame", [this](const Message& message){
         //auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         premoveOn = false;

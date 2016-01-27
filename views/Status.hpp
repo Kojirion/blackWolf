@@ -2,7 +2,7 @@
 #define STATUSVIEW_H
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 class Status : private Entity
 {

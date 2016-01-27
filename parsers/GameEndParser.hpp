@@ -2,7 +2,7 @@
 #include "Grammars.hpp"
 #include "../BlackWolf.hpp"
 #include <boost/spirit/include/qi_symbols.hpp>
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 using boost::spirit::qi::symbols;
 

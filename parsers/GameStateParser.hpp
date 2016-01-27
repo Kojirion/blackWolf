@@ -3,7 +3,7 @@
 #include "SquareParser.hpp"
 #include "../BlackWolf.hpp"
 #include <boost/fusion/include/vector.hpp>
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 //gameStateParser.move_result, gameStateParser.white_time_result, gameStateParser.black_time_result, Piece::None
 

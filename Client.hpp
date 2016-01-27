@@ -4,7 +4,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/signals2.hpp>
 #include "BlackWolf.hpp"
-#include "Entity.hpp"
+#include "messages/Entity.hpp"
 
 class Client : private Entity
 {

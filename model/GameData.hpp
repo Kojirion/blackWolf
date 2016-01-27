@@ -1,7 +1,7 @@
 #pragma once
 #include <Thor/Time/Timer.hpp>
 #include "../BlackWolf.hpp"
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 class GameData : private Entity
 {

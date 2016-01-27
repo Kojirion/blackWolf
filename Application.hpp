@@ -3,7 +3,7 @@
 #include <SFGUI/SFGUI.hpp>
 #include "controller/Controller.hpp"
 
-#include "Entity.hpp"
+#include "messages/Entity.hpp"
 #include "Actions.hpp"
 
 class Application : private Entity

@@ -12,7 +12,7 @@
 
 #include "../views/components/PieceSprite.hpp"
 #include "../BlackWolf.hpp"
-#include "../Entity.hpp"
+#include "../messages/Entity.hpp"
 
 /*
  * A class aggregating a canvas widget and a bimap where the pieces are stored and mapped 1-1 to squares on the board.
