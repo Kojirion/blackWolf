@@ -3,7 +3,7 @@
 namespace Messages{
 
 GameStart::GameStart():
-    Message("newGame")
+    Message(ID::GameStart)
 {
 }
 

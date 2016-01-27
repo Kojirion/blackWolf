@@ -2,6 +2,6 @@
 
 namespace Messages {
 
-thor::EventSystem<Message, std::string> Registrant::messages;
+thor::EventSystem<Message, ID> Registrant::messages;
 
 }

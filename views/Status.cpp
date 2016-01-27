@@ -7,16 +7,16 @@
 Status::Status():
     statusLabel(sfg::Label::Create())
 {
-    messages.connect("gameState", [this](const Messages::Message& message){
+    messages.connect(Messages::ID::GameState, [this](const Messages::Message& message){
         auto received = boost::polymorphic_downcast<const Messages::GameState*>(&message);
         setToPlay(received->turnColor);
     });
 
-    messages.connect("newGame", [this](const Messages::Message&){
+    messages.connect(Messages::ID::GameStart, [this](const Messages::Message&){
         setToPlay(Color::White);
     });
 
-    messages.connect("endGame", [this](const Messages::Message& message){
+    messages.connect(Messages::ID::GameEnd, [this](const Messages::Message& message){
         auto received = boost::polymorphic_downcast<const Messages::GameEnd*>(&message);
         setResult(received->result);
     });

@@ -2,12 +2,12 @@
 
 namespace Messages{
 
-Message::Message(const std::string &id):
+Message::Message(ID id):
     id(id)
 {
 }
 
-std::string getEventId(const Message &message)
+ID getEventId(const Message &message)
 {
     return message.id;
 }

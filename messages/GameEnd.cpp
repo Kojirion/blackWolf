@@ -3,7 +3,7 @@
 namespace Messages{
 
 GameEnd::GameEnd():
-    Message("endGame")
+    Message(ID::GameEnd)
 {
 }
 

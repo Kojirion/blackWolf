@@ -5,7 +5,7 @@
 
 namespace Messages{
 
-using System = thor::EventSystem<Message, std::string>;
+using System = thor::EventSystem<Message, ID>;
 
 class Registrant
 {

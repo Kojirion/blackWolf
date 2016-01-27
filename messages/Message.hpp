@@ -3,14 +3,20 @@
 
 namespace Messages {
 
+enum class ID{
+    GameStart,
+    GameState,
+    GameEnd
+};
+
 struct Message{
-    Message(const std::string& id);
+    Message(ID id);
 
     virtual ~Message() = default;
 
-    std::string id;
+    ID id;
 };
 
-std::string getEventId(const Message &message);
+ID getEventId(const Message &message);
 
 }
