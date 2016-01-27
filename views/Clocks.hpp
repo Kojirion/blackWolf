@@ -1,5 +1,4 @@
-#ifndef CLOCKSVIEW_H
-#define CLOCKSVIEW_H
+#pragma once
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
 #include <SFML/System/Time.hpp>
@@ -17,5 +16,3 @@ public:
     sfg::Widget::Ptr getWhiteClock();
     sfg::Widget::Ptr getBlackClock();
 };
-
-#endif // CLOCKSVIEW_H

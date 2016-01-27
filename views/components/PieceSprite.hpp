@@ -22,7 +22,7 @@ public:
 
     void setPosition(const sf::Vector2f& position) const;
 
-    const sf::Vector2f& getPosition() const;    
+    const sf::Vector2f& getPosition() const;
 
 private:
     Piece m_piece;

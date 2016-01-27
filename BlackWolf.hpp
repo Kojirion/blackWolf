@@ -50,18 +50,6 @@ struct Move{
 bool operator==(const Move& lhs, const Move& rhs);
 std::ostream& operator<<(std::ostream& stream, const Move& move);
 
-enum class Side {
-    King = 0,
-    Queen = 1
-};
-
-struct Castle{
-    Color color;
-    Side side;
-};
-
-bool operator<(const Castle& lhs, const Castle& rhs);
-
 struct PieceToTexPos {
     sf::Vector2f operator()(const Piece& piece) const;
 

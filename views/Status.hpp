@@ -1,5 +1,4 @@
-#ifndef STATUSVIEW_H
-#define STATUSVIEW_H
+#pragma once
 #include <SFGUI/Label.hpp>
 #include "../BlackWolf.hpp"
 #include "../messages/Entity.hpp"
@@ -15,5 +14,3 @@ public:
 
     sfg::Widget::Ptr getView();
 };
-
-#endif // STATUSVIEW_H

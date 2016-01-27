@@ -37,14 +37,6 @@ bool operator <(const Square &lhs, const Square &rhs)
 }
 
 
-bool operator<(const Castle &lhs, const Castle &rhs)
-{
-    if (lhs.color != rhs.color)
-        return (lhs.color < rhs.color);
-    else return (lhs.side < rhs.side);
-}
-
-
 std::ostream &operator<<(std::ostream &stream, const Square &square)
 {
     static const char* colToChar = "abcdefgh";
