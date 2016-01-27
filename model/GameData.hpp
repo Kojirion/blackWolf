@@ -3,7 +3,7 @@
 #include "../BlackWolf.hpp"
 #include "../messages/Entity.hpp"
 
-class GameData : private Entity
+class GameData : private Messages::Entity
 {
 private:
     thor::Timer whiteClock, blackClock;

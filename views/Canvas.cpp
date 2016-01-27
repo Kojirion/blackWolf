@@ -51,13 +51,13 @@ Canvas::Canvas(sf::Window& theWindow):
     m_canvas->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(std::bind(&Canvas::slotMouseRelease, this));
     m_canvas->GetSignal(sfg::Widget::OnMouseEnter).Connect(std::bind(&Canvas::slotEnterCanvas, this));
 
-    messages.connect("newGame", [this](const Message& message){
-        auto received = boost::polymorphic_downcast<const NewGameMessage*>(&message);
+    messages.connect("newGame", [this](const Messages::Message& message){
+        auto received = boost::polymorphic_downcast<const Messages::NewGameMessage*>(&message);
         resetFor(received->user);
     });
 
-    messages.connect("gameState", [this](const Message& message){
-        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+    messages.connect("gameState", [this](const Messages::Message& message){
+        auto received = boost::polymorphic_downcast<const Messages::GameStateMessage*>(&message);
         if (m_previousTurnColor != received->turnColor){
             m_previousTurnColor = received->turnColor;
             if (received->target_square)

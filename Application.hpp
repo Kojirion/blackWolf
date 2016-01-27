@@ -6,7 +6,7 @@
 #include "messages/Entity.hpp"
 #include "Actions.hpp"
 
-class Application : private Entity
+class Application : private Messages::Entity
 {
 public:
     Application();

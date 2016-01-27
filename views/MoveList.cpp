@@ -23,8 +23,8 @@ MoveList::MoveList():
     moveListWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     moveListWindow->AddWithViewport(moveList);
 
-    messages.connect("gameState", [this](const Message& message){
-        auto received = boost::polymorphic_downcast<const GameStateMessage*>(&message);
+    messages.connect("gameState", [this](const Messages::Message& message){
+        auto received = boost::polymorphic_downcast<const Messages::GameStateMessage*>(&message);
         if (plyCount%2==0){
             if (received->turnColor==Color::White)
                 return;
@@ -35,7 +35,7 @@ MoveList::MoveList():
         addMove(received->move);
     });
 
-    messages.connect("newGame", [this](const Message& message){
+    messages.connect("newGame", [this](const Messages::Message&){
         reset();
     });
 }

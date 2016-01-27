@@ -3,13 +3,17 @@
 #include "../BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
 
+namespace Messages{
+
 struct EndGameMessage : public Message {
     EndGameMessage();
 
     Color result;
 };
 
+}
+
 BOOST_FUSION_ADAPT_STRUCT(
-        EndGameMessage,
+        Messages::EndGameMessage,
         (Color, result)
         )

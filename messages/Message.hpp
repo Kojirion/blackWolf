@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace Messages {
+
 struct Message{
     Message(const std::string& id);
 
@@ -10,3 +12,5 @@ struct Message{
 };
 
 std::string getEventId(const Message &message);
+
+}

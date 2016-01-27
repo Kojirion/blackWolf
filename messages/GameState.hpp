@@ -4,8 +4,9 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/optional.hpp>
 
-
 using ParsedPosition = std::vector<std::vector<Piece>>;
+
+namespace Messages{
 
 struct GameStateMessage : public Message {
     GameStateMessage();
@@ -16,8 +17,10 @@ struct GameStateMessage : public Message {
     std::string move;
 };
 
+}
+
 BOOST_FUSION_ADAPT_STRUCT(
-        GameStateMessage,
+        Messages::GameStateMessage,
         (ParsedPosition, position)
         (Color, turnColor)
         (int, white_time)

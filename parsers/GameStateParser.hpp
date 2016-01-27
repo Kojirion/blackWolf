@@ -11,7 +11,7 @@
 
 //using GameStateTuple = boost::fusion::vector<ParsedPosition, int, int, std::string>;
 
-struct GameStateParser : grammar<Iterator, GameStateMessage()>
+struct GameStateParser : grammar<Iterator, Messages::GameStateMessage()>
 {
     GameStateParser();
 
@@ -19,7 +19,7 @@ struct GameStateParser : grammar<Iterator, GameStateMessage()>
     time_taken, move;
     rule<Iterator, std::string()> pretty_move;
     rule<Iterator, std::vector<Piece>()> row;
-    rule<Iterator, GameStateMessage()> start;
+    rule<Iterator, Messages::GameStateMessage()> start;
     //rule<Iterator, boost::fusion::vector<Square, Square, boost::optional<Piece>>()> verbose_move;
     SquareParser square; //can this be moved into source?
 };

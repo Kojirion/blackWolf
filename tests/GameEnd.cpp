@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_CASE(ParsingGameEnd)
     std::string given_1 = "{Game 83 (Kojijay vs. Thulius) Kojijay resigns} 0-1";
     std::string given_2 = "{Game 254 (Thulius vs. Kojijay) Game drawn by mutual agreement} 1/2-1/2";
 
-    EndGameMessage end_1, end_2;
+    Messages::EndGameMessage end_1, end_2;
 
     GameEndParser gameEndParser;
 

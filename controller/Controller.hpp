@@ -12,7 +12,7 @@
 #include "../Actions.hpp"
 
 
-class Controller : private Entity
+class Controller : private Messages::Entity
 {
 public:
     Controller(sf::Window& theWindow, sfg::Desktop& theDesktop,

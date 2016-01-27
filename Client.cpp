@@ -61,14 +61,14 @@ void Client::update()
 struct TriggerMessage
         : public boost::static_visitor<>
 {
-    TriggerMessage(MessageSystem& messages):messages(messages){}
+    TriggerMessage(Messages::MessageSystem& messages):messages(messages){}
 
-    void operator()(Message& message) const
+    void operator()(Messages::Message& message) const
     {
         messages.triggerEvent(message);
     }
 
-    MessageSystem& messages;
+    Messages::MessageSystem& messages;
 };
 
 void Client::handleData(boost::system::error_code ec)
@@ -89,14 +89,14 @@ void Client::handleData(boost::system::error_code ec)
             static SessionStartParser sessionStartParser;
             static GameStateParser gameStateParser;
 
-            static auto onGameStart = [this](NewGameMessage& gameStart){
+            static auto onGameStart = [this](Messages::NewGameMessage& gameStart){
                 gameStart.user = gameStart.p1 == nickname ? Color::White : Color::Black;
             };
 
-            static boost::spirit::qi::rule<Iterator, NewGameMessage()> gameStartGrammar;
+            static boost::spirit::qi::rule<Iterator, Messages::NewGameMessage()> gameStartGrammar;
             gameStartGrammar %= gameStartParser[onGameStart];
 
-            using ParsedMessage = boost::variant<GameStateMessage, NewGameMessage, EndGameMessage>;
+            using ParsedMessage = boost::variant<Messages::GameStateMessage, Messages::NewGameMessage, Messages::EndGameMessage>;
 
             static boost::spirit::qi::rule<Iterator, ParsedMessage()> lineGrammar = gameStateParser | gameStartGrammar | gameEndParser;
 

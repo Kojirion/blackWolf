@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_CASE(ParsingGameStart)
     std::string given = "Creating: Kojijay (++++) Thulius (1690) unrated blitz 2 12";
 
     GameStartParser gameStartParser;
-    NewGameMessage newGameMessage;
+    Messages::NewGameMessage newGameMessage;
 
     auto success = parse(given.begin(), given.end(), gameStartParser, newGameMessage);
     BOOST_CHECK(success);

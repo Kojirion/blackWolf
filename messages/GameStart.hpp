@@ -3,6 +3,8 @@
 #include "../BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
 
+namespace Messages{
+
 struct NewGameMessage : public Message {
     NewGameMessage();
 
@@ -11,8 +13,10 @@ struct NewGameMessage : public Message {
     Color user;
 };
 
+}
+
 BOOST_FUSION_ADAPT_STRUCT(
-        NewGameMessage,
+        Messages::NewGameMessage,
         (std::string, p1)
         (std::string, p2)
         (int, time)
