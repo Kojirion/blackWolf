@@ -12,35 +12,14 @@
 #include "../messages/GameStart.hpp"
 
 
-void Controller::enableWindow(const bool enable)
-{
-    if (enable) boardWindow->SetState(sfg::Widget::State::NORMAL);
-    else boardWindow->SetState(sfg::Widget::State::INSENSITIVE);
-}
-
-void Controller::settingsClicked()
-{
-    //enableWindow(false);
-    //settingsWindow.setTree(resources.getTree());
-    settingsWindow.enable(true);
-}
-
-void Controller::settingsDone(const PieceToTexPos& pieceToTexPos)
-{
-    settingsWindow.enable(false);
-    enableWindow(true);
-
-    board.setPieceColors(pieceToTexPos);
-}
-
 bool Controller::requestMove(const Move& move)
 {
     if (!game.userTurn()) {
         //premove
-        if (board.getColorOn(move.square_1) == game.getUserColor()) {
+        if (canvas.getColorOn(move.square_1) == game.getUserColor()) {
             premove = move;
             premoveOn = true;
-            board.setPremove(move);
+            canvas.setPremove(move);
         }
         return false;
     }
@@ -73,7 +52,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     desktop(theDesktop),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
-    board(theWindow),
+    canvas(theWindow),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
     netWindow(m_currentEvent),
@@ -82,14 +61,19 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 {
     boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
 
-    board.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
-    settingsWindow.settingsDone.connect(boost::bind(&Controller::settingsDone, this,_1));
+    canvas.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
+    settingsWindow.settingsDone.connect([this](const PieceToTexPos& pieceToTexPos){
+        settingsWindow.enable(false);
+        canvas.setPieceColors(pieceToTexPos);
+    });
     client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
     ButtonBox buttons;
-    buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &board));
-    buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Controller::settingsClicked, this));
+    buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &canvas));
+    buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect([]{
+       //settingsWindow.enable(true);
+    });
     buttons.resign->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         client.toClient("resign");
     });
@@ -141,7 +125,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
     mainLayout->SetRowSpacings(2.f);
     mainLayout->SetColumnSpacings(2.f);
-    mainLayout->Attach(board.getBoardWidget(),{0, 0, 3, 2},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
+    mainLayout->Attach(canvas.getBoardWidget(),{0, 0, 3, 2},sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 10.f, 0.f ));
     mainLayout->Attach(promotionFrame, {0, 2, 1, 1});
     mainLayout->Attach(sideLayout, {3,0, 3, 1});
     mainLayout->Attach(moveList.getView(),{3, 1, 3, 3});
@@ -173,7 +157,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         if (premoveOn)
         {
             premoveOn = false;
-            board.clearArrows();
+            canvas.clearArrows();
             requestMove(premove);
         }
     });
@@ -188,10 +172,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         notebook->SetCurrentPage(0);
     });
 
-    messages.connect(Messages::ID::GameEnd, [this](const Messages::Message& message){
+    messages.connect(Messages::ID::GameEnd, [this](const Messages::Message&){
         //auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         premoveOn = false;
-        board.clearArrows();
+        canvas.clearArrows();
     });
 
     callbackSystem.connect(Action::Scroll, [this](thor::ActionContext<Action> context){
@@ -203,7 +187,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 void Controller::update()
 {
     client.update();
-    board.display();
+    canvas.display();
     updateClocks();
 }
 

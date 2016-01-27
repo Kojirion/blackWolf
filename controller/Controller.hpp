@@ -32,32 +32,17 @@ public:
     bool requestMove(const Move& move);
 
 private:
-
-    Canvas board;
-
+    Canvas canvas;
     GameData game;
-
     Status status;
-
     Clocks clocks;
-
     MoveList moveList;
-
     Settings settingsWindow;
-
     Move premove;
     bool premoveOn;
-
     sf::Event m_currentEvent;
-
     NetWidgets netWindow;
-
     sfg::Label::Ptr player1;
     sfg::Label::Ptr player2;    
     Client client;
-
-    void settingsClicked();
-    void settingsDone(const PieceToTexPos& pieceToTexPos);
-    void enableWindow(const bool enable = true);
-
 };
