@@ -92,17 +92,21 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} core)
 
 #tests
-set(test_SRCS
-    tests/tests.cpp
-    tests/SessionStart.cpp
-    tests/GameEnd.cpp
-    tests/GameStart.cpp
-    tests/GameState.cpp
-    tests/Square.cpp
-    tests/MoveString.cpp
-)
-add_executable(unit_tests ${test_SRCS})
-target_link_libraries(unit_tests core)
+set(BUILD_TESTS false CACHE BOOL "Build tests")
+
+if (BUILD_TESTS)
+    set(test_SRCS
+        tests/tests.cpp
+        tests/SessionStart.cpp
+        tests/GameEnd.cpp
+        tests/GameStart.cpp
+        tests/GameState.cpp
+        tests/Square.cpp
+        tests/MoveString.cpp
+    )
+    add_executable(unit_tests ${test_SRCS})
+    target_link_libraries(unit_tests core)
+endif()
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES resources/DejaVuSansMono.ttf DESTINATION ${CMAKE_INSTALL_PREFIX})
