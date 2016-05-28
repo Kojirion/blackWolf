@@ -120,6 +120,15 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         netWindow.grabEntryFocus();
     });
 
+    callbackSystem.connect(Action::Tab, [notebook](thor::ActionContext<Action> context){
+        if (context.event->key.control){
+            if (context.event->key.shift)
+                notebook->PreviousPage();
+            else
+                notebook->NextPage();
+        }
+    });
+
     boardWindow->Add(notebook);
 
     desktop.Add(boardWindow);

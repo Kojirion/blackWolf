@@ -15,6 +15,7 @@ Application::Application():
     m_system.connect(Action::Close, std::bind(&sf::RenderWindow::close, &m_window));
 
     m_actions[Action::Scroll] = thor::Action(sf::Event::MouseWheelScrolled);
+    m_actions[Action::Tab] = thor::Action(sf::Keyboard::Tab, thor::Action::ActionType::PressOnce);
 }
 
 void Application::run()

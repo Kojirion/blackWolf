@@ -4,7 +4,8 @@
 enum class Action{
     Close,
     Resize,
-    Scroll
+    Scroll,
+    Tab
 };
 
 using Actions = thor::ActionMap<Action>;
