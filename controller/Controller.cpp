@@ -52,7 +52,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     ButtonBox buttons;
     buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &canvas));
     buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect([]{
-       //settingsWindow.enable(true);
+        //settingsWindow.enable(true);
     });
     buttons.resign->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         client.toClient("resign");
@@ -64,32 +64,23 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     auto promotionLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
     auto promotionGroup = sfg::RadioButtonGroup::Create();
 
-    auto promotionQueen = sfg::RadioButton::Create("Queen", promotionGroup);
-    auto promotionBishop = sfg::RadioButton::Create("Bishop", promotionGroup);
-    auto promotionKnight = sfg::RadioButton::Create("Knight", promotionGroup);
-    auto promotionRook = sfg::RadioButton::Create("Rook", promotionGroup);
+    auto createPromotionButton = [this, promotionGroup, promotionLayout](const std::string& name, char letter){
+        auto promotionButton = sfg::RadioButton::Create(name, promotionGroup);
+        promotionLayout->Pack(promotionButton);
+        promotionButton->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionButton, letter]{
+            if (promotionButton->IsActive()){
+                std::string promote("promote ");
+                promote += letter;
+                client.toClient(promote);
+            }
+        });
+        return promotionButton;
+    };
 
-    promotionLayout->Pack(promotionQueen);
-    promotionLayout->Pack(promotionBishop);
-    promotionLayout->Pack(promotionKnight);
-    promotionLayout->Pack(promotionRook);
-
-    promotionQueen->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionQueen]{
-        if (promotionQueen->IsActive())
-            client.toClient("promote q");
-    });
-    promotionBishop->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionBishop]{
-        if (promotionBishop->IsActive())
-            client.toClient("promote b");
-    });
-    promotionKnight->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionKnight]{
-        if (promotionKnight->IsActive())
-            client.toClient("promote n");
-    });
-    promotionRook->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, promotionRook]{
-        if (promotionRook->IsActive())
-            client.toClient("promote r");
-    });
+    auto promotionQueen = createPromotionButton("Queen", 'q');
+    createPromotionButton("Bishop", 'b');
+    createPromotionButton("Knight", 'n');
+    createPromotionButton("Rook", 'r');
 
     auto promotionFrame = sfg::Frame::Create("Promotion");
     promotionFrame->Add(promotionLayout);
