@@ -17,34 +17,42 @@ Client::Client():
 
 void Client::connect()
 {
-    outputStream.flush();
-    output.consume(output.size());
+    try {
+        outputStream.flush();
+        output.consume(output.size());
 
-    boost::asio::ip::tcp::resolver resolver(io_service);
-    boost::asio::ip::tcp::resolver::query query("freechess.org","5000");
-    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-    boost::asio::ip::tcp::resolver::iterator end;
-    
-    boost::system::error_code error = boost::asio::error::host_not_found;
-    
-    while(error && endpoint_iterator != end)
-    {
-        socket.close();
-        socket.connect(*endpoint_iterator++, error);
+        boost::asio::ip::tcp::resolver resolver(io_service);
+        boost::asio::ip::tcp::resolver::query query("freechess.org","5000");
+        boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+        boost::asio::ip::tcp::resolver::iterator end;
+
+        boost::system::error_code error = boost::asio::error::host_not_found;
+
+        while(error && endpoint_iterator != end)
+        {
+            socket.close();
+            socket.connect(*endpoint_iterator++, error);
+        }
+
+        if (error)
+        {
+            textReady("Failed to connect.");
+            std::cerr << "Failed to connect.\n";
+            return;
+        }
+
+        std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
+        toClient(hello);
+
+        boost::asio::async_read_until(socket, data, "\n\r",
+                                      boost::bind(&Client::handleData, this, _1));
+    }catch(const std::exception& e){
+        std::string err("Failed to connect: ");
+        err += e.what();
+        err += "\n";
+        textReady(err);
+        std::cerr << err;
     }
-    
-    if (error)
-    {
-        textReady("Failed to connect.");
-        std::cerr << "Failed to connect.\n";
-        return;
-    }
-    
-    std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
-    toClient(hello);
-    
-    boost::asio::async_read_until(socket, data, "\n\r",
-                                  boost::bind(&Client::handleData, this, _1));
 }
 
 void Client::update()
