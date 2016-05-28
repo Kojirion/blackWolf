@@ -28,26 +28,6 @@ bool Controller::requestMove(const Move& move)
     return true;
 }
 
-struct GrabFocusOnTabChange{
-    GrabFocusOnTabChange(const sfg::Notebook::Ptr& notebook, NetWidgets& netWidgets):
-        notebook(notebook),
-        previousPage(notebook->GetCurrentPage()),
-        netWidgets(netWidgets)
-    {
-
-    }
-
-    void operator()(){
-        if (notebook->GetCurrentPage() != previousPage)
-            netWidgets.grabEntryFocus();
-    }
-
-private:
-    sfg::Notebook::Ptr notebook;
-    sfg::Notebook::IndexType previousPage;
-    NetWidgets& netWidgets;
-};
-
 Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, CallbackSystem &callbackSystem):
     desktop(theDesktop),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
@@ -136,8 +116,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     sfg::Notebook::Ptr notebook(sfg::Notebook::Create());
     notebook->AppendPage(mainLayout,sfg::Label::Create("Board"));
     notebook->AppendPage(netWindow.getWidget(),sfg::Label::Create("Server"));
-    GrabFocusOnTabChange grabFocusOnTabChange(notebook, netWindow);
-    notebook->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(grabFocusOnTabChange);
+    notebook->GetSignal(sfg::Notebook::OnTabChange).Connect([this]{
+        netWindow.grabEntryFocus();
+    });
 
     boardWindow->Add(notebook);
 
@@ -146,7 +127,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     buttons.connect->GetSignal(sfg::Button::OnLeftClick).Connect([this, notebook]{
         client.connect();
         notebook->SetCurrentPage(1);
-        netWindow.grabEntryFocus();
     });
 
     messages.connect(Messages::ID::GameState, [this](const Messages::Message& message){
