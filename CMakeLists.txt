@@ -26,7 +26,7 @@ set(bw_HDRS
     controller/components/Settings.hpp
     views/MoveList.hpp
     views/Canvas.hpp
-    views/Clocks.hpp
+    views/Clock.hpp
     model/GameData.hpp
     BlackWolf.hpp
     views/Status.hpp
@@ -60,7 +60,7 @@ set(bw_SRCS
     controller/components/Settings.cpp
     views/MoveList.cpp
     views/Canvas.cpp
-    views/Clocks.cpp
+    views/Clock.cpp
     model/GameData.cpp
     BlackWolf.cpp
     views/Status.cpp

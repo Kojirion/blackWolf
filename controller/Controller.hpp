@@ -2,7 +2,7 @@
 #include "../views/Canvas.hpp"
 #include "../model/GameData.hpp"
 #include "../views/Status.hpp"
-#include "../views/Clocks.hpp"
+#include "../views/Clock.hpp"
 #include "../views/MoveList.hpp"
 #include "../controller/components/ColorChoices.hpp"
 #include "../controller/components/Settings.hpp"
@@ -35,7 +35,7 @@ private:
     Canvas canvas;
     GameData game;
     Status status;
-    Clocks clocks;
+    Clock::Ptr m_whiteClock, m_blackClock;
     MoveList moveList;
     Settings settingsWindow;
     Move premove;

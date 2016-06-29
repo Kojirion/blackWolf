@@ -28,31 +28,3 @@ Color GameData::getUserColor() const
 {
     return m_userColor;
 }
-
-void GameData::setTime(int whiteTime, int blackTime)
-{
-    whiteClock.reset(sf::seconds(whiteTime));
-    blackClock.reset(sf::seconds(blackTime));
-}
-
-sf::Time GameData::getWhiteTime() const
-{
-    return whiteClock.getRemainingTime();
-}
-
-sf::Time GameData::getBlackTime() const
-{
-    return blackClock.getRemainingTime();
-}
-
-void GameData::startClock()
-{
-    if (m_turnColor == Color::White){
-        blackClock.stop();
-        whiteClock.start();
-    }else{
-        assert(m_turnColor==Color::Black);
-        whiteClock.stop();
-        blackClock.start();
-    }
-}

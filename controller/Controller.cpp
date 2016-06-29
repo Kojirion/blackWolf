@@ -35,6 +35,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
     canvas(theWindow),
+    m_whiteClock(Clock::Create()),
+    m_blackClock(Clock::Create()),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
     netWindow(m_currentEvent),
@@ -92,9 +94,9 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     auto sideLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
 
     sideLayout->Pack(player1);
-    sideLayout->Pack(clocks.getWhiteClock());
+    sideLayout->Pack(m_whiteClock);
     sideLayout->Pack(player2);
-    sideLayout->Pack(clocks.getBlackClock());
+    sideLayout->Pack(m_blackClock);
     sideLayout->Pack(status.getView());
 
     sfg::Table::Ptr mainLayout(sfg::Table::Create());
@@ -135,8 +137,17 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 
     messages.connect(Messages::ID::GameState, [this](const Messages::Message& message){
         auto received = boost::polymorphic_downcast<const Messages::GameState*>(&message);
-        game.setTime(received->white_time, received->black_time);
-        game.startClock();
+        m_whiteClock->setTimeLeft(received->white_time);
+        m_blackClock->setTimeLeft(received->black_time);
+        if (received->turnColor == Color::White){
+            m_blackClock->stop();
+            m_whiteClock->start();
+        }else{
+            assert(received->turnColor==Color::Black);
+            m_whiteClock->stop();
+            m_blackClock->start();
+        }
+
 
         if (premoveOn)
         {
@@ -160,6 +171,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         //auto received = boost::polymorphic_downcast<const EndGameMessage*>(&message);
         premoveOn = false;
         canvas.clearArrows();
+        m_whiteClock->stop();
+        m_blackClock->stop();
     });
 
     callbackSystem.connect(Action::Scroll, [this](thor::ActionContext<Action> context){
@@ -182,5 +195,5 @@ void Controller::setEvent(const sf::Event &event)
 
 void Controller::updateClocks()
 {
-    clocks.update(game.getWhiteTime(), game.getBlackTime());
+    //clocks.update(game.getWhiteTime(), game.getBlackTime());
 }
