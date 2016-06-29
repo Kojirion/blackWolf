@@ -7,7 +7,8 @@ enum class ID{
     GameStart,
     GameState,
     GameEnd,
-    TextReady
+    TextReady,
+    TextToClient
 };
 
 struct Message{

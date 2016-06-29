@@ -3,10 +3,10 @@
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Label.hpp>
-#include <boost/signals2.hpp>
 #include <SFML/System/Clock.hpp>
+#include "messages/Entity.hpp"
 
-class NetWidgets
+class NetWidgets : private Messages::Registrant
 {
 public:
     NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent);
@@ -18,8 +18,6 @@ public:
     void scroll(int delta);
 
     void grabEntryFocus();
-
-    boost::signals2::signal<void (std::string)> sendText;
 
 private:
     sfg::Box::Ptr m_chatLayout;

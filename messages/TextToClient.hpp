@@ -3,8 +3,8 @@
 
 namespace Messages {
 
-struct TextReady : public Message {
-    TextReady(const std::string& text);
+struct TextToClient : public Message {
+    TextToClient(const std::string& text);
     std::string text;
 };
 

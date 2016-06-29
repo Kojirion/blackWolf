@@ -3,6 +3,7 @@
 #include <SFGUI/Adjustment.hpp>
 #include <SFML/Window/Event.hpp>
 #include <cassert>
+#include "messages/TextToClient.hpp"
 
 NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent):
     m_chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
@@ -82,7 +83,7 @@ void NetWidgets::entryKeyPressed(const sf::Event& event)
             m_forwardHistory = m_history.end();
         }
         m_chatEntry->SetText("");
-        sendText(toWrite);
+        messages.triggerEvent(Messages::TextToClient(toWrite));
         break;
     }
     case sf::Keyboard::Up:{

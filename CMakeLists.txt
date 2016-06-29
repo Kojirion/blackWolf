@@ -41,6 +41,7 @@ set(bw_HDRS
     messages/GameState.hpp
     messages/GameEnd.hpp
     messages/TextReady.hpp
+    messages/TextToClient.hpp
     parsers/GameStateParser.hpp
     parsers/SquareParser.hpp
     parsers/GameStartParser.hpp
@@ -74,6 +75,7 @@ set(bw_SRCS
     messages/GameState.cpp
     messages/GameEnd.cpp
     messages/TextReady.cpp
+    messages/TextToClient.cpp
     parsers/GameStateParser.cpp
     parsers/GameStartParser.cpp
     parsers/SquareParser.cpp

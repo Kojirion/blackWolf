@@ -15,8 +15,6 @@ public:
 
     void makeMove(const Move& move);
 
-    void toClient(std::string toWrite);
-
 private:
     std::string nickname;
 

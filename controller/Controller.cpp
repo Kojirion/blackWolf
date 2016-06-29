@@ -11,6 +11,7 @@
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
 #include "../messages/TextReady.hpp"
+#include "../messages/TextToClient.hpp"
 
 
 bool Controller::requestMove(const Move& move)
@@ -51,7 +52,6 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         auto received = boost::polymorphic_downcast<const Messages::TextReady*>(&message);
         netWindow.addLine(received->text);
     });
-    netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
     ButtonBox buttons;
     buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &canvas));
@@ -59,10 +59,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         //settingsWindow.enable(true);
     });
     buttons.resign->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
-        client.toClient("resign");
+        messages.triggerEvent(Messages::TextToClient("resign"));
     });
     buttons.draw->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
-        client.toClient("draw");
+        messages.triggerEvent(Messages::TextToClient("draw"));
     });
 
     auto promotionLayout = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
@@ -75,7 +75,7 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
             if (promotionButton->IsActive()){
                 std::string promote("promote ");
                 promote += letter;
-                client.toClient(promote);
+                messages.triggerEvent(Messages::TextToClient(promote));
             }
         });
         return promotionButton;

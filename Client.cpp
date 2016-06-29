@@ -9,11 +9,19 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/variant.hpp>
 #include "messages/TextReady.hpp"
+#include "messages/TextToClient.hpp"
+#include <boost/cast.hpp>
 
 Client::Client():
     outputStream(&output),
     socket(io_service)
 {
+    messages.connect(Messages::ID::TextToClient, [this](const Messages::Message& message){
+        auto received = boost::polymorphic_downcast<const Messages::TextToClient*>(&message);
+        auto toWrite = received->text;
+        crypt(toWrite);
+        outputStream << toWrite;
+    });
 }
 
 void Client::connect()
@@ -43,7 +51,7 @@ void Client::connect()
         }
 
         std::string hello = "TIMESTAMP|openseal|Running on an operating system|";
-        toClient(hello);
+        messages.triggerEvent(Messages::TextToClient(hello));
 
         boost::asio::async_read_until(socket, data, "\n\r",
                                       boost::bind(&Client::handleData, this, _1));
@@ -88,7 +96,7 @@ void Client::handleData(boost::system::error_code ec)
         std::string str;
         while(std::getline(is, str, '\r')){
             if (str == "[G]\n")
-                toClient("\x2""9");
+messages.triggerEvent(Messages::TextToClient("\x2""9"));
 
             
             using boost::spirit::qi::parse;
@@ -116,23 +124,15 @@ void Client::handleData(boost::system::error_code ec)
             static boost::spirit::qi::rule<Iterator, ParsedMessage()> lineGrammarMessage = lineGrammar[onMeaningfulLine];
 
             if (!parse(str.begin(), str.end(), lineGrammarMessage)){
-                if(parse(str.begin(), str.end(), sessionStartParser, nickname)){
-                    toClient("set style 12");
-                }else{
-                    //not processed, so let's print it
+                if(parse(str.begin(), str.end(), sessionStartParser, nickname))
+                    messages.triggerEvent(Messages::TextToClient("set style 12"));
+                else //not processed, so let's print it
                     messages.triggerEvent(Messages::TextReady(str));
-                }
             }
         }
         boost::asio::async_read_until(socket, data, "\n\r",
                                       boost::bind(&Client::handleData, this, _1));
     }
-}
-
-void Client::toClient(std::string toWrite)
-{
-    crypt(toWrite);
-    outputStream << toWrite;
 }
 
 void Client::makeMove(const Move &move)
@@ -144,5 +144,5 @@ void Client::makeMove(const Move &move)
     std::string moveString;
     boost::spirit::karma::generate(Iterator(moveString), moveStringGrammar, move);
 
-    toClient(std::move(moveString));
+    messages.triggerEvent(Messages::TextToClient(std::move(moveString)));
 }
