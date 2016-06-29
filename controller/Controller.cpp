@@ -10,6 +10,7 @@
 #include "../messages/GameEnd.hpp"
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
+#include "../messages/TextReady.hpp"
 
 
 bool Controller::requestMove(const Move& move)
@@ -46,7 +47,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
         settingsWindow.enable(false);
         canvas.setPieceColors(pieceToTexPos);
     });
-    client.textReady.connect(boost::bind(&NetWidgets::addLine, &netWindow, _1));
+    messages.connect(Messages::ID::TextReady, [this](const Messages::Message& message){
+        auto received = boost::polymorphic_downcast<const Messages::TextReady*>(&message);
+        netWindow.addLine(received->text);
+    });
     netWindow.sendText.connect(boost::bind(&Client::toClient, &client, _1));
 
     ButtonBox buttons;

@@ -8,6 +8,7 @@
 #include "generators/MoveStringGrammar.hpp"
 #include <boost/spirit/include/qi.hpp>
 #include <boost/variant.hpp>
+#include "messages/TextReady.hpp"
 
 Client::Client():
     outputStream(&output),
@@ -36,7 +37,7 @@ void Client::connect()
 
         if (error)
         {
-            textReady("Failed to connect.");
+            messages.triggerEvent(Messages::TextReady("Failed to connect."));
             std::cerr << "Failed to connect.\n";
             return;
         }
@@ -50,7 +51,7 @@ void Client::connect()
         std::string err("Failed to connect: ");
         err += e.what();
         err += "\n";
-        textReady(err);
+        messages.triggerEvent(Messages::TextReady(err));
         std::cerr << err;
     }
 }
@@ -119,7 +120,7 @@ void Client::handleData(boost::system::error_code ec)
                     toClient("set style 12");
                 }else{
                     //not processed, so let's print it
-                    textReady(str);
+                    messages.triggerEvent(Messages::TextReady(str));
                 }
             }
         }

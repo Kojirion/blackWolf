@@ -6,7 +6,8 @@ namespace Messages {
 enum class ID{
     GameStart,
     GameState,
-    GameEnd
+    GameEnd,
+    TextReady
 };
 
 struct Message{

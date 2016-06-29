@@ -2,7 +2,6 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/signals2.hpp>
 #include "BlackWolf.hpp"
 #include "messages/Entity.hpp"
 
@@ -13,8 +12,6 @@ public:
 
     void connect();
     void update();
-
-    boost::signals2::signal<void (std::string)> textReady;
 
     void makeMove(const Move& move);
 
