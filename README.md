@@ -28,10 +28,10 @@ make
 The UI currently only offers basic functionality; in order to effectively seek games, it is necessary to issue commands at the console. For a complete reference, see [FICS help files](http://www.freechess.org/Help/AllFiles.html).  
 Some commands to get going:
 
-- ```seek 3 0``` - will post an an for a game with 3 minutes for each player, 0 seconds increment per move
-- ```getgame ``` - will pick the first available seek ad. This is the fastest way to get a game.
-- ```set seek false``` - this will hide seek ads, which can get overwhelming
-- ```set chanoff true``` - this will hide discussions on the various channels
+- ```seek 3 0``` - post an ad for a game with 3 minutes for each player, 0 seconds increment per move
+- ```getgame ``` - pick the first available seek ad. This is the fastest way to get a game.
+- ```set seek false``` - hide seek ads, which can get overwhelming
+- ```set chanoff true``` - hide discussions on the various channels
 
 ## Credit
 
