@@ -46,9 +46,9 @@ public:
 private:
 
     //bimap
-    struct squareId  {};
-    struct pieceId {};
-    using SquaresToPieces = boost::bimap<boost::bimaps::tagged<Square, squareId>, boost::bimaps::tagged<PieceSprite, pieceId>>;
+    struct OriginSquare  {};
+    struct Sprite {};
+    using SquaresToPieces = boost::bimap<boost::bimaps::tagged<Square, OriginSquare>, boost::bimaps::tagged<PieceSprite, Sprite>>;
     SquaresToPieces m_pieces;
     SquaresToPieces::const_iterator m_currentPiece;
 

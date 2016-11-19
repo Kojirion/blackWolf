@@ -51,9 +51,9 @@ Canvas::Canvas(sf::Window& theWindow):
         auto clickedPoint = getMousePosition();
 
         for (const auto &piece : m_pieces){
-            if (piece.get<pieceId>().contains(clickedPoint)){
-                m_currentPiece = m_pieces.project_up(m_pieces.by<pieceId>().find(piece.get<pieceId>()));
-                m_pieceOffset = m_currentPiece->get<pieceId>().getPosition() - clickedPoint;
+            if (piece.get<Sprite>().contains(clickedPoint)){
+                m_currentPiece = m_pieces.project_up(m_pieces.by<Sprite>().find(piece.get<Sprite>()));
+                m_pieceOffset = m_currentPiece->get<Sprite>().getPosition() - clickedPoint;
                 break;
             }
         }
@@ -61,18 +61,18 @@ Canvas::Canvas(sf::Window& theWindow):
 
     m_canvas->GetSignal(sfg::Widget::OnMouseMove).Connect([this]{
         if (pieceHeld())
-            m_currentPiece->get<pieceId>().setPosition(getMousePosition() + m_pieceOffset);
+            m_currentPiece->get<Sprite>().setPosition(getMousePosition() + m_pieceOffset);
     });
 
     m_canvas->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect([this]{
         if (pieceHeld()){
-            auto centrePos = m_currentPiece->get<pieceId>().getPosition() + m_offToCenter;
+            auto centrePos = m_currentPiece->get<Sprite>().getPosition() + m_offToCenter;
             auto gridPos = positionToSquare(centrePos);
 
-            if (!(*requestMove({m_currentPiece->get<squareId>(), gridPos})))
+            if (!(*requestMove({m_currentPiece->get<OriginSquare>(), gridPos})))
                 sendBack();
             else {
-                m_currentPiece->get<pieceId>().setPosition(squareToPosition(gridPos));
+                m_currentPiece->get<Sprite>().setPosition(squareToPosition(gridPos));
                 releasePiece();
             }
         }
@@ -136,12 +136,12 @@ void Canvas::setPieceColors(const PieceToTexPos& pieceToTexPos)
 {
     m_pieceToTexPos = pieceToTexPos;
     for (const auto& piece : m_pieces)
-        piece.get<pieceId>().setTexPos(m_pieceToTexPos);
+        piece.get<Sprite>().setTexPos(m_pieceToTexPos);
 }
 
 Color Canvas::getColorOn(const Square &square) const
 {
-    return m_pieces.by<squareId>().find(square)->get<pieceId>().getColor();
+    return m_pieces.by<OriginSquare>().find(square)->get<Sprite>().getColor();
 }
 
 void Canvas::update(sf::Time dt)
@@ -154,7 +154,7 @@ void Canvas::update(sf::Time dt)
 
     m_pieceVertices.clear();
     for (const auto& piece : m_pieces)
-        piece.get<pieceId>().appendQuadTo(m_pieceVertices);
+        piece.get<Sprite>().appendQuadTo(m_pieceVertices);
 
     m_canvas->Draw(m_pieceVertices.data(), m_pieceVertices.size(), sf::Quads, &m_piecesTexture);
 
@@ -173,8 +173,8 @@ void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color t
     auto wasPieceHeld = pieceHeld();
 
     if (wasPieceHeld){
-        square = m_currentPiece->get<squareId>();
-        pos = m_currentPiece->get<pieceId>().getPosition();
+        square = m_currentPiece->get<OriginSquare>();
+        pos = m_currentPiece->get<Sprite>().getPosition();
         releasePiece();
     }
 
@@ -190,10 +190,10 @@ void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color t
     }
 
     if (wasPieceHeld){
-        auto it = m_pieces.by<squareId>().find(square);
-        if (it->get<pieceId>().getColor() == turnColor){
+        auto it = m_pieces.by<OriginSquare>().find(square);
+        if (it->get<Sprite>().getColor() == turnColor){
             m_currentPiece = m_pieces.project_up(it);
-            m_currentPiece->get<pieceId>().setPosition(pos);
+            m_currentPiece->get<Sprite>().setPosition(pos);
         }
     }
 }
@@ -212,7 +212,7 @@ void Canvas::sendBack()
 {
     assert(pieceHeld());
 
-    m_currentPiece->get<pieceId>().setPosition(squareToPosition(m_currentPiece->get<squareId>()));
+    m_currentPiece->get<Sprite>().setPosition(squareToPosition(m_currentPiece->get<OriginSquare>()));
 
     releasePiece();
 }
@@ -223,7 +223,7 @@ void Canvas::flipBoard()
     else m_flipOffset = 50;
 
     for (const auto &piece : m_pieces)
-        piece.get<pieceId>().setPosition(squareToPosition(piece.get<squareId>()));
+        piece.get<Sprite>().setPosition(squareToPosition(piece.get<OriginSquare>()));
 }
 
 void Canvas::setPremove(const Move &move)
@@ -255,8 +255,8 @@ void Canvas::resetFor(Color whoFaceUp)
 
 void Canvas::animateCaptureOn(const Square& square)
 {
-    auto it = m_pieces.by<squareId>().find(square);
-    if (it != m_pieces.by<squareId>().end()){
+    auto it = m_pieces.by<OriginSquare>().find(square);
+    if (it != m_pieces.by<OriginSquare>().end()){
         auto piece = it->second.getPiece();
         m_particleSystem.addEmitter(Emitter(squareToPosition(square) + m_offToCenter, piece), sf::seconds(0.000001f));
     }
