@@ -10,12 +10,6 @@
 #include "../Common/PieceToTexPos.hpp"
 #include "../messages/Entity.hpp"
 
-/*
- * A class aggregating a canvas widget and a bimap where the pieces are stored and mapped 1-1 to squares on the board.
- * The class is designed around the dimensions of Peter Wong's chess board, which is 440x440 - 50x50 squares,
- * with border width of 20.
- */
-
 enum class Color;
 struct Move;
 

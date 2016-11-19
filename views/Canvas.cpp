@@ -8,60 +8,9 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
-
-class Grid {
-public:
-    Grid(int squareSide, int margin):
-        squareSide(squareSide),
-        margin(margin),
-        flipped(false)
-    {
-
-    }
-
-    sf::Vector2f centerOffset() const{
-        return {squareSide/2.f, squareSide/2.f};
-    }
-
-    Square toSquare(const sf::Vector2f& coords) const{
-        if (flipped)
-            return {static_cast<int>(std::floor((coords.y+7*squareSide-7*squareSide-margin)/(2*squareSide-squareSide))),
-                        static_cast<int>(std::ceil((coords.x-7*squareSide-margin)/(squareSide-2*squareSide)))};
-        else
-            return {static_cast<int>(std::ceil((coords.y-7*squareSide-margin)/(-squareSide))),
-                        static_cast<int>(std::floor((coords.x-margin)/squareSide))};
-    }
-
-    sf::Vector2f toCoords(const Square& square) const {
-        sf::Vector2f result{margin + squareSide*square.col,
-                    8*squareSide + margin - squareSide*(square.row+1)};
-
-        if (flipped)
-            result += {squareSide* (7 - 2*square.col), -squareSide * (7 - 2*square.row)};
-
-        return result;
-    }
-
-    float boardSide() const {
-        return 8*squareSide + 2*margin;
-    }
-
-    void flip(){
-        flipped = !flipped;
-    }
-
-    bool isFlipped() const {
-        return flipped;
-    }
-
-private:
-    float squareSide;
-    float margin;
-    bool flipped;
-};
+#include "Grid.hpp"
 
 static Grid grid{50, 20};
-
 
 using boost::irange;
 
@@ -95,7 +44,7 @@ Canvas::Canvas(sf::Window& theWindow):
         }
     }
 
-    m_canvas->SetRequisition(sf::Vector2f( 440.f, 440.f ));
+    m_canvas->SetRequisition({grid.boardSide(), grid.boardSide()});
 
     m_canvas->GetSignal(sfg::Widget::OnMouseLeftPress).Connect([this]{
         auto clickedPoint = getMousePosition();
@@ -256,8 +205,8 @@ void Canvas::flipBoard()
 
 void Canvas::setPremove(const Move &move)
 {
-    auto from = grid.toCoords(move.square_1) + grid.centerOffset();
-    auto to = grid.toCoords(move.square_2) + grid.centerOffset();
+    auto from = grid.toCoords(move.from) + grid.centerOffset();
+    auto to = grid.toCoords(move.to) + grid.centerOffset();
 
     m_arrows.emplace_back(from, to-from, sf::Color(0,100,0,125), 5.f);
 }

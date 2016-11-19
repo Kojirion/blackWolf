@@ -65,6 +65,8 @@ set(bw_SRCS
     views/MoveList.cpp
     views/Canvas.cpp
     views/Clock.cpp
+    views/Grid.hpp
+    views/Grid.cpp
     model/GameData.cpp
     views/Status.cpp
     controller/components/ButtonBox.cpp

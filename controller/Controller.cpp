@@ -20,7 +20,7 @@ bool Controller::requestMove(const Move& move)
 {
     if (!game.userTurn()) {
         //premove
-        if (canvas.getColorOn(move.square_1) == game.getUserColor()) {
+        if (canvas.getColorOn(move.from) == game.getUserColor()) {
             premove = move;
             premoveOn = true;
             canvas.setPremove(move);

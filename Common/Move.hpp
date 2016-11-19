@@ -2,8 +2,8 @@
 #include "Square.hpp"
 
 struct Move{
-    Square square_1;
-    Square square_2;
+    Square from;
+    Square to;
 };
 
 bool operator==(const Move& lhs, const Move& rhs);
