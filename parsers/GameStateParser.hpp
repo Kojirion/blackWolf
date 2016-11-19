@@ -1,7 +1,6 @@
 #pragma once
 #include "Grammars.hpp"
 #include "SquareParser.hpp"
-#include "../BlackWolf.hpp"
 #include <boost/fusion/include/vector.hpp>
 #include "../messages/GameState.hpp"
 

@@ -1,7 +1,7 @@
 #include "PieceSprite.hpp"
 #include <boost/math/special_functions/sign.hpp>
 #include <cassert>
-#include "../../BlackWolf.hpp"
+#include "../../Common/PieceToTexPos.hpp"
 
 PieceSprite::PieceSprite(const sf::Vector2f& position, const Piece& piece, const PieceToTexPos&  pieceToTexPos, int id):
     m_piece(piece), m_id(id)

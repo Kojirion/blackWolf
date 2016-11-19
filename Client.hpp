@@ -2,7 +2,6 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include "BlackWolf.hpp"
 #include "messages/Entity.hpp"
 
 struct Move;

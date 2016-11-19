@@ -1,6 +1,5 @@
 #include "MoveList.hpp"
 #include <SFGUI/Label.hpp>
-#include "../BlackWolf.hpp"
 #include <boost/cast.hpp>
 #include "../controller/Controller.hpp"
 #include <SFGUI/Adjustment.hpp>

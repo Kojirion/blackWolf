@@ -7,7 +7,8 @@
 #include <array>
 #include <boost/signals2.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include "../../BlackWolf.hpp"
+
+struct PieceToTexPos;
 
 class Settings : private sf::NonCopyable
 {

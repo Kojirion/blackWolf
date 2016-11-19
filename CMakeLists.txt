@@ -28,7 +28,6 @@ set(bw_HDRS
     views/Canvas.hpp
     views/Clock.hpp
     model/GameData.hpp
-    BlackWolf.hpp
     views/Status.hpp
     controller/components/ButtonBox.hpp
     controller/components/ColorChoices.hpp
@@ -67,7 +66,6 @@ set(bw_SRCS
     views/Canvas.cpp
     views/Clock.cpp
     model/GameData.cpp
-    BlackWolf.cpp
     views/Status.cpp
     controller/components/ButtonBox.cpp
     controller/components/ColorChoices.cpp

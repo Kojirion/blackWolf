@@ -1,18 +1,13 @@
 #pragma once
-
 #include <SFML/Graphics/Texture.hpp>
-
 #include <SFGUI/Canvas.hpp>
-
 #include <Thor/Shapes/Arrow.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
-
 #include <boost/signals2.hpp>
 #include <boost/bimap.hpp>
-
 #include "../views/components/PieceSprite.hpp"
 #include "../Common/Square.hpp"
-#include "../BlackWolf.hpp"
+#include "../Common/PieceToTexPos.hpp"
 #include "../messages/Entity.hpp"
 
 /*

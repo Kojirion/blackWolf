@@ -5,6 +5,7 @@
 #include <SFGUI/RadioButton.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 #include <boost/range/irange.hpp>
+#include "../../Common/PieceToTexPos.hpp"
 
 void Settings::requestClose()
 {

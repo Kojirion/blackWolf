@@ -1,6 +1,5 @@
 #pragma once
 #include "Grammars.hpp"
-#include "../BlackWolf.hpp"
 #include <boost/spirit/include/qi_symbols.hpp>
 #include "../messages/GameEnd.hpp"
 

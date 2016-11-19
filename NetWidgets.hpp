@@ -10,13 +10,9 @@ class NetWidgets : private Messages::Registrant
 {
 public:
     NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent);
-
     sfg::Widget::Ptr getWidget();
-
     void addLine(const std::string &line);
-
     void scroll(int delta);
-
     void grabEntryFocus();
 
 private:
