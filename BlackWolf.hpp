@@ -1,17 +1,9 @@
 #pragma once
 #include <ostream>
 #include <SFML/System/Vector2.hpp>
+#include "Common/Color.hpp"
 
-enum class Color{
-    None = 0,
-    White = 1 << 0,
-    Black = 1 << 1,
-    Both = White | Black
-};
 
-bool operator &(const Color& lhs, const Color& rhs);
-Color operator!(Color rhs);
-int sign(Color color);
 
 struct Piece{
     enum class Type{

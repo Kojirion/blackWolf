@@ -2,6 +2,7 @@
 #include <Thor/Particles/EmissionInterface.hpp>
 #include <Thor/Particles/Particle.hpp>
 #include <boost/range/irange.hpp>
+#include "../../Common/Color.hpp"
 
 using boost::irange;
 

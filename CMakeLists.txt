@@ -50,6 +50,10 @@ set(bw_HDRS
     parsers/Grammars.hpp
     generators/MoveStringGrammar.hpp
     Actions.hpp
+    Common/Color.hpp
+    Common/Square.hpp
+    Common/Move.hpp
+    Common/PieceToTexPos.hpp
 )
 
 set(bw_SRCS
@@ -81,6 +85,10 @@ set(bw_SRCS
     parsers/SquareParser.cpp
     parsers/GameEndParser.cpp
     parsers/SessionStartParser.cpp
+    Common/Color.cpp
+    Common/Square.cpp
+    Common/Move.cpp
+    Common/PieceToTexPos.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})
