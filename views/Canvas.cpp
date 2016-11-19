@@ -5,6 +5,7 @@
 #include "../controller/Controller.hpp"
 #include "components/Emitter.hpp"
 #include <boost/range/irange.hpp>
+#include <boost/range/algorithm/find_if.hpp>
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
 
@@ -44,12 +45,45 @@ Canvas::Canvas(sf::Window& theWindow):
         }
     }
 
-    //connect signals and messages to slots
     m_canvas->SetRequisition(sf::Vector2f( 440.f, 440.f ));
-    m_canvas->GetSignal(sfg::Widget::OnMouseLeftPress).Connect(std::bind(&Canvas::slotLeftClick, this));
-    m_canvas->GetSignal(sfg::Widget::OnMouseMove).Connect(std::bind(&Canvas::slotMouseMove, this));
-    m_canvas->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect(std::bind(&Canvas::slotMouseRelease, this));
-    m_canvas->GetSignal(sfg::Widget::OnMouseEnter).Connect(std::bind(&Canvas::slotEnterCanvas, this));
+
+    m_canvas->GetSignal(sfg::Widget::OnMouseLeftPress).Connect([this]{
+        auto clickedPoint = getMousePosition();
+
+        for (const auto &piece : m_pieces){
+            if (piece.get<pieceId>().contains(clickedPoint)){
+                m_currentPiece = m_pieces.project_up(m_pieces.by<pieceId>().find(piece.get<pieceId>()));
+                m_pieceOffset = m_currentPiece->get<pieceId>().getPosition() - clickedPoint;
+                break;
+            }
+        }
+    });
+
+    m_canvas->GetSignal(sfg::Widget::OnMouseMove).Connect([this]{
+        if (pieceHeld())
+            m_currentPiece->get<pieceId>().setPosition(getMousePosition() + m_pieceOffset);
+    });
+
+    m_canvas->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect([this]{
+        if (pieceHeld()){
+            auto centrePos = m_currentPiece->get<pieceId>().getPosition() + m_offToCenter;
+            auto gridPos = positionToSquare(centrePos);
+
+            if (!(*requestMove({m_currentPiece->get<squareId>(), gridPos})))
+                sendBack();
+            else {
+                m_currentPiece->get<pieceId>().setPosition(squareToPosition(gridPos));
+                releasePiece();
+            }
+        }
+    });
+
+    m_canvas->GetSignal(sfg::Widget::OnMouseEnter).Connect([this]{
+        if (pieceHeld()){
+            if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                sendBack();
+        }
+    });
 
     messages.connect(Messages::ID::GameStart, [this](const Messages::Message& message){
         auto received = boost::polymorphic_downcast<const Messages::GameStart*>(&message);
@@ -194,58 +228,15 @@ void Canvas::flipBoard()
 
 void Canvas::setPremove(const Move &move)
 {
-    sf::Vector2f point1 = squareToPosition(move.square_1) + m_offToCenter;
-    sf::Vector2f point2 = squareToPosition(move.square_2) + m_offToCenter;
+    auto from = squareToPosition(move.square_1) + m_offToCenter;
+    auto to = squareToPosition(move.square_2) + m_offToCenter;
 
-    m_arrows.emplace_back(point1,point2-point1,sf::Color(0,100,0,125), 5.f);
+    m_arrows.emplace_back(from, to-from, sf::Color(0,100,0,125), 5.f);
 }
 
 void Canvas::clearArrows()
 {
     m_arrows.clear();
-}
-
-void Canvas::slotLeftClick()
-{
-    sf::Vector2f clickedPoint = getMousePosition();
-
-    for (const auto &piece : m_pieces){
-        if (piece.get<pieceId>().contains(clickedPoint)){
-            m_currentPiece = m_pieces.project_up(m_pieces.by<pieceId>().find(piece.get<pieceId>()));
-            m_pieceOffset = m_currentPiece->get<pieceId>().getPosition() - clickedPoint;
-            break;
-        }
-    }
-}
-
-void Canvas::slotMouseMove()
-{
-    if (pieceHeld())
-        m_currentPiece->get<pieceId>().setPosition(getMousePosition() + m_pieceOffset);
-}
-
-void Canvas::slotMouseRelease()
-{
-    if (pieceHeld()){
-        sf::Vector2f centrePos = m_currentPiece->get<pieceId>().getPosition() + m_offToCenter;
-
-        Square gridPos = positionToSquare(centrePos);
-
-        if (!(*requestMove({m_currentPiece->get<squareId>(), gridPos})))
-            sendBack();
-        else {
-            m_currentPiece->get<pieceId>().setPosition(squareToPosition(gridPos));
-            releasePiece();
-        }
-    }
-}
-
-void Canvas::slotEnterCanvas()
-{
-    if (pieceHeld()){
-        if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            sendBack();
-    }
 }
 
 void Canvas::resetFor(Color whoFaceUp)

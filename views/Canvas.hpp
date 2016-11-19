@@ -74,13 +74,6 @@ private:
 
     PieceToTexPos m_pieceToTexPos;
 
-    //slots
-    void slotMouseMove();
-    void slotMouseRelease();
-    void slotLeftClick();
-    void slotEnterCanvas();
-
-
     bool flipped() const;
     bool pieceHeld() const;
 
