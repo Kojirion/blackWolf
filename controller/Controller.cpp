@@ -41,7 +41,7 @@ Controller::Controller(sf::Window &window, sfg::Desktop &desktop, CallbackSystem
     m_blackClock(Clock::Create()),
     settingsWindow(desktop),
     premove({{0,0},{0,0}}), premoveOn(false),
-    netWindow(m_currentEvent),
+    console(m_currentEvent),
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create())
 {
@@ -67,7 +67,7 @@ Controller::Controller(sf::Window &window, sfg::Desktop &desktop, CallbackSystem
     });
     messages.connect(Messages::ID::TextReady, [this](const Messages::Message& message){
         auto received = boost::polymorphic_downcast<const Messages::TextReady*>(&message);
-        netWindow.addLine(received->text);
+        console.addLine(received->text);
     });
 
     ButtonBox buttons;
@@ -127,9 +127,9 @@ Controller::Controller(sf::Window &window, sfg::Desktop &desktop, CallbackSystem
 
     sfg::Notebook::Ptr notebook(sfg::Notebook::Create());
     notebook->AppendPage(mainLayout,sfg::Label::Create("Board"));
-    notebook->AppendPage(netWindow.getWidget(),sfg::Label::Create("Server"));
+    notebook->AppendPage(console.getWidget(),sfg::Label::Create("Console"));
     notebook->GetSignal(sfg::Notebook::OnTabChange).Connect([this]{
-        netWindow.grabEntryFocus();
+        console.grabEntryFocus();
     });
 
     callbackSystem.connect(Action::Tab, [notebook](thor::ActionContext<Action> context){
@@ -192,7 +192,7 @@ Controller::Controller(sf::Window &window, sfg::Desktop &desktop, CallbackSystem
 
     callbackSystem.connect(Action::Scroll, [this](thor::ActionContext<Action> context){
         int delta = context.event->mouseWheelScroll.delta;
-        netWindow.scroll(delta);
+        console.scroll(delta);
     });
 }
 

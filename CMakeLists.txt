@@ -33,7 +33,7 @@ set(bw_HDRS
     controller/components/ColorChoices.hpp
     Client.hpp
     Timeseal.hpp
-    NetWidgets.hpp
+    Console.hpp
     messages/Entity.hpp
     messages/Message.hpp
     messages/GameStart.hpp
@@ -71,7 +71,7 @@ set(bw_SRCS
     controller/components/ColorChoices.cpp
     Client.cpp
     Timeseal.cpp
-    NetWidgets.cpp
+    Console.cpp
     messages/Entity.cpp
     messages/Message.cpp
     messages/GameStart.cpp

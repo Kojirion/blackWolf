@@ -1,11 +1,11 @@
-#include "NetWidgets.hpp"
+#include "Console.hpp"
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Adjustment.hpp>
 #include <SFML/Window/Event.hpp>
 #include <cassert>
 #include "messages/TextToClient.hpp"
 
-NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent):
+Console::Console(const std::reference_wrapper<const sf::Event> currentEvent):
     m_chatLayout(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f)),
     m_chatEntry(sfg::Entry::Create()),
     m_chatText(sfg::Label::Create()),
@@ -23,25 +23,25 @@ NetWidgets::NetWidgets(const std::reference_wrapper<const sf::Event> currentEven
     m_chatLayout->Pack(m_chatEntry);
 
     m_chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(
-                std::bind(&NetWidgets::entryKeyPressed, this, currentEvent));
+                std::bind(&Console::entryKeyPressed, this, currentEvent));
 
     auto adjustment = m_chatWindow->GetVerticalAdjustment();
     adjustment->GetSignal(sfg::Adjustment::OnChange).Connect(
                 std::bind(&sf::Clock::restart, m_clock));
 }
 
-sfg::Widget::Ptr NetWidgets::getWidget()
+sfg::Widget::Ptr Console::getWidget()
 {
     return m_chatLayout;
 }
 
-void NetWidgets::addLine(const std::string& line)
+void Console::addLine(const std::string& line)
 {
     m_chatText->SetText(m_chatText->GetText() + line);
     autoscroll();
 }
 
-void NetWidgets::scroll(int delta)
+void Console::scroll(int delta)
 {
     if (!m_chatWindow->IsGloballyVisible())
         return;
@@ -56,12 +56,12 @@ void NetWidgets::scroll(int delta)
     }
 }
 
-void NetWidgets::grabEntryFocus()
+void Console::grabEntryFocus()
 {
     m_chatEntry->GrabFocus();
 }
 
-void NetWidgets::autoscroll()
+void Console::autoscroll()
 {
     auto timeOfNoScroll = m_clock.getElapsedTime().asSeconds();
     if (timeOfNoScroll>5.f){
@@ -70,7 +70,7 @@ void NetWidgets::autoscroll()
     }
 }
 
-void NetWidgets::entryKeyPressed(const sf::Event& event)
+void Console::entryKeyPressed(const sf::Event& event)
 {
     assert(event.type == sf::Event::KeyPressed);
 

@@ -7,7 +7,7 @@
 #include "../controller/components/ColorChoices.hpp"
 #include "../controller/components/Settings.hpp"
 #include "../Client.hpp"
-#include "../NetWidgets.hpp"
+#include "../Console.hpp"
 #include "../messages/Entity.hpp"
 #include "../Actions.hpp"
 #include "../Common/Move.hpp"
@@ -42,7 +42,7 @@ private:
     Move premove;
     bool premoveOn;
     sf::Event m_currentEvent;
-    NetWidgets netWindow;
+    Console console;
     sfg::Label::Ptr player1;
     sfg::Label::Ptr player2;    
     Client client;

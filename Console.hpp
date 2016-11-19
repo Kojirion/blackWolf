@@ -6,10 +6,10 @@
 #include <SFML/System/Clock.hpp>
 #include "messages/Entity.hpp"
 
-class NetWidgets : private Messages::Registrant
+class Console : private Messages::Registrant
 {
 public:
-    NetWidgets(const std::reference_wrapper<const sf::Event> currentEvent);
+    Console(const std::reference_wrapper<const sf::Event> currentEvent);
     sfg::Widget::Ptr getWidget();
     void addLine(const std::string &line);
     void scroll(int delta);
