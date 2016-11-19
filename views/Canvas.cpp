@@ -9,14 +9,64 @@
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
 
+class Grid {
+public:
+    Grid(int squareSide, int margin):
+        squareSide(squareSide),
+        margin(margin),
+        flipped(false)
+    {
+
+    }
+
+    sf::Vector2f centerOffset() const{
+        return {squareSide/2.f, squareSide/2.f};
+    }
+
+    Square toSquare(const sf::Vector2f& coords) const{
+        if (flipped)
+            return {static_cast<int>(std::floor((coords.y+7*squareSide-7*squareSide-margin)/(2*squareSide-squareSide))),
+                        static_cast<int>(std::ceil((coords.x-7*squareSide-margin)/(squareSide-2*squareSide)))};
+        else
+            return {static_cast<int>(std::ceil((coords.y-7*squareSide-margin)/(-squareSide))),
+                        static_cast<int>(std::floor((coords.x-margin)/squareSide))};
+    }
+
+    sf::Vector2f toCoords(const Square& square) const {
+        sf::Vector2f result{margin + squareSide*square.col,
+                    8*squareSide + margin - squareSide*(square.row+1)};
+
+        if (flipped)
+            result += {squareSide* (7 - 2*square.col), -squareSide * (7 - 2*square.row)};
+
+        return result;
+    }
+
+    float boardSide() const {
+        return 8*squareSide + 2*margin;
+    }
+
+    void flip(){
+        flipped = !flipped;
+    }
+
+    bool isFlipped() const {
+        return flipped;
+    }
+
+private:
+    float squareSide;
+    float margin;
+    bool flipped;
+};
+
+static Grid grid{50, 20};
+
 
 using boost::irange;
 
-const sf::Vector2f Canvas::m_offToCenter(25.f,25.f);
-
 Canvas::Canvas(sf::Window& theWindow):
     m_currentPiece(m_pieces.end()),
-    m_flipOffset(0),
     m_canvas(sfg::Canvas::Create()),
     m_applicationWindow(theWindow),
     m_previousTurnColor(Color::Black),
@@ -66,13 +116,13 @@ Canvas::Canvas(sf::Window& theWindow):
 
     m_canvas->GetSignal(sfg::Widget::OnMouseLeftRelease).Connect([this]{
         if (pieceHeld()){
-            auto centrePos = m_currentPiece->get<Sprite>().getPosition() + m_offToCenter;
-            auto gridPos = positionToSquare(centrePos);
+            auto centrePos = m_currentPiece->get<Sprite>().getPosition() + grid.centerOffset();
+            auto gridPos = grid.toSquare(centrePos);
 
             if (!(*requestMove({m_currentPiece->get<OriginSquare>(), gridPos})))
                 sendBack();
             else {
-                m_currentPiece->get<Sprite>().setPosition(squareToPosition(gridPos));
+                m_currentPiece->get<Sprite>().setPosition(grid.toCoords(gridPos));
                 releasePiece();
             }
         }
@@ -101,30 +151,9 @@ Canvas::Canvas(sf::Window& theWindow):
     });
 }
 
-bool Canvas::flipped() const
-{
-    return (m_flipOffset!=0);
-}
-
-Square Canvas::positionToSquare(const sf::Vector2f &position) const
-{
-    if (!flipped())
-        return {static_cast<int>(std::ceil((position.y+7*m_flipOffset-370)/(2*m_flipOffset-50))),
-                    static_cast<int>(std::floor((position.x-7*m_flipOffset-20)/(50-2*m_flipOffset)))};
-    else
-        return {static_cast<int>(std::floor((position.y+7*m_flipOffset-370)/(2*m_flipOffset-50))),
-                    static_cast<int>(std::ceil((position.x-7*m_flipOffset-20)/(50-2*m_flipOffset)))};
-}
-
 bool Canvas::pieceHeld() const
 {
     return m_currentPiece != m_pieces.end();
-}
-
-sf::Vector2f Canvas::squareToPosition(const Square &square) const
-{
-    return sf::Vector2f(m_flipOffset * (7 - 2*square.col) + 20 + 50 * square.col,
-                        -m_flipOffset * (7 - 2*square.row) + 420 - 50 * (square.row+1));
 }
 
 void Canvas::releasePiece()
@@ -184,7 +213,7 @@ void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color t
         for (auto j : irange(0,8)){
             const Piece& piece = position[i][j];
             if (piece.type == Piece::Type::None) continue;
-            PieceSprite toAdd(squareToPosition({7-i,j}),piece, m_pieceToTexPos, m_idCount++);
+            PieceSprite toAdd(grid.toCoords({7-i,j}), piece, m_pieceToTexPos, m_idCount++);
             m_pieces.insert(SquaresToPieces::value_type({7-i,j}, toAdd));
         }
     }
@@ -212,24 +241,23 @@ void Canvas::sendBack()
 {
     assert(pieceHeld());
 
-    m_currentPiece->get<Sprite>().setPosition(squareToPosition(m_currentPiece->get<OriginSquare>()));
+    m_currentPiece->get<Sprite>().setPosition(grid.toCoords(m_currentPiece->get<OriginSquare>()));
 
     releasePiece();
 }
 
 void Canvas::flipBoard()
 {
-    if (flipped()) m_flipOffset = 0;
-    else m_flipOffset = 50;
+    grid.flip();
 
     for (const auto &piece : m_pieces)
-        piece.get<Sprite>().setPosition(squareToPosition(piece.get<OriginSquare>()));
+        piece.get<Sprite>().setPosition(grid.toCoords(piece.get<OriginSquare>()));
 }
 
 void Canvas::setPremove(const Move &move)
 {
-    auto from = squareToPosition(move.square_1) + m_offToCenter;
-    auto to = squareToPosition(move.square_2) + m_offToCenter;
+    auto from = grid.toCoords(move.square_1) + grid.centerOffset();
+    auto to = grid.toCoords(move.square_2) + grid.centerOffset();
 
     m_arrows.emplace_back(from, to-from, sf::Color(0,100,0,125), 5.f);
 }
@@ -241,12 +269,12 @@ void Canvas::clearArrows()
 
 void Canvas::resetFor(Color whoFaceUp)
 {
-    if (flipped()){
+    if (grid.isFlipped()){
         if (whoFaceUp & Color::White)
-            flipBoard();
+            grid.flip();
     }else{
         if (!(whoFaceUp & Color::White))
-            flipBoard();
+            grid.flip();
     }
 
     m_idCount = 1;
@@ -258,6 +286,6 @@ void Canvas::animateCaptureOn(const Square& square)
     auto it = m_pieces.by<OriginSquare>().find(square);
     if (it != m_pieces.by<OriginSquare>().end()){
         auto piece = it->second.getPiece();
-        m_particleSystem.addEmitter(Emitter(squareToPosition(square) + m_offToCenter, piece), sf::seconds(0.000001f));
+        m_particleSystem.addEmitter(Emitter(grid.toCoords(square) + grid.centerOffset(), piece), sf::seconds(0.000001f));
     }
 }

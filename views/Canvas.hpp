@@ -50,9 +50,6 @@ private:
     SquaresToPieces m_pieces;
     SquaresToPieces::const_iterator m_currentPiece;
 
-    int m_flipOffset; //set to 0 for white on bottom, 50 for black
-    static const sf::Vector2f m_offToCenter; //offset to center of square
-
     sfg::Canvas::Ptr m_canvas;
     sf::Sprite m_boardSprite;
     sf::Window& m_applicationWindow;
@@ -72,18 +69,13 @@ private:
 
     PieceToTexPos m_pieceToTexPos;
 
-    bool flipped() const;
     bool pieceHeld() const;
 
     void animateCaptureOn(const Square &square);
-
-    Square positionToSquare(const sf::Vector2f& Position) const;
-    sf::Vector2f squareToPosition(const Square& square) const;
 
     sf::Vector2f getMousePosition() const;
 
     void sendBack();
 
     void resetFor(Color whoFaceUp);
-
 };
