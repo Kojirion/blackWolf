@@ -32,11 +32,11 @@ bool Controller::requestMove(const Move& move)
     return true;
 }
 
-Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, CallbackSystem &callbackSystem):
-    desktop(theDesktop),
+Controller::Controller(sf::Window &window, sfg::Desktop &desktop, CallbackSystem &callbackSystem):
+    desktop(desktop),
     boardWindow(sfg::Window::Create(sfg::Window::BACKGROUND)),
     settingsButton(sfg::Button::Create("Settings")),
-    canvas(theWindow),
+    canvas(window),
     m_whiteClock(Clock::Create()),
     m_blackClock(Clock::Create()),
     settingsWindow(desktop),
@@ -51,14 +51,14 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     pt::read_json("Settings.json", tree);
 
     auto theme = tree.get("Theme", "blackwolf.theme");
-    theDesktop.LoadThemeFromFile(theme);
+    desktop.LoadThemeFromFile(theme);
 
     auto whiteIndex = tree.get("WhitePieces", 1);
     auto blackIndex = tree.get("BlackPieces", 0);
     canvas.setPieceColors({whiteIndex, blackIndex});
 
 
-    boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
+    boardWindow->SetRequisition(static_cast<sf::Vector2f>(window.getSize()));
 
     canvas.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
     settingsWindow.settingsDone.connect([this](const PieceToTexPos& pieceToTexPos){
@@ -196,10 +196,10 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     });
 }
 
-void Controller::update()
+void Controller::update(sf::Time dt)
 {
     client.update();
-    canvas.display();
+    canvas.update(dt);
     updateClocks();
 }
 

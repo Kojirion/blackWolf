@@ -15,7 +15,7 @@
 class Controller : private Messages::Registrant
 {
 public:
-    Controller(sf::Window& theWindow, sfg::Desktop& theDesktop,
+    Controller(sf::Window& window, sfg::Desktop& desktop,
                CallbackSystem& callbackSystem);
 
     sfg::Desktop& desktop;
@@ -23,7 +23,7 @@ public:
     sfg::Window::Ptr boardWindow;
     sfg::Button::Ptr settingsButton;
 
-    void update();
+    void update(sf::Time dt);
     void setEvent(const sf::Event& event);
 
     void updateClocks();

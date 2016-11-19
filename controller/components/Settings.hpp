@@ -11,6 +11,15 @@
 
 class Settings : private sf::NonCopyable
 {
+public:
+    Settings(sfg::Desktop& theDesktop);
+    void enable(bool doEnable = true);
+    sfg::Widget::Ptr getWidget();
+
+    boost::signals2::signal<void (const PieceToTexPos& pieceToTexPos)> settingsDone;
+
+    void setTree(const boost::property_tree::ptree pt);
+
 private:
     sfg::Window::Ptr window;
     sfg::Desktop& desktop;
@@ -28,13 +37,4 @@ private:
     std::string toSetWhite;
     std::string toSetBlack;
     std::string toSetBoard;
-
-public:
-    Settings(sfg::Desktop& theDesktop);
-    void enable(bool doEnable = true);
-    sfg::Widget::Ptr getWidget();
-
-    boost::signals2::signal<void (const PieceToTexPos& pieceToTexPos)> settingsDone;
-
-    void setTree(const boost::property_tree::ptree pt);
 };

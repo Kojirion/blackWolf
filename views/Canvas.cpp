@@ -110,9 +110,9 @@ Color Canvas::getColorOn(const Square &square) const
     return m_pieces.by<squareId>().find(square)->get<pieceId>().getColor();
 }
 
-void Canvas::display()
+void Canvas::update(sf::Time dt)
 {
-    m_particleSystem.update(m_frameClock.restart());
+    m_particleSystem.update(dt);
     m_canvas->Clear();
 
     m_canvas->Draw(m_boardSprite);

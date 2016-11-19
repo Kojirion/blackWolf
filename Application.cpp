@@ -41,10 +41,11 @@ void Application::run()
 
         m_actions.invokeCallbacks(m_system, &(m_window));
 
-        m_desktop.Update(clock.restart().asSeconds());
+        auto dt = clock.restart();
+        m_desktop.Update(dt.asSeconds());
 
         m_window.clear();
-        controller.update();
+        controller.update(dt);
         m_sfgui.Display(m_window);
         m_window.display();
     }

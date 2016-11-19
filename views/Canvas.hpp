@@ -25,7 +25,7 @@ class Canvas : private Messages::Registrant
 {
 public:
     Canvas(sf::Window& theWindow);
-    void display();
+    void update(sf::Time dt);
     void setupBoard(const std::vector<std::vector<Piece> > &position, Color turnColor);
 
     sfg::Widget::Ptr getBoardWidget() const;
@@ -63,8 +63,6 @@ private:
 
     std::vector<sf::Vertex> m_pieceVertices;
     sf::Texture m_piecesTexture, m_boardTexture;
-
-    sf::Clock m_frameClock;
 
     sf::Vector2f m_pieceOffset; //offset from mouse tip to piece
 
