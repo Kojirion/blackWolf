@@ -49,9 +49,9 @@ Canvas::Canvas(sf::Window& theWindow):
     m_canvas->GetSignal(sfg::Widget::OnMouseLeftPress).Connect([this]{
         auto clickedPoint = getMousePosition();
 
-        for (const auto &piece : m_pieces){
-            if (piece.get<Sprite>().contains(clickedPoint)){
-                m_currentPiece = m_pieces.project_up(m_pieces.by<Sprite>().find(piece.get<Sprite>()));
+        for (auto piece=std::begin(m_pieces); piece!=std::end(m_pieces); ++piece){
+            if (piece->get<Sprite>().contains(clickedPoint)){
+                m_currentPiece = piece;
                 m_pieceOffset = m_currentPiece->get<Sprite>().getPosition() - clickedPoint;
                 break;
             }
@@ -136,12 +136,8 @@ void Canvas::update(sf::Time dt)
 
     m_canvas->Draw(m_pieceVertices.data(), m_pieceVertices.size(), sf::Quads, &m_piecesTexture);
 
-
-
     for (auto& arrow : m_arrows)
         m_canvas->Draw(arrow, sf::BlendAdd);
-
-
 }
 
 void Canvas::setupBoard(const std::vector<std::vector<Piece>>& position, Color turnColor)
