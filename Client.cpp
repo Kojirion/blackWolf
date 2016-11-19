@@ -11,6 +11,7 @@
 #include "messages/TextReady.hpp"
 #include "messages/TextToClient.hpp"
 #include <boost/cast.hpp>
+#include "Common/Move.hpp"
 
 Client::Client():
     outputStream(&output),

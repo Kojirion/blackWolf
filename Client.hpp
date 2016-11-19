@@ -5,6 +5,8 @@
 #include "BlackWolf.hpp"
 #include "messages/Entity.hpp"
 
+struct Move;
+
 class Client : private Messages::Registrant
 {
 public:

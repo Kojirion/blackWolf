@@ -11,6 +11,7 @@
 #include <boost/bimap.hpp>
 
 #include "../views/components/PieceSprite.hpp"
+#include "../Common/Square.hpp"
 #include "../BlackWolf.hpp"
 #include "../messages/Entity.hpp"
 
@@ -20,6 +21,8 @@
  * with border width of 20.
  */
 
+enum class Color;
+struct Move;
 
 class Canvas : private Messages::Registrant
 {

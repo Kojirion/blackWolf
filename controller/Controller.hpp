@@ -10,6 +10,7 @@
 #include "../NetWidgets.hpp"
 #include "../messages/Entity.hpp"
 #include "../Actions.hpp"
+#include "../Common/Move.hpp"
 
 
 class Controller : private Messages::Registrant

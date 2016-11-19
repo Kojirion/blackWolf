@@ -11,38 +11,12 @@
 
 
 
-bool operator <(const Square &lhs, const Square &rhs)
-{
-    if(lhs.row==rhs.row) return (lhs.col<rhs.col);
-    return (lhs.row<rhs.row);
-}
 
 
-std::ostream &operator<<(std::ostream &stream, const Square &square)
-{
-    static const char* colToChar = "abcdefgh";
-    stream << colToChar[square.col] << (square.row+1);
-    return stream;
-}
 
 
-std::ostream &operator<<(std::ostream &stream, const Move &move)
-{
-    stream << move.square_1 << move.square_2;
-    return stream;
-}
 
 
-bool operator==(const Square &lhs, const Square &rhs)
-{
-    return (lhs.row == rhs.row) && (lhs.col == rhs.col);
-}
-
-
-bool operator==(const Move &lhs, const Move &rhs)
-{
-    return (lhs.square_1 == rhs.square_1) && (lhs.square_2 == rhs.square_2);
-}
 
 sf::Vector2f PieceToTexPos::operator()(const Piece &piece) const
 {

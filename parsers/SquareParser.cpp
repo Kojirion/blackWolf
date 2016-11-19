@@ -1,7 +1,7 @@
 #include "SquareParser.hpp"
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
-#include "../BlackWolf.hpp"
+#include "../Common/Square.hpp"
 
 using namespace boost::spirit::qi;
 
