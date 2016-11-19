@@ -1,5 +1,5 @@
 #pragma once
-#include "../BlackWolf.hpp"
+#include "../Common/Color.hpp"
 #include "../messages/Entity.hpp"
 
 class GameData : private Messages::Registrant

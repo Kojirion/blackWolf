@@ -3,6 +3,7 @@
 #include "../messages/GameEnd.hpp"
 #include "../messages/GameState.hpp"
 #include "../messages/GameStart.hpp"
+#include "../Common/Color.hpp"
 
 Status::Status():
     statusLabel(sfg::Label::Create())

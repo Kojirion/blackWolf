@@ -1,5 +1,6 @@
 #pragma once
 #include "Message.hpp"
+#include "../Common/Piece.hpp"
 #include "../BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/optional.hpp>

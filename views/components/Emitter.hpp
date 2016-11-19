@@ -2,7 +2,7 @@
 #include <Thor/Vectors/PolarVector2.hpp>
 #include <Thor/Particles/Affectors.hpp>
 #include <Thor/Math.hpp>
-#include "../../BlackWolf.hpp"
+#include "../../Common/Piece.hpp"
 
 extern const int nr_fragments_side;
 extern const int nr_fragments;

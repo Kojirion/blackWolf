@@ -1,8 +1,11 @@
 #pragma once
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include "../../BlackWolf.hpp"
 #include <array>
+#include "../../Common/Piece.hpp"
+
+struct PieceToTexPos;
+enum class Color;
 
 class PieceSprite
 {

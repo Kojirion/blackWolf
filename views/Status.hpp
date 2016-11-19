@@ -1,7 +1,8 @@
 #pragma once
 #include <SFGUI/Label.hpp>
-#include "../BlackWolf.hpp"
 #include "../messages/Entity.hpp"
+
+enum class Color;
 
 class Status : private Messages::Registrant
 {

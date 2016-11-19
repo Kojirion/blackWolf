@@ -3,6 +3,7 @@
 #include <Thor/Particles/Particle.hpp>
 #include <boost/range/irange.hpp>
 #include "../../Common/Color.hpp"
+#include "../../Common/Piece.hpp"
 
 using boost::irange;
 

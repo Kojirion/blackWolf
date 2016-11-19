@@ -1,28 +1,7 @@
 #pragma once
 #include <ostream>
 #include <SFML/System/Vector2.hpp>
-#include "Common/Color.hpp"
 
-
-
-struct Piece{
-    enum class Type{
-        Rook = 0,
-        Knight,
-        Bishop,
-        Queen,
-        King,
-        Pawn,
-        Shadow,
-        None
-    };
-
-    Color color;
-    Type type;
-};
-
-const Piece noPiece = {Color::None, Piece::Type::None};
-bool operator==(const Piece& lhs, const Piece& rhs);
 
 struct Square{
     int row;
@@ -41,6 +20,8 @@ struct Move{
 
 bool operator==(const Move& lhs, const Move& rhs);
 std::ostream& operator<<(std::ostream& stream, const Move& move);
+
+class Piece;
 
 struct PieceToTexPos {
     sf::Vector2f operator()(const Piece& piece) const;

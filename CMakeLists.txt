@@ -54,6 +54,7 @@ set(bw_HDRS
     Common/Square.hpp
     Common/Move.hpp
     Common/PieceToTexPos.hpp
+    Common/Piece.hpp
 )
 
 set(bw_SRCS
@@ -89,6 +90,7 @@ set(bw_SRCS
     Common/Square.cpp
     Common/Move.cpp
     Common/PieceToTexPos.cpp
+    Common/Piece.cpp
 )
 
 set(bw_ALL ${bw_HDRS} ${bw_SRCS})

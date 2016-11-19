@@ -1,7 +1,7 @@
 #pragma once
 #include "Message.hpp"
-#include "../BlackWolf.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
+#include "../Common/Color.hpp"
 
 namespace Messages{
 
