@@ -30,7 +30,7 @@ Canvas::Canvas(sf::Window& theWindow):
 
     //prepare fragments for capture animations
     m_particleSystem.setTexture(m_piecesTexture);
-    m_particleSystem.addAffector( thor::TorqueAffector(100.f) );
+    m_particleSystem.addAffector(thor::TorqueAffector(100.f));
 
     int l = 50/nr_fragments_side;
     for (auto i : irange(0,12)){

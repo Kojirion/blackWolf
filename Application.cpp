@@ -1,13 +1,13 @@
 #include "Application.hpp"
 #include <SFGUI/Renderers/VertexArrayRenderer.hpp>
 
+
 Application::Application():
     m_window(sf::VideoMode(800, 800), "Black Wolf", sf::Style::Close)
 {
     sfg::Renderer::Set( sfg::VertexArrayRenderer::Create() );
 
     m_window.setFramerateLimit(60);
-    m_desktop.LoadThemeFromFile("blackwolf.theme");
 
     auto font = std::make_shared<sf::Font>(sf::Font());
     font->loadFromFile("DejaVuSansMono.ttf");

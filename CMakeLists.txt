@@ -118,3 +118,4 @@ install(FILES resources/BoardBlack.jpg DESTINATION ${CMAKE_INSTALL_PREFIX}/Graph
 install(FILES resources/Pieces.png DESTINATION ${CMAKE_INSTALL_PREFIX}/Graphics)
 install(FILES resources/gui.theme DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES resources/blackwolf.theme DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES resources/Settings.json DESTINATION .)

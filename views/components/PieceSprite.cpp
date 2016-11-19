@@ -26,10 +26,11 @@ void PieceSprite::appendQuadTo(std::vector<sf::Vertex> &toAppendTo) const
 
 void PieceSprite::setTexPos(const PieceToTexPos&  pieceToTexPos) const
 {
-    m_quad[0].texCoords = pieceToTexPos(m_piece);
-    m_quad[1].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 0);
-    m_quad[2].texCoords = m_quad[0].texCoords + sf::Vector2f(50.f, 50.f);
-    m_quad[3].texCoords = m_quad[0].texCoords + sf::Vector2f(0, 50.f);
+    auto origin = pieceToTexPos(m_piece);
+    m_quad[0].texCoords = origin;
+    m_quad[1].texCoords = origin + sf::Vector2f(50.f, 0);
+    m_quad[2].texCoords = origin + sf::Vector2f(50.f, 50.f);
+    m_quad[3].texCoords = origin + sf::Vector2f(0, 50.f);
 }
 
 Color PieceSprite::getColor() const

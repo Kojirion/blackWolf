@@ -12,6 +12,8 @@
 #include "../messages/GameStart.hpp"
 #include "../messages/TextReady.hpp"
 #include "../messages/TextToClient.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 
 bool Controller::requestMove(const Move& move)
@@ -43,6 +45,19 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
     player1(sfg::Label::Create()),
     player2(sfg::Label::Create())
 {
+    namespace pt = boost::property_tree;
+
+    pt::ptree tree;
+    pt::read_json("Settings.json", tree);
+
+    auto theme = tree.get("Theme", "blackwolf.theme");
+    theDesktop.LoadThemeFromFile(theme);
+
+    auto whiteIndex = tree.get("WhitePieces", 1);
+    auto blackIndex = tree.get("BlackPieces", 0);
+    canvas.setPieceColors({whiteIndex, blackIndex});
+
+
     boardWindow->SetRequisition(static_cast<sf::Vector2f>(theWindow.getSize()));
 
     canvas.requestMove.connect(boost::bind(&Controller::requestMove, this,_1));
@@ -57,8 +72,8 @@ Controller::Controller(sf::Window &theWindow, sfg::Desktop &theDesktop, Callback
 
     ButtonBox buttons;
     buttons.flip->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&Canvas::flipBoard, &canvas));
-    buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect([]{
-        //settingsWindow.enable(true);
+    buttons.settings->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
+        settingsWindow.enable(true);
     });
     buttons.resign->GetSignal(sfg::Button::OnLeftClick).Connect([this]{
         messages.triggerEvent(Messages::TextToClient("resign"));
